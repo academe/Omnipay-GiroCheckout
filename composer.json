@@ -1,0 +1,38 @@
+{
+    "name": "academe/omnipay-girocheckout",
+    "type": "library",
+    "description": "GiroSolution GiroCheckout driver for the Omnipay PHP payment processing library",
+    "keywords": [
+        "gateway",
+        "merchant",
+        "omnipay",
+        "pay",
+        "payment",
+        "purchase",
+        "girosolution",
+        "girocheckout"
+    ],
+    "homepage": "https://github.com/academe/omnipay-girocheckout",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jason Judge",
+            "email": "jason@academe.co.uk"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Academe\\GiroCheckout\\" : "src/" }
+    },
+    "require": {
+        "php": ">=5.4",
+        "omnipay/common": "~2.4"
+    },
+    "require-dev": {
+        "omnipay/tests": "~2.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
+}

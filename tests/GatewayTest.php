@@ -1,0 +1,68 @@
+<?php
+
+namespace Academe\GiroCheckout;
+
+use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Tests\GatewayTestCase;
+
+class GatewayTest extends GatewayTestCase
+{
+    /**
+     * @var Gateway
+     */
+    protected $gateway;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->gateway = new Gateway($this->getHttpClient(), $this->getHttpRequest());
+    }
+
+    /**
+     * Override the core setter/getter test.
+     * Use a random number or string, depending on the datatype of the default,
+     * to prevent triggering validation rules.
+     */
+    public function testDefaultParametersHaveMatchingMethods()
+    {
+        $settings = $this->gateway->getDefaultParameters();
+        foreach ($settings as $key => $default) {
+            $getter = 'get'.ucfirst($this->camelCase($key));
+            $setter = 'set'.ucfirst($this->camelCase($key));
+
+            if (is_numeric($default)) {
+                $value = rand(1000000000, 9999999999);
+            } else {
+                $value = uniqid();
+            }
+
+            $this->assertTrue(method_exists($this->gateway, $getter), "Gateway must implement $getter()");
+            $this->assertTrue(method_exists($this->gateway, $setter), "Gateway must implement $setter()");
+
+            // setter must return instance
+            $this->assertSame($this->gateway, $this->gateway->$setter($value));
+            $this->assertSame($value, $this->gateway->$getter());
+        }
+    }
+
+    /**
+     * @expectedException Omnipay\Common\Exception\InvalidRequestException
+     */
+    public function testMerchantIdString()
+    {
+        $this->gateway->initialize([
+            'merchantId' => 'ABCDEFG',
+        ]);
+    }
+
+    /**
+     * @expectedException Omnipay\Common\Exception\InvalidRequestException
+     */
+    public function testPorjectIdString()
+    {
+        $this->gateway->initialize([
+            'projectId' => 'ABCDEFG',
+        ]);
+    }
+}
