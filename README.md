@@ -2,7 +2,7 @@
 
 **GiroCheckout driver for the Omnipay PHP payment processing library**
 
-[![Build Status](https://travis-ci.org/academe/omnipay-girocheckout.png?branch=master)](https://travis-ci.org/academe/omnipay-girocheckout)
+[![Build Status](https://travis-ci.org/academe/Omnipay-GiroCheckout.svg?branch=master)](https://travis-ci.org/academe/Omnipay-GiroCheckout)
 [![Latest Stable Version](https://poser.pugx.org/academe/omnipay-girocheckout/v/stable)](https://packagist.org/packages/academe/omnipay-girocheckout)
 [![Latest Unstable Version](https://poser.pugx.org/academe/omnipay-girocheckout/v/unstable)](https://packagist.org/packages/academe/omnipay-girocheckout)
 [![Total Downloads](https://poser.pugx.org/academe/omnipay-girocheckout/downloads)](https://packagist.org/packages/academe/omnipay-girocheckout)
