@@ -174,4 +174,3 @@ class Gateway extends AbstractGateway
         return $this->createRequest(Message\FetchCustomerRequest::class, $parameters);
     }
 }
- 
