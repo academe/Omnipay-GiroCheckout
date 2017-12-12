@@ -152,7 +152,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         list($prefixLang) = preg_split('/[-_]+/', $lang);
         $prefixLang = strtolower($prefixLang);
 
-        foreach($this->supportedLanguages as $supportedLanguage) {
+        foreach ($this->supportedLanguages as $supportedLanguage) {
             $lcSupportedLanguage = strtolower($supportedLanguage);
 
             // Match with wrong case, or full "en-GB" format provided.
