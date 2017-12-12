@@ -34,11 +34,10 @@ class CompleteAuthorizeRequest extends AbstractRequest
     {
         $data = [];
 
-        foreach($this->queryParameters as $queryParameter) {
+        foreach ($this->queryParameters as $queryParameter) {
             $data[$queryParameter] = $this->httpRequest->get($queryParameter);
         }
 
-        return $data;
     }
 
     /**
