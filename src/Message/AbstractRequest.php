@@ -187,4 +187,13 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
         return hash_hmac('MD5', $hashString, $this->getProjectPassphrase());
     }
+
+    /**
+     * @param array $data
+     * @return string
+     */
+    public function responseHash($responseBody)
+    {
+        return hash_hmac('MD5', $responseBody, $this->getProjectPassphrase());
+    }
 }

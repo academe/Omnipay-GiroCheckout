@@ -2,6 +2,7 @@
 
 namespace Academe\GiroCheckout\Message;
 
+use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Exception\InvalidRequestException;
 
 /**
@@ -17,7 +18,7 @@ class AuthorizeRequest extends AbstractRequest
     protected $transactionType = self::TRANSACTION_TYPE_AUTH;
 
     /**
-     * TODO: Just handles Credit Card payments initially.
+     * TODO: Just handles Credit Card payments initially; other payment types to be supported.
      * All values will be strings; they will be sent as a form encoded request.
      *
      * @return array
@@ -79,8 +80,46 @@ class AuthorizeRequest extends AbstractRequest
         return $data;
     }
 
+    /**
+     * @param array $data
+     * @return 
+     */
     public function sendData($data)
     {
+        // Content-Type: application/x-www-form-urlencoded
+        // Request must be UTF-8 encoded
+
+        $httpRequest = $this->httpClient->createRequest(
+            'POST',
+            'https://payment.girosolution.de/girocheckout/api/v2/transaction/start'
+        );
+
+        foreach ($data as $name => $value) {
+            $httpRequest->setPostField($name, $value);
+        }
+
+        $httpResponse = $httpRequest->send();
+
+        // A valid response is one in which the hash that has been sent does
+        // not tie up with the message body.
+
+        $headerHash = (string)$httpResponse->getHeader('hash');
+        $bodyContent = (string)$httpResponse->getBody();
+
+        $validResponse = ($this->responseHash($bodyContent) === $headerHash);
+
+        if (! $validResponse) {
+            // The response may have been tampered with; we cannot trust it.
+            throw new InvalidResponseException(sprintf(
+                'The response hash "%s" does not validate with the body "%s"; may have been tampered',
+                $headerHash,
+                $bodyContent
+            ));
+        }
+
+        // The raw response will be needed by the Response message to access the hash
+        // in the header.
+        return $this->response = new Response($this, $httpResponse->json());
     }
 
     /**
