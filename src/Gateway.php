@@ -29,6 +29,7 @@ class Gateway extends AbstractGateway
             'merchantId' => 0,
             'projectId' => 0,
             'projectPassphrase' => '',
+            'language' => 'de',
         ];
     }
 
@@ -52,6 +53,8 @@ class Gateway extends AbstractGateway
 
         return $this->setParameter('merchantId', $value);
     }
+
+    // Config settera and getters:
 
     /**
      * @return integer
@@ -91,7 +94,35 @@ class Gateway extends AbstractGateway
         return $this->setParameter('projectPassphrase', $value);
     }
 
-//////////
+    /**
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->getParameter('language');
+    }
+
+    /**
+     * @param  string $value
+     * @return $this
+     */
+    public function setLanguage($value)
+    {
+        return $this->setParameter('language', $value);
+    }
+
+    // Messages:
+
+    /**
+     * @param  array $parameters
+     * @return Message\AuthorizeRequest
+     */
+    public function authorize(array $parameters = array())
+    {
+        return $this->createRequest(Message\AuthorizeRequest::class, $parameters);
+    }
+
+    //////////
 
     /**
      * @param  array $parameters
@@ -146,6 +177,8 @@ class Gateway extends AbstractGateway
     {
         return $this->createRequest(Message\RefundRequest::class, $parameters);
     }
+
+    //////////
 
     /**
      * @param  array $parameters
