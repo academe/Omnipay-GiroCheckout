@@ -38,6 +38,7 @@ class CompleteAuthorizeRequest extends AbstractRequest
             $data[$queryParameter] = $this->httpRequest->get($queryParameter);
         }
 
+        return $data;
     }
 
     /**
@@ -60,6 +61,6 @@ class CompleteAuthorizeRequest extends AbstractRequest
             ));
         }
 
-        return $this->response = new CompleteAuthotizeResponse($this, $data);
+        return $this->response = new CompleteAuthorizeResponse($this, $data);
     }
 }

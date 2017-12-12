@@ -8,7 +8,7 @@ namespace Academe\GiroCheckout\Message;
 
 use Omnipay\Common\Message\RedirectResponseInterface;
 
-class CompleteAuthotizeResponse extends AbstractResponse
+class CompleteAuthorizeResponse extends AbstractResponse
 {
     /**
      * @return bool
