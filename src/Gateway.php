@@ -47,7 +47,7 @@ class Gateway extends AbstractGateway
      */
     public function setMerchantId($value)
     {
-        if (! is_integer($value)) {
+        if (! is_numeric($value)) {
             throw new InvalidRequestException('merchantId must be numeric');
         }
 
@@ -70,7 +70,7 @@ class Gateway extends AbstractGateway
      */
     public function setProjectId($value)
     {
-        if (! is_integer($value)) {
+        if (! is_numeric($value)) {
             throw new InvalidRequestException('projectId must be numeric');
         }
 
@@ -122,6 +122,15 @@ class Gateway extends AbstractGateway
         return $this->createRequest(Message\AuthorizeRequest::class, $parameters);
     }
 
+    /**
+     * @param  array $parameters
+     * @return Message\PurchaseRequest
+     */
+    public function purchase(array $parameters = array())
+    {
+        return $this->createRequest(Message\PurchaseRequest::class, $parameters);
+    }
+
     //////////
 
     /**
@@ -149,15 +158,6 @@ class Gateway extends AbstractGateway
     public function xxxfetchTransaction(array $parameters = array())
     {
         return $this->createRequest(Message\FetchTransactionRequest::class, $parameters);
-    }
-
-    /**
-     * @param  array $parameters
-     * @return Message\PurchaseRequest
-     */
-    public function xxxpurchase(array $parameters = array())
-    {
-        return $this->createRequest(Message\PurchaseRequest::class, $parameters);
     }
 
     /**

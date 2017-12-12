@@ -32,6 +32,17 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     const MOBILE_OPTIMISE_NO = 0;
 
     /**
+     * @var string Value to send as a PKN to indicate a new PKN should be created.
+     */
+    const PKN_CREATE = 'create';
+
+    /**
+     * @var int Flag to indicate a recurring payment.
+     */
+    const MOBILE_RECURRING_YES = 1;
+    const MOBILE_RECURRING_NO = 0;
+
+    /**
      * @var array List of supported language strings.
      */
      protected $supportedLanguages = [
@@ -66,7 +77,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function setMerchantId($value)
     {
-        if (! is_integer($value)) {
+        if (! is_numeric($value)) {
             throw new InvalidRequestException('merchantId must be numeric');
         }
 
@@ -87,7 +98,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function setProjectId($value)
     {
-        if (! is_integer($value)) {
+        if (! is_numeric($value)) {
             throw new InvalidRequestException('projectId must be numeric');
         }
 
@@ -162,5 +173,18 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         }
 
         return '';
+    }
+
+    /**
+     * @param array $data
+     * @return string
+     */
+    public function requestHash(array $data)
+    {
+        unset($data['hash']);
+
+        $hashString = implode('', $data);
+
+        return hash_hmac('MD5', $hashString, $this->getProjectPassphrase());
     }
 }

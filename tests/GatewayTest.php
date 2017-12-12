@@ -75,6 +75,34 @@ class GatewayTest extends GatewayTestCase
     }
 
     /**
+     * Override the core setter/getter test.
+     * Use a random number or string, depending on the datatype of the default,
+     * to prevent triggering validation rules.
+     */
+    public function testPurchaseParameters()
+    {
+        if ($this->gateway->supportsPurchase()) {
+            foreach ($this->gateway->getDefaultParameters() as $key => $default) {
+                // set property on gateway
+                $getter = 'get'.ucfirst($this->camelCase($key));
+                $setter = 'set'.ucfirst($this->camelCase($key));
+
+                if (is_numeric($default)) {
+                    $value = rand(1000000000, 9999999999);
+                } else {
+                    $value = uniqid();
+                }
+
+                $this->gateway->$setter($value);
+
+                // request should have matching property, with correct value
+                $request = $this->gateway->purchase();
+                $this->assertSame($value, $request->$getter());
+            }
+        }
+    }
+
+    /**
      * @expectedException Omnipay\Common\Exception\InvalidRequestException
      */
     public function testMerchantIdString()
