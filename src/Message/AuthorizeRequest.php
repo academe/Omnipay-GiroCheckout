@@ -81,8 +81,9 @@ class AuthorizeRequest extends AbstractRequest
     }
 
     /**
+     * @throws InvalidResponseException
      * @param array $data
-     * @return 
+     * @return Response
      */
     public function sendData($data)
     {
@@ -105,15 +106,16 @@ class AuthorizeRequest extends AbstractRequest
 
         $headerHash = (string)$httpResponse->getHeader('hash');
         $bodyContent = (string)$httpResponse->getBody();
+        $bodyHash = $this->responseHash($bodyContent);
 
-        $validResponse = ($this->responseHash($bodyContent) === $headerHash);
+        $validResponse = ($bodyHash === $headerHash);
 
         if (! $validResponse) {
             // The response may have been tampered with; we cannot trust it.
             throw new InvalidResponseException(sprintf(
                 'The response hash "%s" does not validate with the body "%s"; may have been tampered',
                 $headerHash,
-                $bodyContent
+                $bodyHash
             ));
         }
 

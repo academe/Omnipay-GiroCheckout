@@ -182,6 +182,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     public function requestHash(array $data)
     {
         unset($data['hash']);
+        unset($data['gcHash']);
 
         $hashString = implode('', $data);
 

@@ -131,6 +131,24 @@ class Gateway extends AbstractGateway
         return $this->createRequest(Message\PurchaseRequest::class, $parameters);
     }
 
+    /**
+     * @param  array $parameters
+     * @return Message\CompletePurchaseRequest
+     */
+    public function completeAuthorize(array $parameters = array())
+    {
+        return $this->createRequest(Message\CompleteAuthorizeRequest::class, $parameters);
+    }
+
+    /**
+     * @param  array $parameters
+     * @return Message\CompletePurchaseRequest
+     */
+    public function completePurchase(array $parameters = array())
+    {
+        return $this->createRequest(Message\CompleteAuthorizeRequest::class, $parameters);
+    }
+
     //////////
 
     /**
@@ -158,15 +176,6 @@ class Gateway extends AbstractGateway
     public function xxxfetchTransaction(array $parameters = array())
     {
         return $this->createRequest(Message\FetchTransactionRequest::class, $parameters);
-    }
-
-    /**
-     * @param  array $parameters
-     * @return Message\CompletePurchaseRequest
-     */
-    public function xxxcompletePurchase(array $parameters = array())
-    {
-        return $this->createRequest(Message\CompletePurchaseRequest::class, $parameters);
     }
 
     /**

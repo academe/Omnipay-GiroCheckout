@@ -103,6 +103,62 @@ class GatewayTest extends GatewayTestCase
     }
 
     /**
+     * Override the core setter/getter test.
+     * Use a random number or string, depending on the datatype of the default,
+     * to prevent triggering validation rules.
+     */
+    public function testCompleteAuthorizeParameters()
+    {
+        if ($this->gateway->supportsCompleteAuthorize()) {
+            foreach ($this->gateway->getDefaultParameters() as $key => $default) {
+                // set property on gateway
+                $getter = 'get'.ucfirst($this->camelCase($key));
+                $setter = 'set'.ucfirst($this->camelCase($key));
+
+                if (is_numeric($default)) {
+                    $value = rand(1000000000, 9999999999);
+                } else {
+                    $value = uniqid();
+                }
+
+                $this->gateway->$setter($value);
+
+                // request should have matching property, with correct value
+                $request = $this->gateway->completeAuthorize();
+                $this->assertSame($value, $request->$getter());
+            }
+        }
+    }
+
+    /**
+     * Override the core setter/getter test.
+     * Use a random number or string, depending on the datatype of the default,
+     * to prevent triggering validation rules.
+     */
+    public function testCompletePurchaseParameters()
+    {
+        if ($this->gateway->supportsCompletePurchase()) {
+            foreach ($this->gateway->getDefaultParameters() as $key => $default) {
+                // set property on gateway
+                $getter = 'get'.ucfirst($this->camelCase($key));
+                $setter = 'set'.ucfirst($this->camelCase($key));
+
+                if (is_numeric($default)) {
+                    $value = rand(1000000000, 9999999999);
+                } else {
+                    $value = uniqid();
+                }
+
+                $this->gateway->$setter($value);
+
+                // request should have matching property, with correct value
+                $request = $this->gateway->completePurchase();
+                $this->assertSame($value, $request->$getter());
+            }
+        }
+    }
+
+    /**
      * @expectedException Omnipay\Common\Exception\InvalidRequestException
      */
     public function testMerchantIdString()

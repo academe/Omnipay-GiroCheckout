@@ -2,8 +2,13 @@
 
 namespace Academe\GiroCheckout\Message;
 
+/**
+ * At the moment this just handles the CC initialisation response.
+ * It will likely be refactored to a number of more focused response
+ * messages.
+ */
+
 use Omnipay\Common\Message\RedirectResponseInterface;
-use Omnipay\Common\Message\AbstractResponse;
 
 class Response extends AbstractResponse implements RedirectResponseInterface
 {
@@ -20,19 +25,6 @@ class Response extends AbstractResponse implements RedirectResponseInterface
         // Not yet successfully complete for an authorization initialisation.
         // CHECKME: except maybe when using a PCN?
         return false;
-    }
-
-    /**
-     * Get a data item, or a default if not present.
-     *
-     * @param  string $name    The key for the field.
-     * @param  mixed $default  The value to return if the data item is not found at all, or is null.
-     * @return mixed           The value of the field, often a string, but could be case to anything..
-     */
-    protected function getDataItem($name, $default = null)
-    {
-        $data = $this->getData();
-        return isset($this->data[$name]) ? $this->data[$name] : $default;
     }
 
     /**
