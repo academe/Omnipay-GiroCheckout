@@ -43,7 +43,7 @@ class Helper
             $lang = 'en';
         }
 
-        foreach($messages as $message) {
+        foreach ($messages as $message) {
             if ($message['code'] == $code) {
                 return $message['message-' . $lang];
             }
