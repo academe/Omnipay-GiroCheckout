@@ -43,6 +43,16 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     const MOBILE_RECURRING_NO = 0;
 
     /**
+     * @var string The request method.
+     */
+    protected $requestMethod = 'POST';
+
+    /**
+     * @var string The request endpoint.
+     */
+    protected $requestEndpoint = '';
+
+    /**
      * @var array Query parameters.
      */
     protected $notificationQueryParameters = [
@@ -251,5 +261,102 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
                 $queryHash
             ));
         }
+    }
+
+    /**
+     * @throws InvalidResponseException
+     * @param array $data
+     * @return Response
+     */
+    public function sendData($data)
+    {
+        // Content-Type: application/x-www-form-urlencoded
+        // Request must be UTF-8 encoded
+
+        $httpRequest = $this->httpClient->createRequest(
+            $this->requestMethod,
+            $this->requestEndpoint
+        );
+
+        foreach ($data as $name => $value) {
+            $httpRequest->setPostField($name, $value);
+            echo " $name=$value "; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        }
+
+        $httpResponse = $httpRequest->send();
+
+        // A valid response is one in which the hash that has been sent does
+        // not tie up with the message body.
+
+        $headerHash = (string)$httpResponse->getHeader('hash');
+        $bodyContent = (string)$httpResponse->getBody();
+        $bodyHash = $this->responseHash($bodyContent);
+
+        $validResponse = ($bodyHash === $headerHash);
+
+        if (! $validResponse) {
+            // The response may have been tampered with; we cannot trust it.
+            throw new InvalidResponseException(sprintf(
+                'The response hash "%s" does not validate with the body "%s"; may have been tampered',
+                $headerHash,
+                $bodyHash
+            ));
+        }
+
+        // The raw response will be needed by the Response message to access the hash
+        // in the header.
+        return $this->response = new Response($this, $httpResponse->json());
+    }
+
+    /**
+     * Get the base data needed to identify the project.
+     *
+     * @param array $data
+     * @return array
+     */
+    public function getBaseProjectData($data = [])
+    {
+        $data['merchantId']     = $this->getMerchantId();
+        $data['projectId']      = $this->getProjectId();
+
+        return $data;
+    }
+
+    /**
+     * Get the base data needed for initiating a transaction through any payment type.
+     *
+     * @param array $data
+     * @return array
+     */
+    public function getBaseTransactionData($data = [])
+    {
+        $data = $this->getBaseProjectData($data);
+
+        $data['merchantTxId']   = $this->getTransactionId();
+        $data['amount']         = (string)$this->getAmountInteger();
+        $data['currency']       = $this->getCurrency();
+        $data['purpose']        = substr($this->getDescription(), 0, static::PURPOSE_LENGTH);
+
+        return $data;
+    }
+
+    /**
+     * Get the URLs for a transaction. These go in just before the hash.
+     *
+     * @param array $data
+     * @return array
+     */
+    public function getTransactionURLData($data = [])
+    {
+        // Where to send the user after filling out their CC details, or cancelling.
+
+        $data['urlRedirect'] = $this->getReturnUrl();
+
+        // Back channel notification of the result.
+        // The main part of the result will be handed over the front channel too.
+
+        $data['urlNotify'] = $this->getNotifyUrl();
+
+        return $data;
     }
 }

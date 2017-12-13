@@ -18,6 +18,11 @@ class AuthorizeRequest extends AbstractRequest
     protected $transactionType = self::TRANSACTION_TYPE_AUTH;
 
     /**
+     * @var string
+     */
+    protected $requestEndpoint = 'https://payment.girosolution.de/girocheckout/api/v2/transaction/start';
+
+    /**
      * TODO: Just handles Credit Card payments initially; other payment types to be supported.
      * All values will be strings; they will be sent as a form encoded request.
      *
@@ -25,15 +30,9 @@ class AuthorizeRequest extends AbstractRequest
      */
     public function getData()
     {
-        $data = [
-            'merchantId' => $this->getMerchantId(),
-            'projectId' => $this->getProjectId(),
-            'merchantTxId' => $this->getTransactionId(),
-            'amount' => (string)$this->getAmountInteger(),
-            'currency' => $this->getCurrency(),
-            'purpose' => substr($this->getDescription(), 0, static::PURPOSE_LENGTH),
-            'type' => $this->transactionType,
-        ];
+        $data = $this->getBaseTransactionData();
+
+        $data['type'] = $this->transactionType;
 
         if ($this->getValidLanguage()) {
             $data['locale'] = $this->getValidLanguage();
@@ -65,63 +64,12 @@ class AuthorizeRequest extends AbstractRequest
                 : (string)static::MOBILE_RECURRING_NO;
         }
 
-        // Where to send the user after filling out their CC details, or cancelling.
-
-        $data['urlRedirect'] = $this->getReturnUrl();
-
-        // Back channel notification of the result.
-        // The main part of the result will be handed over the front channel too.
-
-        $data['urlNotify'] = $this->getNotifyUrl();
+        $data = $this->getTransactionURLData($data);
 
         // Add a hash for the data we have constructed.
         $data['hash'] = $this->requestHash($data);
 
         return $data;
-    }
-
-    /**
-     * @throws InvalidResponseException
-     * @param array $data
-     * @return Response
-     */
-    public function sendData($data)
-    {
-        // Content-Type: application/x-www-form-urlencoded
-        // Request must be UTF-8 encoded
-
-        $httpRequest = $this->httpClient->createRequest(
-            'POST',
-            'https://payment.girosolution.de/girocheckout/api/v2/transaction/start'
-        );
-
-        foreach ($data as $name => $value) {
-            $httpRequest->setPostField($name, $value);
-        }
-
-        $httpResponse = $httpRequest->send();
-
-        // A valid response is one in which the hash that has been sent does
-        // not tie up with the message body.
-
-        $headerHash = (string)$httpResponse->getHeader('hash');
-        $bodyContent = (string)$httpResponse->getBody();
-        $bodyHash = $this->responseHash($bodyContent);
-
-        $validResponse = ($bodyHash === $headerHash);
-
-        if (! $validResponse) {
-            // The response may have been tampered with; we cannot trust it.
-            throw new InvalidResponseException(sprintf(
-                'The response hash "%s" does not validate with the body "%s"; may have been tampered',
-                $headerHash,
-                $bodyHash
-            ));
-        }
-
-        // The raw response will be needed by the Response message to access the hash
-        // in the header.
-        return $this->response = new Response($this, $httpResponse->json());
     }
 
     /**
