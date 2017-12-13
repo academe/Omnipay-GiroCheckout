@@ -137,7 +137,7 @@ class Gateway extends AbstractGateway
      */
     public function completeAuthorize(array $parameters = [])
     {
-        return $this->createRequest(Message\CompleteAuthorizeRequest::class, $parameters);
+        return $this->createRequest(Message\CompleteRequest::class, $parameters);
     }
 
     /**
@@ -146,7 +146,7 @@ class Gateway extends AbstractGateway
      */
     public function completePurchase(array $parameters = [])
     {
-        return $this->createRequest(Message\CompleteAuthorizeRequest::class, $parameters);
+        return $this->createRequest(Message\CompleteRequest::class, $parameters);
     }
 
     /**

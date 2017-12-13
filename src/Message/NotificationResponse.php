@@ -4,9 +4,9 @@ namespace Academe\GiroCheckout\Message;
 
 /**
  * Everything the notification response needs is already handled
- * by the CompleteAuthorizationResponse.
+ * by the CompleteResponse.
  */
 
-class NotificationResponse extends CompleteAuthorizeResponse
+class NotificationResponse extends CompleteResponse
 {
 }

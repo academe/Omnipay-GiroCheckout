@@ -13,7 +13,7 @@ namespace Academe\GiroCheckout\Message;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\NotificationInterface;
 
-class CompleteAuthorizeRequest extends AbstractRequest implements NotificationInterface
+class CompleteRequest extends AbstractRequest implements NotificationInterface
 {
     /**
      * @return array
@@ -26,13 +26,13 @@ class CompleteAuthorizeRequest extends AbstractRequest implements NotificationIn
     /**
      * @throws InvalidRequestException
      * @param array $data
-     * @return CompleteAuthotizeResponse
+     * @return CompleteResponse
      */
     public function sendData($data)
     {
         $this->validateNotificationData($data);
 
-        return $this->response = new CompleteAuthorizeResponse($this, $data);
+        return $this->response = new CompleteResponse($this, $data);
     }
 
     /**

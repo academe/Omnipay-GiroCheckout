@@ -8,7 +8,7 @@ namespace Academe\GiroCheckout\Message;
 
 use Omnipay\Common\Message\NotificationInterface;
 
-class CompleteAuthorizeResponse extends AbstractResponse implements NotificationInterface
+class CompleteResponse extends AbstractResponse implements NotificationInterface
 {
     /**
      * @return bool
