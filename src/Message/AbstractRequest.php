@@ -43,6 +43,19 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     const MOBILE_RECURRING_NO = 0;
 
     /**
+     * @var array Query parameters.
+     */
+    protected $notificationQueryParameters = [
+        'gcReference',
+        'gcMerchantTxId',
+        'gcBackendTxId',
+        'gcAmount',
+        'gcCurrency',
+        'gcResultPayment',
+        'gcHash',
+    ];
+
+    /**
      * @var array List of supported language strings.
      */
      protected $supportedLanguages = [
@@ -196,5 +209,47 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     public function responseHash($responseBody)
     {
         return hash_hmac('MD5', $responseBody, $this->getProjectPassphrase());
+    }
+
+    /**
+     * @return array
+     */
+    protected function getNotificationData()
+    {
+        $data = [];
+
+        foreach ($this->notificationQueryParameters as $queryParameter) {
+            $data[$queryParameter] = $this->httpRequest->get($queryParameter);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Validates the hash of an incoming notification request (either as a back-channel
+     * notificatioon or a front-end user redirect back to the merchant site).
+     * An exception will be thrown if the hash does not validate.
+     *
+     * CHECKME: if the $data is empty, do we want to just skip this check? That will make
+     * this sae to call whether there is a notification or not.
+     *
+     * @throws InvalidRequestException
+     * @param array $data
+     * @return null
+     */
+    public function validateNotificationData($data)
+    {
+        $gcHash = isset($data['gcHash']) ? $data['gcHash'] : '';
+        $queryHash = $this->requestHash($data);
+
+        // Check for tampering.
+
+        if ($gcHash !== $queryHash) {
+            throw new InvalidRequestException(sprintf(
+                'The request hash "%s" does not validate with the query "%s"; may have been tampered',
+                $gcHash,
+                $queryHash
+            ));
+        }
     }
 }

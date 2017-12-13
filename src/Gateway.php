@@ -117,7 +117,7 @@ class Gateway extends AbstractGateway
      * @param  array $parameters
      * @return Message\AuthorizeRequest
      */
-    public function authorize(array $parameters = array())
+    public function authorize(array $parameters = [])
     {
         return $this->createRequest(Message\AuthorizeRequest::class, $parameters);
     }
@@ -126,7 +126,7 @@ class Gateway extends AbstractGateway
      * @param  array $parameters
      * @return Message\PurchaseRequest
      */
-    public function purchase(array $parameters = array())
+    public function purchase(array $parameters = [])
     {
         return $this->createRequest(Message\PurchaseRequest::class, $parameters);
     }
@@ -135,7 +135,7 @@ class Gateway extends AbstractGateway
      * @param  array $parameters
      * @return Message\CompletePurchaseRequest
      */
-    public function completeAuthorize(array $parameters = array())
+    public function completeAuthorize(array $parameters = [])
     {
         return $this->createRequest(Message\CompleteAuthorizeRequest::class, $parameters);
     }
@@ -144,9 +144,18 @@ class Gateway extends AbstractGateway
      * @param  array $parameters
      * @return Message\CompletePurchaseRequest
      */
-    public function completePurchase(array $parameters = array())
+    public function completePurchase(array $parameters = [])
     {
         return $this->createRequest(Message\CompleteAuthorizeRequest::class, $parameters);
+    }
+
+    /**
+     * @param  array $parameters
+     * @return Message\NotificationRequest
+     */
+    public function acceptNotification(array $parameters = [])
+    {
+        return $this->createRequest(Message\NotificationRequest::class, $parameters);
     }
 
     //////////

@@ -6,9 +6,9 @@ namespace Academe\GiroCheckout\Message;
  ^
  */
 
-use Omnipay\Common\Message\RedirectResponseInterface;
+use Omnipay\Common\Message\NotificationInterface;
 
-class CompleteAuthorizeResponse extends AbstractResponse
+class CompleteAuthorizeResponse extends AbstractResponse implements NotificationInterface
 {
     /**
      * @return bool
@@ -72,5 +72,32 @@ class CompleteAuthorizeResponse extends AbstractResponse
     public function getCurrency()
     {
         return $this->getDataItem('gcCurrency');
+    }
+
+    /**
+     * @return string The result code translated into a message, where known.
+     */
+    public function getMessage()
+    {
+        // During testimg, the mock request will not have our language method,
+        // so we catch it.
+
+        $request = $this->getRequest();
+
+        if (method_exists($request, 'getValidLanguage')) {
+            $lang = $this->getRequest()->getValidLanguage();
+        } else {
+            $lang = 'en';
+        }
+
+        return Helper::getMessage($this->getCode(), $lang);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTransactionStatus()
+    {
+        return Helper::getTransactionStatus($this->getCode());
     }
 }

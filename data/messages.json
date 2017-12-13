@@ -1,0 +1,191 @@
+[
+ {
+   "code": 4000,
+   "payment-type-en": "General",
+   "payment-type-de": "",
+   "message-en": "Transaction successful",
+   "message-de": "Transaktion erfolgreich"
+ },
+ {
+   "code": 4001,
+   "payment-type-en": "giropay",
+   "payment-type-de": "giropay",
+   "message-en": "Bank offline",
+   "message-de": "giropay Bank offline"
+ },
+ {
+   "code": 4002,
+   "payment-type-en": "giropay",
+   "payment-type-de": "giropay",
+   "message-en": "Online banking account invalid",
+   "message-de": "Online Banking Zugang ungültig"
+ },
+ {
+   "code": 4500,
+   "payment-type-en": "giropay",
+   "payment-type-de": "giropay",
+   "message-en": "Unknown payment result",
+   "message-de": "Zahlungsausgang unbekannt"
+ },
+ {
+   "code": 4051,
+   "payment-type-en": "Direct debit",
+   "payment-type-de": "Lastschrift",
+   "message-en": "Invalid bank account",
+   "message-de": "Kontoverbindung ungültig"
+ },
+ {
+   "code": 4101,
+   "payment-type-en": "Credit card",
+   "payment-type-de": "Kreditkarte",
+   "message-en": "Issuing country invalid or unknown",
+   "message-de": "Ausgabeland der Karte nicht gültig oder unbekannt"
+ },
+ {
+   "code": 4102,
+   "payment-type-en": "Credit card",
+   "payment-type-de": "Kreditkarte",
+   "message-en": "3D-Secure or MasterCard SecureCode authorization failed",
+   "message-de": "3D-Secure Autorisierung fehlgeschlagen"
+ },
+ {
+   "code": 4103,
+   "payment-type-en": "Credit card",
+   "payment-type-de": "Kreditkarte",
+   "message-en": "Validation date of card exceeded",
+   "message-de": "Gültigkeitsdatum der Karte überschritten"
+ },
+ {
+   "code": 4104,
+   "payment-type-en": "Credit card",
+   "payment-type-de": "Kreditkarte",
+   "message-en": "Invalid or unknown card type",
+   "message-de": "Kreditkartentyp ungültig oder unbekannt"
+ },
+ {
+   "code": 4105,
+   "payment-type-en": "Credit card",
+   "payment-type-de": "Kreditkarte",
+   "message-en": "Limited-use card",
+   "message-de": "Karte eingeschränkt nutzbar"
+ },
+ {
+   "code": 4106,
+   "payment-type-en": "Credit card",
+   "payment-type-de": "Kreditkarte",
+   "message-en": "Invalid pseudo-cardnumber",
+   "message-de": "Pseudo-Kartennummer ungültig"
+ },
+ {
+   "code": 4107,
+   "payment-type-en": "Credit card",
+   "payment-type-de": "Kreditkarte",
+   "message-en": "Card stolen, suspicious or marked to move in",
+   "message-de": "Karte gestohlen, verdächtig oder zum Einziehen markiert"
+ },
+ {
+   "code": 4108,
+   "payment-type-en": "Credit card",
+   "payment-type-de": "Kreditkarte",
+   "message-en": "Telephone approval",
+   "message-de": "Telefonische Genehmigung"
+ },
+ {
+   "code": 4151,
+   "payment-type-en": "PayPal",
+   "payment-type-de": "PayPal",
+   "message-en": "Invalid PayPal token",
+   "message-de": "PayPal Token ungültig"
+ },
+ {
+   "code": 4152,
+   "payment-type-en": "PayPal",
+   "payment-type-de": "PayPal",
+   "message-en": "Post-processing necessary at PayPal",
+   "message-de": "Nachbearbeitung bei PayPal notwendig"
+ },
+ {
+   "code": 4153,
+   "payment-type-en": "PayPal",
+   "payment-type-de": "PayPal",
+   "message-en": "Change PayPal payment method",
+   "message-de": "Zahlungsmethode bei PayPal ändern"
+ },
+ {
+   "code": 4154,
+   "payment-type-en": "PayPal",
+   "payment-type-de": "PayPal",
+   "message-en": "PayPal-payment is not completed",
+   "message-de": "PayPal-Zahlung nicht abgeschlossen"
+ },
+ {
+   "code": 4501,
+   "payment-type-en": "General",
+   "payment-type-de": "Allgemein",
+   "message-en": "Timeout / no user input",
+   "message-de": "Timeout / keine Benutzereingabe"
+ },
+ {
+   "code": 4502,
+   "payment-type-en": "General",
+   "payment-type-de": "Allgemein",
+   "message-en": "User aborted",
+   "message-de": "Abbruch durch Benutzer"
+ },
+ {
+   "code": 4503,
+   "payment-type-en": "General",
+   "payment-type-de": "Allgemein",
+   "message-en": "Duplicate transaction",
+   "message-de": "doppelte Transaktion"
+ },
+ {
+   "code": 4504,
+   "payment-type-en": "General",
+   "payment-type-de": "Allgemein",
+   "message-en": "Uspicion of manipulation or payment method temporarily blocked",
+   "message-de": "Manipulationsverdacht oder Zahlungsmittel temporär gesperrt"
+ },
+ {
+   "code": 4505,
+   "payment-type-en": "General",
+   "payment-type-de": "Allgemein",
+   "message-en": "Payment method blocked or rejected",
+   "message-de": "Zahlungsmittel gesperrt oder abgelehnt"
+ },
+ {
+   "code": 4506,
+   "payment-type-en": "General",
+   "payment-type-de": "Allgemein",
+   "message-en": "Invalid Blue Code barcode",
+   "message-de": "Blue Code Barcode ungültig"
+ },
+ {
+   "code": 4900,
+   "payment-type-en": "General",
+   "payment-type-de": "Allgemein",
+   "message-en": "Transaction rejected",
+   "message-de": "Transaktion nicht erfolgreich"
+ },
+ {
+   "code": 4020,
+   "payment-type-en": "Age verification",
+   "payment-type-de": "Altersverifikation",
+   "message-en": "Age verification successful",
+   "message-de": "Altersverifikation erfolgreich"
+ },
+ {
+   "code": 4021,
+   "payment-type-en": "Age verification",
+   "payment-type-de": "Altersverifikation",
+   "message-en": "Age verification not possible",
+   "message-de": "Altersverifikation nicht durchführbar"
+ },
+ {
+   "code": 4022,
+   "payment-type-en": "Age verification",
+   "payment-type-de": "Altersverifikation",
+   "message-en": "Age verification unsuccessful",
+   "message-de": "Altersverifikation nicht erfolgreich"
+ }
+]

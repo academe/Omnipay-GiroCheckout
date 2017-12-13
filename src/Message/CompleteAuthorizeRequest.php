@@ -11,34 +11,16 @@ namespace Academe\GiroCheckout\Message;
  */
 
 use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Common\Message\NotificationInterface;
 
-class CompleteAuthorizeRequest extends AbstractRequest
+class CompleteAuthorizeRequest extends AbstractRequest implements NotificationInterface
 {
-    /**
-     * @var array Query parameters.
-     */
-    protected $queryParameters = [
-        'gcReference',
-        'gcMerchantTxId',
-        'gcBackendTxId',
-        'gcAmount',
-        'gcCurrency',
-        'gcResultPayment',
-        'gcHash',
-    ];
-
     /**
      * @return array
      */
     public function getData()
     {
-        $data = [];
-
-        foreach ($this->queryParameters as $queryParameter) {
-            $data[$queryParameter] = $this->httpRequest->get($queryParameter);
-        }
-
-        return $data;
+        return $this->getNotificationData();
     }
 
     /**
@@ -48,19 +30,35 @@ class CompleteAuthorizeRequest extends AbstractRequest
      */
     public function sendData($data)
     {
-        $gcHash = isset($data['gcHash']) ? $data['gcHash'] : '';
-        $queryHash = $this->requestHash($data);
-
-        // Check for tampering.
-
-        if ($gcHash !== $queryHash) {
-            throw new InvalidRequestException(sprintf(
-                'The request hash "%s" does not validate with the query "%s"; may have been tampered',
-                $gcHash,
-                $queryHash
-            ));
-        }
+        $this->validateNotificationData($data);
 
         return $this->response = new CompleteAuthorizeResponse($this, $data);
+    }
+
+    /**
+     * @var string containing a numeric result code
+     */
+    public function getCode()
+    {
+        $data = $this->getData();
+        return isset($data['gcResultPayment']) ? $data['gcResultPayment'] : '';
+    }
+
+    /**
+     * There are no messages sent with the notification data. However, we could
+     * lookup the result code to get the message published here:
+     * http://api.girocheckout.de/en:girocheckout:resultcodes#result_codes_payment
+     */
+    public function getMessage()
+    {
+        return Helper::getMessage($this->getCode(), $this->getValidLanguage());
+    }
+
+    /**
+     * @return string
+     */
+    public function getTransactionStatus()
+    {
+        return Helper::getTransactionStatus($this->getCode());
     }
 }
