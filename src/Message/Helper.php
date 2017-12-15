@@ -7,6 +7,7 @@ namespace Academe\GiroCheckout\Message;
  */
 
 use Omnipay\Common\Message\NotificationInterface;
+use ReflectionClass;
 
 class Helper
 {
@@ -50,5 +51,29 @@ class Helper
         }
 
         return '';
+    }
+
+   /**
+     * Get an array of constants in an object or class, with an optional prefix.
+     * @param null $prefix
+     * @return array
+     */
+    public static function constantList($classOrObject, $prefix = null)
+    {
+        $reflection = new ReflectionClass($classOrObject);
+        $constants = $reflection->getConstants();
+
+        if (isset($prefix)) {
+            $result = [];
+            $prefix = strtoupper($prefix);
+            foreach ($constants as $key => $value) {
+                if (strpos($key, $prefix) === 0) {
+                    $result[$key] = $value;
+                }
+            }
+            return $result;
+        } else {
+            return $constants;
+        }
     }
 }

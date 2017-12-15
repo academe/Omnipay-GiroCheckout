@@ -13,6 +13,19 @@ use Omnipay\Common\AbstractGateway;
 class Gateway extends AbstractGateway
 {
     /**
+     * @var string
+     */
+    const PAYMENT_TYPE_CREDIT_CARD  = 'CreditCard ';
+    const PAYMENT_TYPE_PAYPAL       = 'PayPal';
+    const PAYMENT_TYPE_DIRECTDEBIT  = 'DirectDebit';
+    const PAYMENT_TYPE_GIROPAY      = 'Giropay';
+    const PAYMENT_TYPE_PAYDIREKT    = 'Paydirekt';
+
+    const PAYMENT_TYPE_MAESTRO      = 'Maestro';
+    const PAYMENT_TYPE_IDEAL        = 'iDEAL';
+    const PAYMENT_TYPE_EPS          = 'eps';
+
+    /**
      * @return string
      */
     public function getName()
@@ -30,6 +43,7 @@ class Gateway extends AbstractGateway
             'projectId' => 0,
             'projectPassphrase' => '',
             'language' => 'de',
+            'paymentType' => static::PAYMENT_TYPE_CREDIT_CARD,
         ];
     }
 
@@ -109,6 +123,33 @@ class Gateway extends AbstractGateway
     public function setLanguage($value)
     {
         return $this->setParameter('language', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentType()
+    {
+        return $this->getParameter('paymentType');
+    }
+
+    /**
+     * @param  string $value once of self::PAYMENT_TYPE_*
+     * @return $this
+     */
+    public function setPaymentType($value)
+    {
+        $paymentTypes = Message\Helper::constantList($this, 'PAYMENT_TYPE_');
+
+        if (! in_array($value, $paymentTypes)) {
+            throw new InvalidRequestException(sprintf(
+                'paymentType must be one of: %s; %s given',
+                implode(', ', $paymentTypes),
+                $value
+            ));
+        }
+
+        return $this->setParameter('paymentType', $value);
     }
 
     // Messages:

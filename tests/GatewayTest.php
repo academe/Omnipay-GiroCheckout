@@ -33,6 +33,8 @@ class GatewayTest extends GatewayTestCase
 
             if (is_numeric($default)) {
                 $value = rand(1000000000, 9999999999);
+            } elseif ($key == 'paymentType') {
+                $value = 'DirectDebit';
             } else {
                 $value = uniqid();
             }
@@ -61,6 +63,8 @@ class GatewayTest extends GatewayTestCase
 
                 if (is_numeric($default)) {
                     $value = rand(1000000000, 9999999999);
+                } elseif ($key == 'paymentType') {
+                    $value = 'DirectDebit';
                 } else {
                     $value = uniqid();
                 }
@@ -89,6 +93,8 @@ class GatewayTest extends GatewayTestCase
 
                 if (is_numeric($default)) {
                     $value = rand(1000000000, 9999999999);
+                } elseif ($key == 'paymentType') {
+                    $value = 'DirectDebit';
                 } else {
                     $value = uniqid();
                 }
@@ -117,6 +123,8 @@ class GatewayTest extends GatewayTestCase
 
                 if (is_numeric($default)) {
                     $value = rand(1000000000, 9999999999);
+                } elseif ($key == 'paymentType') {
+                    $value = 'DirectDebit';
                 } else {
                     $value = uniqid();
                 }
@@ -145,6 +153,8 @@ class GatewayTest extends GatewayTestCase
 
                 if (is_numeric($default)) {
                     $value = rand(1000000000, 9999999999);
+                } elseif ($key == 'paymentType') {
+                    $value = 'DirectDebit';
                 } else {
                     $value = uniqid();
                 }

@@ -4,6 +4,7 @@ namespace Academe\GiroCheckout\Message;
 
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Exception\InvalidRequestException;
+use Academe\GiroCheckout\Gateway;
 
 /**
  * GiroCheckout Gateway Authorization Request
@@ -23,48 +24,156 @@ class AuthorizeRequest extends AbstractRequest
     protected $requestEndpoint = 'https://payment.girosolution.de/girocheckout/api/v2/transaction/start';
 
     /**
+     * @param array $data
+     * @return array Data with the Giropay fields attempted.
+     */
+    public function getGiropayData($data = [])
+    {
+        // TODO: all Giropay fields; all are optional.
+
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     * @return array Data with the Paydirekt fields attempted.
+     */
+    public function getPaydirektData($data = [])
+    {
+        // TODO: all Paydirekt fields.
+
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     * @return array Data with the Direct Debit fields attempted.
+     */
+    public function getDirectDebitData($data = [])
+    {
+        // TODO: all Direct Debit fields.
+
+        return $data;
+    }
+
+    /**
      * TODO: Just handles Credit Card payments initially; other payment types to be supported.
      * All values will be strings; they will be sent as a form encoded request.
+     * The data parameters MUST be built in a strict order.
+     * Should we moved all validation to here, rather than where the parameters are added?
      *
      * @return array
      */
     public function getData()
     {
-        $data = $this->getBaseTransactionData();
+        // Construction of the data will depend on the payment type.
 
-        $data['type'] = $this->transactionType;
+        $paymentType = $this->getPaymentType();
 
-        if ($this->getValidLanguage()) {
-            $data['locale'] = $this->getValidLanguage();
+        if ($paymentType === null) {
+            // Default the payment type if not set (normally during testing).
+            $paymentType = Gateway::PAYMENT_TYPE_CREDIT_CARD;
         }
 
-        if ($this->getMobileOptimise() !== null) {
-            $data['mobile'] = ! empty($this->getMobileOptimise())
-                ? (string)static::MOBILE_OPTIMISE_YES
-                : (string)static::MOBILE_OPTIMISE_NO;
+        // First six parameters are mandatory and common to all payment methods.
+
+        $data = [];
+        $data['merchantId']     = $this->getMerchantId();
+        $data['projectId']      = $this->getProjectId();
+        $data['merchantTxId']   = $this->getTransactionId();
+        $data['amount']         = (string)$this->getAmountInteger();
+        $data['currency']       = $this->getCurrency();
+        $data['purpose']        = substr($this->getDescription(), 0, static::PURPOSE_LENGTH);
+
+        // EPS and Giropay require a bic
+
+        if (
+            $paymentType === Gateway::PAYMENT_TYPE_EPS
+            || $paymentType === Gateway::PAYMENT_TYPE_GIROPAY
+        ) {
+            $data['bic'] = $this->getBic();
         }
 
-        // A pseudo card number (PKN) can be supplied, or a new PKN can be requested,
-        // or the transaction can be left as a one-off with no PKN saved.
+        // Giropay has a bunch of optional fields here.
 
-        $pkn = $this->getCardReference() ?: $this->getToken();
+        if ($paymentType === Gateway::PAYMENT_TYPE_GIROPAY) {
+            $data = $this->getGiropayData($data);
+        }
 
-        if ($pkn !== null) {
-            $data['pkn'] = $pkn;
-        } else {
-            // No PKN supplied. Are we asking for a new one?
-            if (! empty($this->getRegisterCardReference())) {
-                $data['pkn'] = static::PKN_CREATE;
+        // Credit Card, Direct Debit and Maestro have optional type, locale and mobile parameters.
+
+        if (
+            $paymentType === Gateway::PAYMENT_TYPE_CREDIT_CARD
+            || $paymentType === Gateway::PAYMENT_TYPE_DIRECTDEBIT
+            || $paymentType === Gateway::PAYMENT_TYPE_MAESTRO
+        ) {
+            // 'SALE' or 'AUTH'.
+            $data['type'] = $this->transactionType;
+
+            if ($this->getValidLanguage()) {
+                $data['locale'] = $this->getValidLanguage();
+            }
+
+            // FIXME: just call this "mobile".
+            if ($this->getMobileOptimise() !== null) {
+                $data['mobile'] = ! empty($this->getMobileOptimise())
+                    ? (string)static::MOBILE_OPTIMISE_YES
+                    : (string)static::MOBILE_OPTIMISE_NO;
             }
         }
 
-        if ($this->getRecurring() !== null) {
+        // Direct Debit has a bunch of optional fields here.
+
+        if ($paymentType === Gateway::PAYMENT_TYPE_DIRECTDEBIT) {
+            $data = $this->getDirectDebitData($data);
+        }
+
+        if ($paymentType === Gateway::PAYMENT_TYPE_PAYDIREKT) {
+            // 'SALE' or 'AUTH'.
+            $data['type'] = $this->transactionType;
+        }
+
+        // The PKN is use by Credit Card and Direct Debit payment types.
+
+        if (
+            $paymentType === Gateway::PAYMENT_TYPE_CREDIT_CARD
+            || $paymentType === Gateway::PAYMENT_TYPE_DIRECTDEBIT
+        ) {
+            // A pseudo card number (PKN) can be supplied, or a new PKN can be requested,
+            // or the transaction can be left as a one-off with no PKN saved.
+
+            $pkn = $this->getCardReference() ?: $this->getToken();
+
+            if ($pkn !== null) {
+                $data['pkn'] = $pkn;
+            } else {
+                // No PKN supplied. Are we asking for a new one?
+                if (! empty($this->getRegisterCardReference())) {
+                    $data['pkn'] = static::PKN_CREATE;
+                }
+            }
+        }
+
+        if ($paymentType === Gateway::PAYMENT_TYPE_CREDIT_CARD && $this->getRecurring() !== null) {
             $data['recurring'] = ! empty($this->getRecurring())
                 ? (string)static::MOBILE_RECURRING_YES
                 : (string)static::MOBILE_RECURRING_NO;
         }
 
-        $data = $this->getTransactionURLData($data);
+        // Paydirekt has a bunch of fields here.
+
+        if ($paymentType === Gateway::PAYMENT_TYPE_PAYDIREKT) {
+            $data = $this->getPaydirektData($data);
+        }
+
+        // Where to send the user after filling out their CC details, or cancelling.
+
+        $data['urlRedirect'] = $this->getReturnUrl();
+
+        // Back channel notification of the result.
+        // The main part of the result will be handed over the front channel too.
+
+        $data['urlNotify'] = $this->getNotifyUrl();
 
         // Add a hash for the data we have constructed.
         $data['hash'] = $this->requestHash($data);

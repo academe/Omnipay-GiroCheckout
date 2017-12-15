@@ -4,6 +4,7 @@ namespace Academe\GiroCheckout\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\AbstractRequest as OmnipayAbstractRequest;
+use Academe\GiroCheckout\Gateway;
 
 /**
  * GiroCheckout Gateway Abstract Request
@@ -70,7 +71,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
      protected $supportedLanguages = [
         'de',   // German (default)
-        'en',   //English
+        'en',   // English
         'es',   // Spanish
         'fr',   // French
         'it',   // Italian
@@ -160,6 +161,33 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     public function setLanguage($value)
     {
         return $this->setParameter('language', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentType()
+    {
+        return $this->getParameter('paymentType');
+    }
+
+    /**
+     * @param  string $value once of Gateway::PAYMENT_TYPE_*
+     * @return $this
+     */
+    public function setPaymentType($value)
+    {
+        $paymentTypes = Helper::constantList(Gateway::class, 'PAYMENT_TYPE_');
+
+        if (! in_array($value, $paymentTypes)) {
+            throw new InvalidRequestException(sprintf(
+                'paymentType must be one of: %s; %s given',
+                implode(', ', $paymentTypes),
+                $value
+            ));
+        }
+
+        return $this->setParameter('paymentType', $value);
     }
 
     /**
@@ -306,57 +334,5 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         // The raw response will be needed by the Response message to access the hash
         // in the header.
         return $this->response = new Response($this, $httpResponse->json());
-    }
-
-    /**
-     * Get the base data needed to identify the project.
-     *
-     * @param array $data
-     * @return array
-     */
-    public function getBaseProjectData($data = [])
-    {
-        $data['merchantId']     = $this->getMerchantId();
-        $data['projectId']      = $this->getProjectId();
-
-        return $data;
-    }
-
-    /**
-     * Get the base data needed for initiating a transaction through any payment type.
-     *
-     * @param array $data
-     * @return array
-     */
-    public function getBaseTransactionData($data = [])
-    {
-        $data = $this->getBaseProjectData($data);
-
-        $data['merchantTxId']   = $this->getTransactionId();
-        $data['amount']         = (string)$this->getAmountInteger();
-        $data['currency']       = $this->getCurrency();
-        $data['purpose']        = substr($this->getDescription(), 0, static::PURPOSE_LENGTH);
-
-        return $data;
-    }
-
-    /**
-     * Get the URLs for a transaction. These go in just before the hash.
-     *
-     * @param array $data
-     * @return array
-     */
-    public function getTransactionURLData($data = [])
-    {
-        // Where to send the user after filling out their CC details, or cancelling.
-
-        $data['urlRedirect'] = $this->getReturnUrl();
-
-        // Back channel notification of the result.
-        // The main part of the result will be handed over the front channel too.
-
-        $data['urlNotify'] = $this->getNotifyUrl();
-
-        return $data;
     }
 }
