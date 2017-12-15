@@ -29,7 +29,13 @@ class AuthorizeRequest extends AbstractRequest
      */
     public function getGiropayData($data = [])
     {
-        // TODO: all Giropay fields; all are optional.
+        // TODO: all Giropay fields; all are optional:
+        // iban
+        // info1Label info1Text
+        // info2Label info2Text
+        // info3Label info3Text
+        // info4Label info4Text
+        // info5Label info5Text
 
         return $data;
     }
@@ -51,7 +57,11 @@ class AuthorizeRequest extends AbstractRequest
      */
     public function getDirectDebitData($data = [])
     {
-        // TODO: all Direct Debit fields.
+        // TODO: all Direct Debit fields:
+        // mandateReference
+        // mandateSignedOn
+        // mandateReceiverName
+        // mandateSequence
 
         return $data;
     }
@@ -115,8 +125,8 @@ class AuthorizeRequest extends AbstractRequest
             }
 
             // FIXME: just call this "mobile".
-            if ($this->getMobileOptimise() !== null) {
-                $data['mobile'] = ! empty($this->getMobileOptimise())
+            if ($this->getMobile() !== null) {
+                $data['mobile'] = ! empty($this->getMobile())
                     ? (string)static::MOBILE_OPTIMISE_YES
                     : (string)static::MOBILE_OPTIMISE_NO;
             }
@@ -184,18 +194,18 @@ class AuthorizeRequest extends AbstractRequest
     /**
      * @return mixed
      */
-    public function getMobileOptimise()
+    public function getMobile()
     {
-        return $this->getParameter('mobileOptimise');
+        return $this->getParameter('mobile');
     }
 
     /**
      * @param  mixed $value A value that will later be cast to true/false
      * @return $this
      */
-    public function setMobileOptimise($value)
+    public function setMobile($value)
     {
-        return $this->setParameter('mobileOptimise', $value);
+        return $this->setParameter('mobile', $value);
     }
 
     /**

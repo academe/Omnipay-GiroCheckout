@@ -26,7 +26,7 @@ class AuthorizeRequestTest extends TestCase
             'currency' => 'EUR',
             'description' => 'A lovely test authorisation',
             'language' => 'en',
-            'mobileOptimise' => true,
+            'mobile' => true,
         ]);
     }
 
