@@ -7,7 +7,7 @@ use Omnipay\Common\Exception\InvalidRequestException;
 use Academe\GiroCheckout\Gateway;
 
 /**
- * GiroCheckout Gateway Authorization Request
+ * GiroCheckout Gateway Authorization Request,
  *
  * @link http://api.girocheckout.de/en:girocheckout:introduction:start
  */
@@ -22,6 +22,18 @@ class AuthorizeRequest extends AbstractRequest
      * @var string
      */
     protected $requestEndpoint = 'https://payment.girosolution.de/girocheckout/api/v2/transaction/start';
+
+    /**
+     * @var array List of payment types that a request supports.
+     */
+    protected $supportedPaymentTypes = [
+        Gateway::PAYMENT_TYPE_CREDIT_CARD,
+        Gateway::PAYMENT_TYPE_DIRECTDEBIT,
+        Gateway::PAYMENT_TYPE_MAESTRO,
+        Gateway::PAYMENT_TYPE_EPS,
+        Gateway::PAYMENT_TYPE_GIROPAY,
+        Gateway::PAYMENT_TYPE_PAYDIREKT,
+    ];
 
     /**
      * @param array $data

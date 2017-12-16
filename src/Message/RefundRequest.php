@@ -17,4 +17,15 @@ class RefundRequest extends CaptureRequest
      * @var string
      */
     protected $requestEndpoint = 'https://payment.girosolution.de/girocheckout/api/v2/transaction/refund';
+
+    /**
+     * @param array $data The data so far
+     * @return array
+     */
+    public function getPaydirektData(array $data = [])
+    {
+        $data['merchantReconciliationReferenceNumber'] = $this->getMerchantReconciliationReferenceNumber();
+
+        return $data;
+    }
 }

@@ -54,6 +54,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     protected $requestEndpoint = '';
 
     /**
+     * @var array List of payment types that a request supports.
+     */
+    protected $supportedPaymentTypes = [];
+
+    /**
      * @var array Query parameters.
      */
     protected $notificationQueryParameters = [

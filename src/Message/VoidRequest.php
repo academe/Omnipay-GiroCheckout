@@ -14,6 +14,15 @@ use Academe\GiroCheckout\Gateway;
 class VoidRequest extends AbstractRequest
 {
     /**
+     * @var array List of payment types that a request supports.
+     */
+    protected $supportedPaymentTypes = [
+        Gateway::PAYMENT_TYPE_CREDIT_CARD,
+        Gateway::PAYMENT_TYPE_DIRECTDEBIT,
+        Gateway::PAYMENT_TYPE_PAYDIREKT,
+    ];
+
+    /**
      * @var string
      */
     protected $requestEndpoint = 'https://payment.girosolution.de/girocheckout/api/v2/transaction/void';
