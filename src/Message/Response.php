@@ -22,8 +22,9 @@ class Response extends AbstractResponse implements RedirectResponseInterface
      */
     public function isSuccessful()
     {
-        // Not yet successfully complete for an authorization initialisation.
-        // CHECKME: except maybe when using a PCN?
+        // Not yet successfully complete for an authorization initialisation,
+        // since a redirect is always needed.
+        // CHECKME: except maybe when using a PKN?
         return false;
     }
 
@@ -82,4 +83,8 @@ class Response extends AbstractResponse implements RedirectResponseInterface
     {
         return $this->getCode() == static::RESPONSE_CODE_INITIALISE_SUCCESS && !empty($this->getRedirectUrl());
     }
+
+    // TODO: for CC capture/refund: merchantTxid, amount, currency, resultPayment
+    // The transaction can then be a success if resultPayment == 4000 and code == 0
+    // Maybe extend to a child class.
 }

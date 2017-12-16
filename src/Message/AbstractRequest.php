@@ -319,7 +319,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
         foreach ($data as $name => $value) {
             $httpRequest->setPostField($name, $value);
-            echo " $name=$value "; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
 
         $httpResponse = $httpRequest->send();
@@ -342,8 +341,14 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             ));
         }
 
-        // The raw response will be needed by the Response message to access the hash
-        // in the header.
-        return $this->response = new Response($this, $httpResponse->json());
+        return $this->createResponse($httpResponse->json());
+    }
+
+    /**
+     * Create the resoonse object.
+     */
+    protected function createResponse(array $data)
+    {
+        return $this->response = new Response($this, $data);
     }
 }

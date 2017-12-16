@@ -19,7 +19,7 @@ class CaptureRequest extends AbstractRequest
     protected $requestEndpoint = 'https://payment.girosolution.de/girocheckout/api/v2/transaction/capture';
 
     /**
-     *
+     * @return array
      */
     public function getData()
     {
@@ -32,22 +32,38 @@ class CaptureRequest extends AbstractRequest
         $data = [];
         $data['merchantId']     = $this->getMerchantId(true);
         $data['projectId']      = $this->getProjectId(true);
-        $data['merchantTxId']   = $this->getTransactionId(true);
+        $data['merchantTxId']   = $this->getTransactionId();
         $data['amount']         = (string)$this->getAmountInteger();
         $data['currency']       = $this->getCurrency();
 
-        // GiroCheckout transaction ID from a previous transaction, which
-        // the capture or refund is for.
-
-        $data['reference']      = $this->getTransactionReference();
+        // NOTE: the online documentation has the purpose and reference swapped
+        // around. However, that causes invalid hash errors against the live
+        // API. I will assume the documentation is incorrect, at least at the the
+        // time this is being written.
+        // http://api.girocheckout.de/en:girocheckout:creditcard:start
 
         if ($purpose = $this->getDescription()) {
             $data['purpose'] = substr($purpose, 0, static::PURPOSE_LENGTH);
         }
 
+        // GiroCheckout transaction ID from a previous transaction, which
+        // the capture or refund is for.
+
+        $data['reference'] = $this->getTransactionReference();
+
         // Add a hash for the data we have constructed.
         $data['hash'] = $this->requestHash($data);
 
         return $data;
+    }
+
+    /**
+     * Create the response object.
+     *
+     * @return CaptureResponse
+     */
+    protected function createResponse(array $data)
+    {
+        return $this->response = new CaptureResponse($this, $data);
     }
 }
