@@ -3,10 +3,11 @@
 namespace Academe\GiroCheckout\Message;
 
 /**
- ^
+ *
  */
 
 use Omnipay\Common\Message\NotificationInterface;
+use Academe\GiroCheckout\Gateway;
 
 class CompleteResponse extends AbstractResponse implements NotificationInterface
 {
@@ -15,7 +16,7 @@ class CompleteResponse extends AbstractResponse implements NotificationInterface
      */
     public function isSuccessful()
     {
-        return $this->getCode() == 4000;
+        return $this->getCode() == Gateway::RESULT_PAYMENT_SUCCESS;
     }
 
     /**
@@ -23,7 +24,7 @@ class CompleteResponse extends AbstractResponse implements NotificationInterface
      */
     public function isCancelled()
     {
-        return $this->getCode() == 4502;
+        return $this->getCode() == Gateway::RESULT_PAYMENT_CANCELLED;
     }
 
     /**

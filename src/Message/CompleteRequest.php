@@ -12,6 +12,7 @@ namespace Academe\GiroCheckout\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\NotificationInterface;
+use Academe\GiroCheckout\Gateway;
 
 class CompleteRequest extends AbstractRequest implements NotificationInterface
 {
@@ -33,6 +34,22 @@ class CompleteRequest extends AbstractRequest implements NotificationInterface
         $this->validateNotificationData($data);
 
         return $this->response = new CompleteResponse($this, $data);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSuccessful()
+    {
+        return $this->getCode() == Gateway::RESULT_PAYMENT_SUCCESS;
+    }
+
+    /**
+     * @return bool True if the user aborted the process
+     */
+    public function isCancelled()
+    {
+        return $this->getCode() == Gateway::RESULT_PAYMENT_CANCELLED;
     }
 
     /**

@@ -26,6 +26,14 @@ class Gateway extends AbstractGateway
     const PAYMENT_TYPE_EPS          = 'eps';
 
     /**
+     * @var int Just a few of the payment result codes we explicity check for.
+     */
+    const RESULT_PAYMENT_SUCCESS        = 4000;
+    const RESULT_PAYMENT_PAYPAL_PENDING = 4152;
+    const RESULT_PAYMENT_CANCELLED      = 4502;
+    const RESULT_PAYMENT_REJECTED       = 4900;
+
+    /**
      * @return string
      */
     public function getName()

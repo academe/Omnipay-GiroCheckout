@@ -6,7 +6,7 @@ use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\Tests\TestCase;
 
-class CompleteRequestTest extends TestCase
+class NotificationRequestTest extends TestCase
 {
     protected $requestSuccess;
     protected $requestCancelled;
@@ -28,7 +28,7 @@ class CompleteRequestTest extends TestCase
         $httpRequestSuccess = $this->getHttpRequest();
         $this->httpRequestSuccess = $httpRequestSuccess;
 
-        $this->requestSuccess = new CompleteRequest($this->getHttpClient(), $httpRequestSuccess);
+        $this->requestSuccess = new NotificationRequest($this->getHttpClient(), $httpRequestSuccess);
 
         $this->requestSuccess->initialize($options);
 
@@ -46,7 +46,7 @@ class CompleteRequestTest extends TestCase
 
         $httpRequestCancelled = clone $httpRequestSuccess;
 
-        $this->requestCancelled = new CompleteRequest($this->getHttpClient(), $httpRequestCancelled);
+        $this->requestCancelled = new NotificationRequest($this->getHttpClient(), $httpRequestCancelled);
 
         $this->requestCancelled->initialize($options);
 
@@ -64,7 +64,7 @@ class CompleteRequestTest extends TestCase
 
         $httpRequestInvalid = clone $httpRequestSuccess;
 
-        $this->requestInvalid = new CompleteRequest($this->getHttpClient(), $httpRequestInvalid);
+        $this->requestInvalid = new NotificationRequest($this->getHttpClient(), $httpRequestInvalid);
 
         $this->requestInvalid->initialize($options);
 

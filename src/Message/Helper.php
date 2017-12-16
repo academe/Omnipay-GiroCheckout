@@ -7,6 +7,7 @@ namespace Academe\GiroCheckout\Message;
  */
 
 use Omnipay\Common\Message\NotificationInterface;
+use Academe\GiroCheckout\Gateway;
 use ReflectionClass;
 
 class Helper
@@ -19,11 +20,11 @@ class Helper
      */
     public static function getTransactionStatus($code)
     {
-        if ($code == 4000) {
+        if ($code == Gateway::RESULT_PAYMENT_SUCCESS) {
             return NotificationInterface::STATUS_COMPLETED;
         }
 
-        if ($code == 4152) {
+        if ($code == Gateway::RESULT_PAYMENT_PAYPAL_PENDING) {
             return NotificationInterface::STATUS_PENDING;
         }
 
