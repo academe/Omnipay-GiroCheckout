@@ -233,66 +233,17 @@ class Gateway extends AbstractGateway
      * @param  array $parameters
      * @return Message\RefundRequest
      */
-    public function refund(array $parameters = array())
+    public function refund(array $parameters = [])
     {
         return $this->createRequest(Message\RefundRequest::class, $parameters);
     }
 
-    //////////
-
     /**
      * @param  array $parameters
-     * @return Message\FetchIssuersRequest
+     * @return Message\VoidRequest
      */
-    public function xxxfetchIssuers(array $parameters = array())
+    public function void(array $parameters = [])
     {
-        return $this->createRequest(Message\FetchIssuersRequest::class, $parameters);
-    }
-
-    /**
-     * @param  array $parameters
-     * @return Message\FetchPaymentMethodsRequest
-     */
-    public function xxxfetchPaymentMethods(array $parameters = array())
-    {
-        return $this->createRequest(Message\FetchPaymentMethodsRequest::class, $parameters);
-    }
-
-    /**
-     * @param  array $parameters
-     * @return Message\FetchTransactionRequest
-     */
-    public function xxxfetchTransaction(array $parameters = array())
-    {
-        return $this->createRequest(Message\FetchTransactionRequest::class, $parameters);
-    }
-
-    //////////
-
-    /**
-     * @param  array $parameters
-     * @return Message\CreateCustomerRequest
-     */
-    public function xxxcreateCustomer(array $parameters = array())
-    {
-        return $this->createRequest(Message\CreateCustomerRequest::class, $parameters);
-    }
-
-    /**
-     * @param  array $parameters
-     * @return Message\UpdateCustomerRequest
-     */
-    public function xxxupdateCustomer(array $parameters = array())
-    {
-        return $this->createRequest(Message\UpdateCustomerRequest::class, $parameters);
-    }
-
-    /**
-     * @param  array $parameters
-     * @return Message\FetchCustomerRequest
-     */
-    public function xxxfetchCustomer(array $parameters = array())
-    {
-        return $this->createRequest(Message\FetchCustomerRequest::class, $parameters);
+        return $this->createRequest(Message\VoidRequest::class, $parameters);
     }
 }

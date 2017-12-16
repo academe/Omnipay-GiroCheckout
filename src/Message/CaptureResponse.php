@@ -3,7 +3,7 @@
 namespace Academe\GiroCheckout\Message;
 
 /**
- *
+ * Handles the Capture, Refund and Void responses.
  */
 
 use Academe\GiroCheckout\Gateway;
