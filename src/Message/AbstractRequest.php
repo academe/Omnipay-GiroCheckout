@@ -88,11 +88,18 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     ];
 
     /**
+     * @param bool $assertValidation True to assert validation rules on the value
      * @return integer
      */
-    public function getMerchantId()
+    public function getMerchantId($assertValidation = false)
     {
-        return $this->getParameter('merchantId');
+        $merchantId = $this->getParameter('merchantId');
+
+        if ($assertValidation && ! is_numeric($merchantId)) {
+            throw new InvalidRequestException('merchantId must be numeric');
+        }
+
+        return $merchantId;
     }
 
     /**
@@ -101,19 +108,22 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function setMerchantId($value)
     {
-        if (! is_numeric($value)) {
-            throw new InvalidRequestException('merchantId must be numeric');
-        }
-
         return $this->setParameter('merchantId', $value);
     }
 
     /**
+     * @param bool $assertValidation True to assert validation rules on the value
      * @return integer
      */
-    public function getProjectId()
+    public function getProjectId($assertValidation = false)
     {
-        return $this->getParameter('projectId');
+        $projectId = $this->getParameter('projectId');
+
+        if ($assertValidation && ! is_numeric($projectId)) {
+            throw new InvalidRequestException('projectId must be numeric');
+        }
+
+        return $projectId;
     }
 
     /**
@@ -122,10 +132,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function setProjectId($value)
     {
-        if (! is_numeric($value)) {
-            throw new InvalidRequestException('projectId must be numeric');
-        }
-
         return $this->setParameter('projectId', $value);
     }
 
@@ -164,29 +170,34 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
+     * @param bool $assertValidation True to assert validation rules on the value
      * @return string
      */
-    public function getPaymentType()
+    public function getPaymentType($assertValidation = false)
     {
-        return $this->getParameter('paymentType');
+        $paymentType = $this->getParameter('paymentType');
+
+        if ($assertValidation) {
+            $paymentTypes = Helper::constantList(Gateway::class, 'PAYMENT_TYPE_');
+
+            if (! in_array($paymentType, $paymentTypes)) {
+                throw new InvalidRequestException(sprintf(
+                    'paymentType must be one of: %s; %s given',
+                    implode(', ', $paymentTypes),
+                    $paymentType
+                ));
+            }
+        }
+
+        return $paymentType;
     }
 
     /**
-     * @param  string $value once of Gateway::PAYMENT_TYPE_*
+     * @param  string $value once of self::PAYMENT_TYPE_*
      * @return $this
      */
     public function setPaymentType($value)
     {
-        $paymentTypes = Helper::constantList(Gateway::class, 'PAYMENT_TYPE_');
-
-        if (! in_array($value, $paymentTypes)) {
-            throw new InvalidRequestException(sprintf(
-                'paymentType must be one of: %s; %s given',
-                implode(', ', $paymentTypes),
-                $value
-            ));
-        }
-
         return $this->setParameter('paymentType', $value);
     }
 

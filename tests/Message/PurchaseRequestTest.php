@@ -19,6 +19,7 @@ class PurchaseRequestTest extends TestCase
         $this->request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
 
         $this->request->initialize([
+            'paymentType' => 'CreditCard',
             'merchantId' => '12345678',
             'projectId' => 654321,
             'transactionId' => 'trans-id-123',
@@ -36,6 +37,7 @@ class PurchaseRequestTest extends TestCase
     public function testMerchantIdString()
     {
         $this->request->setMerchantId('ABCDEFG');
+        $this->request->getMerchantId(true);
     }
 
     /**
@@ -44,6 +46,7 @@ class PurchaseRequestTest extends TestCase
     public function testProjectIdString()
     {
         $this->request->setProjectId('ABCDEFG');
+        $this->request->getProjectId(true);
     }
 
     public function testPurposeTruncate()

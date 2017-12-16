@@ -67,7 +67,6 @@ class AuthorizeRequest extends AbstractRequest
     }
 
     /**
-     * TODO: Just handles Credit Card payments initially; other payment types to be supported.
      * All values will be strings; they will be sent as a form encoded request.
      * The data parameters MUST be built in a strict order.
      * Should we moved all validation to here, rather than where the parameters are added?
@@ -78,19 +77,14 @@ class AuthorizeRequest extends AbstractRequest
     {
         // Construction of the data will depend on the payment type.
 
-        $paymentType = $this->getPaymentType();
-
-        if ($paymentType === null) {
-            // Default the payment type if not set (normally during testing).
-            $paymentType = Gateway::PAYMENT_TYPE_CREDIT_CARD;
-        }
+        $paymentType = $this->getPaymentType(true);
 
         // First six parameters are mandatory and common to all payment methods.
 
         $data = [];
-        $data['merchantId']     = $this->getMerchantId();
-        $data['projectId']      = $this->getProjectId();
-        $data['merchantTxId']   = $this->getTransactionId();
+        $data['merchantId']     = $this->getMerchantId(true);
+        $data['projectId']      = $this->getProjectId(true);
+        $data['merchantTxId']   = $this->getTransactionId(true);
         $data['amount']         = (string)$this->getAmountInteger();
         $data['currency']       = $this->getCurrency();
         $data['purpose']        = substr($this->getDescription(), 0, static::PURPOSE_LENGTH);

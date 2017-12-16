@@ -2,20 +2,22 @@
 
 namespace Academe\GiroCheckout;
 
-use Omnipay\Common\Exception\InvalidRequestException;
-use Omnipay\Common\AbstractGateway;
-
 /**
  * GiroCheckout Gateway
  *
  * @link http://api.girocheckout.de/en:girocheckout:introduction:start
  */
+
+use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Common\AbstractGateway;
+use Academe\GiroCheckout\Helper;
+
 class Gateway extends AbstractGateway
 {
     /**
      * @var string
      */
-    const PAYMENT_TYPE_CREDIT_CARD  = 'CreditCard ';
+    const PAYMENT_TYPE_CREDIT_CARD  = 'CreditCard';
     const PAYMENT_TYPE_PAYPAL       = 'PayPal';
     const PAYMENT_TYPE_DIRECTDEBIT  = 'DirectDebit';
     const PAYMENT_TYPE_GIROPAY      = 'Giropay';
@@ -56,11 +58,18 @@ class Gateway extends AbstractGateway
     }
 
     /**
+     * @param bool $assertValidation True to assert validation rules on the value
      * @return integer
      */
-    public function getMerchantId()
+    public function getMerchantId($assertValidation = false)
     {
-        return $this->getParameter('merchantId');
+        $merchantId = $this->getParameter('merchantId');
+
+        if ($assertValidation && ! is_numeric($merchantId)) {
+            throw new InvalidRequestException('merchantId must be numeric');
+        }
+
+        return $merchantId;
     }
 
     /**
@@ -69,21 +78,24 @@ class Gateway extends AbstractGateway
      */
     public function setMerchantId($value)
     {
-        if (! is_numeric($value)) {
-            throw new InvalidRequestException('merchantId must be numeric');
-        }
-
         return $this->setParameter('merchantId', $value);
     }
 
     // Config settera and getters:
 
     /**
+     * @param bool $assertValidation True to assert validation rules on the value
      * @return integer
      */
-    public function getProjectId()
+    public function getProjectId($assertValidation = false)
     {
-        return $this->getParameter('projectId');
+        $projectId = $this->getParameter('projectId');
+
+        if ($assertValidation && ! is_numeric($projectId)) {
+            throw new InvalidRequestException('projectId must be numeric');
+        }
+
+        return $projectId;
     }
 
     /**
@@ -92,10 +104,6 @@ class Gateway extends AbstractGateway
      */
     public function setProjectId($value)
     {
-        if (! is_numeric($value)) {
-            throw new InvalidRequestException('projectId must be numeric');
-        }
-
         return $this->setParameter('projectId', $value);
     }
 
@@ -134,11 +142,26 @@ class Gateway extends AbstractGateway
     }
 
     /**
+     * @param bool $assertValidation True to assert validation rules on the value
      * @return string
      */
-    public function getPaymentType()
+    public function getPaymentType($assertValidation = false)
     {
-        return $this->getParameter('paymentType');
+        $paymentType = $this->getParameter('paymentType');
+
+        if ($assertValidation) {
+            $paymentTypes = Helper::constantList($this, 'PAYMENT_TYPE_');
+
+            if (! in_array($paymentType, $paymentTypes)) {
+                throw new InvalidRequestException(sprintf(
+                    'paymentType must be one of: %s; %s given',
+                    implode(', ', $paymentTypes),
+                    $paymentType
+                ));
+            }
+        }
+
+        return $paymentType;
     }
 
     /**
@@ -147,16 +170,6 @@ class Gateway extends AbstractGateway
      */
     public function setPaymentType($value)
     {
-        $paymentTypes = Message\Helper::constantList($this, 'PAYMENT_TYPE_');
-
-        if (! in_array($value, $paymentTypes)) {
-            throw new InvalidRequestException(sprintf(
-                'paymentType must be one of: %s; %s given',
-                implode(', ', $paymentTypes),
-                $value
-            ));
-        }
-
         return $this->setParameter('paymentType', $value);
     }
 
@@ -207,6 +220,24 @@ class Gateway extends AbstractGateway
         return $this->createRequest(Message\NotificationRequest::class, $parameters);
     }
 
+    /**
+     * @param  array $parameters
+     * @return Message\CaptureRequest
+     */
+    public function capture(array $parameters = [])
+    {
+        return $this->createRequest(Message\CaptureRequest::class, $parameters);
+    }
+
+    /**
+     * @param  array $parameters
+     * @return Message\RefundRequest
+     */
+    public function refund(array $parameters = array())
+    {
+        return $this->createRequest(Message\RefundRequest::class, $parameters);
+    }
+
     //////////
 
     /**
@@ -234,15 +265,6 @@ class Gateway extends AbstractGateway
     public function xxxfetchTransaction(array $parameters = array())
     {
         return $this->createRequest(Message\FetchTransactionRequest::class, $parameters);
-    }
-
-    /**
-     * @param  array $parameters
-     * @return Message\RefundRequest
-     */
-    public function xxxrefund(array $parameters = array())
-    {
-        return $this->createRequest(Message\RefundRequest::class, $parameters);
     }
 
     //////////
