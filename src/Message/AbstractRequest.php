@@ -359,8 +359,12 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * @return string Absolute endpoint URL.
      */
-    public function getEndpoint()
+    public function getEndpoint($path = null)
     {
+        if ($path !== null) {
+            return implode('/', [$this->endpointBaseUrl, $path]);
+        }
+
         return implode('/', [$this->endpointBaseUrl, $this->endpointPath]);
     }
 }

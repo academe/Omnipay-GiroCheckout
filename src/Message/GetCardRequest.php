@@ -18,11 +18,6 @@ use Academe\GiroCheckout\Gateway;
 class GetCardRequest extends AbstractRequest
 {
     /**
-     * @var string The resource path, appended to the endpoint base URL.
-     */
-    protected $endpointPath = 'creditcard/pkninfo';
-
-    /**
      * @return array
      */
     public function getData()
@@ -45,6 +40,20 @@ class GetCardRequest extends AbstractRequest
         $data['hash'] = $this->requestHash($data);
 
         return $data;
+    }
+
+    /**
+     * @return string Absolute endpoint URL.
+     */
+    public function getEndpoint($path = null)
+    {
+        if ($this->getPaymentType() === Gateway::PAYMENT_TYPE_DIRECTDEBIT) {
+            $path = 'directdebit/pkninfo';
+        } else {
+            $path = 'creditcard/pkninfo';
+        }
+
+        return parent::getEndpoint($path);
     }
 
     /**
