@@ -149,10 +149,10 @@ When authorizing, the gateway can be asked to create a reusable card reference.
 This flag in the authorize request will trigger that:
 
 ```php
-[
+$authRequest = $gateway->authorize([
     ...
     'createCard' => true,
-]
+]);
 ```
 
 After the authorize completes, the card reference is fetched using this request:
@@ -175,10 +175,10 @@ $getCardResponse->getExpiryMonth();
 The `$cardReference` is then used for authorizing:
 
 ```php
-[
+$authRequest = $gateway->authorize([
     ...
     'cardReference' => $cardReference,
-]
+]);
 ```
 
 The user will be redirected to the payment gateway like the basic authorize,
@@ -246,4 +246,3 @@ $voidResponse = $voidRequest->send();
 // Check if successful:
 $captureRersponse->isSuccessful();
 ```
-
