@@ -38,12 +38,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     const PKN_CREATE = 'create';
 
     /**
-     * @var int Flag to indicate a recurring payment.
-     */
-    const MOBILE_RECURRING_YES = 1;
-    const MOBILE_RECURRING_NO = 0;
-
-    /**
      * @var string The request method.
      */
     protected $requestMethod = 'POST';
@@ -283,9 +277,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      * Validates the hash of an incoming notification request (either as a back-channel
      * notificatioon or a front-end user redirect back to the merchant site).
      * An exception will be thrown if the hash does not validate.
-     *
-     * CHECKME: if the $data is empty, do we want to just skip this check? That will make
-     * this sae to call whether there is a notification or not.
      *
      * @throws InvalidRequestException
      * @param array $data

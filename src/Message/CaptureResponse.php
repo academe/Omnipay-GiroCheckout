@@ -24,6 +24,9 @@ class CaptureResponse extends Response
      * how the transactino went. It is differentiated from the overall response
      * status, "rc".
      *
+     * TODO: move this to the Responce class, as it will also be returned
+     * for offline repeat payments that don't involve a user redirect.
+     *
      * @return int|string The value will be numeric, but may be cast into a string
      */
     public function getReasonCode()

@@ -9,6 +9,7 @@ namespace Academe\GiroCheckout\Message;
  */
 
 use Omnipay\Common\Message\RedirectResponseInterface;
+use Academe\GiroCheckout\Gateway;
 
 class Response extends AbstractResponse implements RedirectResponseInterface
 {
@@ -22,10 +23,9 @@ class Response extends AbstractResponse implements RedirectResponseInterface
      */
     public function isSuccessful()
     {
-        // Not yet successfully complete for an authorization initialisation,
-        // since a redirect is always needed.
-        // CHECKME: except maybe when using a PKN?
-        return false;
+        return $this->getCode() == static::RESPONSE_CODE_INITIALISE_SUCCESS
+            && $this->getReasonCode() == Gateway::RESULT_PAYMENT_SUCCESS
+            && empty($this->getRedirectUrl());
     }
 
     /**
@@ -34,6 +34,14 @@ class Response extends AbstractResponse implements RedirectResponseInterface
     public function getCode()
     {
         return $this->getDataItem('rc');
+    }
+
+    /**
+     * @return string Numeric payment result code as a string.
+     */
+    public function getReasonCode()
+    {
+        return $this->getDataItem('resultPayment');
     }
 
     /**
@@ -69,6 +77,7 @@ class Response extends AbstractResponse implements RedirectResponseInterface
     }
 
     /**
+     * CHECKME: should this be an empty array?
      * @return null
      */
     public function getRedirectData()
@@ -81,10 +90,11 @@ class Response extends AbstractResponse implements RedirectResponseInterface
      */
     public function isRedirect()
     {
-        return $this->getCode() == static::RESPONSE_CODE_INITIALISE_SUCCESS && !empty($this->getRedirectUrl());
+        return $this->getCode() == static::RESPONSE_CODE_INITIALISE_SUCCESS
+            && !empty($this->getRedirectUrl());
     }
 
-    // TODO: for CC capture/refund: merchantTxid, amount, currency, resultPayment
+    // TODO: for CC capture/refund: merchantTxid, amount, currency
     // The transaction can then be a success if resultPayment == 4000 and code == 0
     // Maybe extend to a child class.
 }

@@ -29,6 +29,7 @@ class Gateway extends AbstractGateway
 
     /**
      * @var int Just a few of the payment result codes we explicity check for.
+     * See http://api.girocheckout.de/en:girocheckout:resultcodes#result_codes_payment
      */
     const RESULT_PAYMENT_SUCCESS        = 4000;
     const RESULT_PAYMENT_PAYPAL_PENDING = 4152;
@@ -186,6 +187,24 @@ class Gateway extends AbstractGateway
 
     /**
      * @param  array $parameters
+     * @return Message\RepeatAuthorizeRequest
+     */
+    public function repeatAuthorize(array $parameters = [])
+    {
+        return $this->createRequest(Message\RepeatAuthorizeRequest::class, $parameters);
+    }
+
+    /**
+     * @param  array $parameters
+     * @return Message\RepeatPurchaseRequest
+     */
+    public function repeatPurchase(array $parameters = [])
+    {
+        return $this->createRequest(Message\RepeatPurchaseRequest::class, $parameters);
+    }
+
+    /**
+     * @param  array $parameters
      * @return Message\PurchaseRequest
      */
     public function purchase(array $parameters = [])
@@ -245,5 +264,21 @@ class Gateway extends AbstractGateway
     public function void(array $parameters = [])
     {
         return $this->createRequest(Message\VoidRequest::class, $parameters);
+    }
+
+    /**
+     * Omnipay Common recognises create/update/delete card.
+     * We cannot do any of those as distinct actions with this gateway, but getCard
+     * fits that pattern.
+     *
+     * CHECKME: Can we support createCard/deleteCard using a zero-amount transaction?
+     * That's a trick some gateways use.
+     *
+     * @param  array $parameters
+     * @return Message\GetCardRequest
+     */
+    public function getCard(array $parameters = [])
+    {
+        return $this->createRequest(Message\GetCardRequest::class, $parameters);
     }
 }

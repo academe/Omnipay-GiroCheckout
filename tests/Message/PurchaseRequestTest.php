@@ -75,14 +75,14 @@ class PurchaseRequestTest extends TestCase
         }
     }
 
-    public function testRegisterCardReference()
+    public function testCreateCard()
     {
-        $this->request->setRegisterCardReference(true);
+        $this->request->setCreateCard(true);
         $data = $this->request->getData();
 
         $this->assertSame('create', $data['pkn']);
 
-        $this->request->setRegisterCardReference(false);
+        $this->request->setCreateCard(false);
         $data = $this->request->getData();
 
         $this->assertArrayNotHasKey('pkn', $data);
@@ -95,7 +95,7 @@ class PurchaseRequestTest extends TestCase
         // If the card reference is set, then asking for a new card reference
         // to be created, will have no effect.
 
-        $this->request->setRegisterCardReference(true);
+        $this->request->setCreateCard(true);
         $data = $this->request->getData();
 
         $this->assertSame('1234567812345678', $data['pkn']);
@@ -103,7 +103,8 @@ class PurchaseRequestTest extends TestCase
         //var_dump($data);
     }
 
-    public function testRecurring()
+    // Recurdding payments are now handled by their own message.
+    /*public function testRecurring()
     {
         $this->request->setRecurring(null);
         $data = $this->request->getData();
@@ -120,13 +121,13 @@ class PurchaseRequestTest extends TestCase
         $this->request->setRecurring(false);
         $data = $this->request->getData();
         $this->assertSame('0', $data['recurring']);
-    }
+    }*/
 
     public function testHash()
     {
         // This hash will change if the initializartion data changes.
         $data = $this->request->getData();
-        $this->assertSame('4c9aefe8b7accab9290b993b12dca5fd', $data['hash']);
+        $this->assertSame('f921b3c6640555bdcd4fb0ac20c60d9d', $data['hash']);
 
         $data = [
             'merchantId' => '1234567',

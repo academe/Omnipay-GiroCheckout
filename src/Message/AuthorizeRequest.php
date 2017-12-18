@@ -14,6 +14,12 @@ use Academe\GiroCheckout\Gateway;
 class AuthorizeRequest extends AbstractRequest
 {
     /**
+     * @var int Flag to indicate a recurring payment.
+     */
+    const RECURRING_YES = 1;
+    const RECURRING_NO = 0;
+
+    /**
      * @var string The type of transaction being requested.
      */
     protected $transactionType = self::TRANSACTION_TYPE_AUTH;
@@ -34,6 +40,11 @@ class AuthorizeRequest extends AbstractRequest
         Gateway::PAYMENT_TYPE_GIROPAY,
         Gateway::PAYMENT_TYPE_PAYDIREKT,
     ];
+
+    /**
+     * @var string
+     */
+    protected $recurring = self::RECURRING_NO;
 
     /**
      * @param array $data
@@ -123,10 +134,13 @@ class AuthorizeRequest extends AbstractRequest
             || $paymentType === Gateway::PAYMENT_TYPE_DIRECTDEBIT
             || $paymentType === Gateway::PAYMENT_TYPE_MAESTRO
         ) {
-            // 'SALE' or 'AUTH'.
+            // 'SALE' or 'AUTH', for purchase or authorization.
+
             $data['type'] = $this->transactionType;
 
-            if ($this->getValidLanguage()) {
+            // The locale cannot be set for recurring (aka repeat, offline) payments.
+
+            if ($this->recurring !== static::RECURRING_YES && $this->getValidLanguage()) {
                 $data['locale'] = $this->getValidLanguage();
             }
 
@@ -160,21 +174,25 @@ class AuthorizeRequest extends AbstractRequest
 
             $pkn = $this->getCardReference() ?: $this->getToken();
 
+            // A PKN is required if doing a recurring CC payment.
+
+            if ($paymentType === Gateway::PAYMENT_TYPE_CREDIT_CARD && $this->recurring == static::RECURRING_YES) {
+                if (empty($pkn)) {
+                    throw new InvalidRequestException('A repeat payment requires a cardReference; none given');
+                }
+            }
+
             if ($pkn !== null) {
                 $data['pkn'] = $pkn;
             } else {
                 // No PKN supplied. Are we asking for a new one?
-                if (! empty($this->getRegisterCardReference())) {
+                if (! empty($this->getCreateCard())) {
                     $data['pkn'] = static::PKN_CREATE;
                 }
             }
         }
 
-        if ($paymentType === Gateway::PAYMENT_TYPE_CREDIT_CARD && $this->getRecurring() !== null) {
-            $data['recurring'] = ! empty($this->getRecurring())
-                ? (string)static::MOBILE_RECURRING_YES
-                : (string)static::MOBILE_RECURRING_NO;
-        }
+        $data['recurring'] = $this->recurring;
 
         // Paydirekt has a bunch of fields here.
 
@@ -183,8 +201,11 @@ class AuthorizeRequest extends AbstractRequest
         }
 
         // Where to send the user after filling out their CC details, or cancelling.
+        // Only supply a redirect (aka return) URL if not doing a recurring payment.
 
-        $data['urlRedirect'] = $this->getReturnUrl();
+        if ($this->recurring !== static::RECURRING_YES) {
+            $data['urlRedirect'] = $this->getReturnUrl();
+        }
 
         // Back channel notification of the result.
         // The main part of the result will be handed over the front channel too.
@@ -217,34 +238,17 @@ class AuthorizeRequest extends AbstractRequest
     /**
      * @return mixed
      */
-    public function getRegisterCardReference()
+    public function getCreateCard()
     {
-        return $this->getParameter('registerCardReference');
+        return $this->getParameter('createCard');
     }
 
     /**
      * @param  mixed $value A value that will later be cast to true/false
      * @return $this
      */
-    public function setRegisterCardReference($value)
+    public function setCreateCard($value)
     {
-        return $this->setParameter('registerCardReference', $value);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRecurring()
-    {
-        return $this->getParameter('recurring');
-    }
-
-    /**
-     * @param  mixed $value A value that will later be cast to true/false
-     * @return $this
-     */
-    public function setRecurring($value)
-    {
-        return $this->setParameter('recurring', $value);
+        return $this->setParameter('createCard', $value);
     }
 }

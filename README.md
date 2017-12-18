@@ -12,3 +12,7 @@
 processing library for PHP 5.3+. This package implements Sage Pay support for Omnipay.
 This version supports PHP 5.6+.
 
+Some notes for the docs:
+
+* Each payment type has its own project and shared secret for hash validation.
+
