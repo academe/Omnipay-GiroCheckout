@@ -12,6 +12,23 @@
 processing library for PHP 5.3+. This package implements Sage Pay support for Omnipay.
 This version supports PHP 5.6+.
 
+Table of Contents
+=================
+
+   * [Omnipay: GiroCheckout](#omnipay-girocheckout)
+   * [Authentication](#authentication)
+   * [Credit Card Payment Type](#credit-card-payment-type)
+      * [Credit Card Authorize](#credit-card-authorize)
+         * [Basic Authorize](#basic-authorize)
+            * [Credit Card Complete Authorize](#credit-card-complete-authorize)
+            * [Credit Card Authorize Notify](#credit-card-authorize-notify)
+         * [Creating a Reusable Card Reference](#creating-a-reusable-card-reference)
+         * [Offline Repeat Authorize](#offline-repeat-authorize)
+         * [Credit Card Purchase Transactions](#credit-card-purchase-transactions)
+         * [Credit Card Capture](#credit-card-capture)
+         * [Credit Card Refund](#credit-card-refund)
+         * [Credit Card Void](#credit-card-void)
+
 # Authentication
 
 A GiroCheckout merchant accoutn is first set up.
