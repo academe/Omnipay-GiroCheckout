@@ -2,10 +2,6 @@
 
 namespace Academe\GiroCheckout\Message;
 
-//use Omnipay\Common\Exception\InvalidResponseException;
-//use Omnipay\Common\Exception\InvalidRequestException;
-//use Academe\GiroCheckout\Gateway;
-
 /**
  * GiroCheckout Gateway Repeat Authorization Request.
  * Performs an offline repeat authorization.

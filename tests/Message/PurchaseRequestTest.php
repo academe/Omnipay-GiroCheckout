@@ -103,7 +103,7 @@ class PurchaseRequestTest extends TestCase
         //var_dump($data);
     }
 
-    // Recurdding payments are now handled by their own message.
+    // Recurring payments are now handled by their own message.
     /*public function testRecurring()
     {
         $this->request->setRecurring(null);

@@ -3,7 +3,7 @@
 namespace Academe\GiroCheckout\Message;
 
 /**
- ^
+ * Response helper methods.
  */
 
 use Omnipay\Common\Message\RedirectResponseInterface;

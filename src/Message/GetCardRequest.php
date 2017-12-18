@@ -2,10 +2,6 @@
 
 namespace Academe\GiroCheckout\Message;
 
-use Omnipay\Common\Exception\InvalidResponseException;
-use Omnipay\Common\Exception\InvalidRequestException;
-use Academe\GiroCheckout\Gateway;
-
 /**
  * GiroCheckout Gateway "query pseudo card information" Request,
  * Gets the cardReference and other details from a previous transaction.
@@ -14,6 +10,11 @@ use Academe\GiroCheckout\Gateway;
  *
  * @link http://api.girocheckout.de/en:girocheckout:creditcard:start#pseudo_card_numbers_pkn
  */
+
+use Omnipay\Common\Exception\InvalidResponseException;
+use Omnipay\Common\Exception\InvalidRequestException;
+use Academe\GiroCheckout\Gateway;
+
 class GetCardRequest extends AbstractRequest
 {
     /**

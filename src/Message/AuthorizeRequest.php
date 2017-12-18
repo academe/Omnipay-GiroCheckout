@@ -2,15 +2,16 @@
 
 namespace Academe\GiroCheckout\Message;
 
-use Omnipay\Common\Exception\InvalidResponseException;
-use Omnipay\Common\Exception\InvalidRequestException;
-use Academe\GiroCheckout\Gateway;
-
 /**
  * GiroCheckout Gateway Authorization Request,
  *
  * @link http://api.girocheckout.de/en:girocheckout:introduction:start
  */
+
+use Omnipay\Common\Exception\InvalidResponseException;
+use Omnipay\Common\Exception\InvalidRequestException;
+use Academe\GiroCheckout\Gateway;
+
 class AuthorizeRequest extends AbstractRequest
 {
     /**

@@ -22,7 +22,7 @@ Table of Contents
          * [Basic Authorize](#basic-authorize)
             * [Credit Card Complete Authorize](#credit-card-complete-authorize)
             * [Credit Card Authorize Notify](#credit-card-authorize-notify)
-         * [Creating a Reusable Card Reference](#creating-a-reusable-card-reference)
+         * [Create a Reusable Card Reference](#create-a-reusable-card-reference)
          * [Offline Repeat Authorize](#offline-repeat-authorize)
          * [Credit Card Purchase Transactions](#credit-card-purchase-transactions)
          * [Credit Card Capture](#credit-card-capture)
@@ -143,7 +143,7 @@ Exactly the same rules apply as to the `completeAuthorize` request - an exceptio
 will be raised if the hash does not validate; the same standard Omnpay result
 details are available.
 
-### Creating a Reusable Card Reference
+### Create a Reusable Card Reference
 
 When authorizing, the gateway can be asked to create a reusable card reference.
 This flag in the authorize request will trigger that:
