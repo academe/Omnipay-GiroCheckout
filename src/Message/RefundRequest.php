@@ -14,9 +14,9 @@ use Academe\GiroCheckout\Gateway;
 class RefundRequest extends CaptureRequest
 {
     /**
-     * @var string
+     * @var string The resource path, appended to the endpoint base URL.
      */
-    protected $requestEndpoint = 'https://payment.girosolution.de/girocheckout/api/v2/transaction/refund';
+    protected $endpointPath = 'transaction/refund';
 
     /**
      * @param array $data The data so far

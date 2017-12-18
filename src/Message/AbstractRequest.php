@@ -44,9 +44,14 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     protected $requestMethod = 'POST';
 
     /**
-     * @var string The request endpoint.
+     * @var string The base URL for all API endpoints.
      */
-    protected $requestEndpoint = '';
+    protected $endpointBaseUrl = 'https://payment.girosolution.de/girocheckout/api/v2';
+
+    /**
+     * @var string The resource path, appended to the endpoint base URL.
+     */
+    protected $endpointPath = '';
 
     /**
      * @var array List of payment types that a request supports.
@@ -311,7 +316,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
         $httpRequest = $this->httpClient->createRequest(
             $this->requestMethod,
-            $this->requestEndpoint
+            $this->getEndpoint()
         );
 
         foreach ($data as $name => $value) {
@@ -343,9 +348,19 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
     /**
      * Create the resoonse object.
+     *
+     * @return Response
      */
     protected function createResponse(array $data)
     {
         return $this->response = new Response($this, $data);
+    }
+
+    /**
+     * @return string Absolute endpoint URL.
+     */
+    public function getEndpoint()
+    {
+        return implode('/', [$this->endpointBaseUrl, $this->endpointPath]);
     }
 }

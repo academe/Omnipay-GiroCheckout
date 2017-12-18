@@ -18,9 +18,9 @@ use Academe\GiroCheckout\Gateway;
 class GetCardRequest extends AbstractRequest
 {
     /**
-     * @var string
+     * @var string The resource path, appended to the endpoint base URL.
      */
-    protected $requestEndpoint = 'https://payment.girosolution.de/girocheckout/api/v2/creditcard/pkninfo';
+    protected $endpointPath = 'creditcard/pkninfo';
 
     /**
      * @return array

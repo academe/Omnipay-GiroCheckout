@@ -23,9 +23,9 @@ class VoidRequest extends AbstractRequest
     ];
 
     /**
-     * @var string
+     * @var string The resource path, appended to the endpoint base URL.
      */
-    protected $requestEndpoint = 'https://payment.girosolution.de/girocheckout/api/v2/transaction/void';
+    protected $endpointPath = 'transaction/void';
 
     // Response is identical to the capture/refund response.
 

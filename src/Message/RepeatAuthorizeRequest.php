@@ -11,9 +11,9 @@ namespace Academe\GiroCheckout\Message;
 class RepeatAuthorizeRequest extends AuthorizeRequest
 {
     /**
-     * @var string
+     * @var string The resource path, appended to the endpoint base URL.
      */
-    protected $requestEndpoint = 'https://payment.girosolution.de/girocheckout/api/v2/transaction/payment';
+    protected $endpointPath = 'transaction/payment';
 
     /**
      * @var string

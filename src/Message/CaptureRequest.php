@@ -31,9 +31,9 @@ class CaptureRequest extends AbstractRequest
     ];
 
     /**
-     * @var string
+     * @var string The resource path, appended to the endpoint base URL.
      */
-    protected $requestEndpoint = 'https://payment.girosolution.de/girocheckout/api/v2/transaction/capture';
+    protected $endpointPath = 'transaction/capture';
 
     /**
      * @return array

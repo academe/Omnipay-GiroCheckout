@@ -26,9 +26,9 @@ class AuthorizeRequest extends AbstractRequest
     protected $transactionType = self::TRANSACTION_TYPE_AUTH;
 
     /**
-     * @var string
+     * @var string The resource path, appended to the endpoint base URL.
      */
-    protected $requestEndpoint = 'https://payment.girosolution.de/girocheckout/api/v2/transaction/start';
+    protected $endpointPath = 'transaction/start';
 
     /**
      * @var array List of payment types that a request supports.
