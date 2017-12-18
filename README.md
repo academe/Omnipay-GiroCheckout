@@ -12,7 +12,221 @@
 processing library for PHP 5.3+. This package implements Sage Pay support for Omnipay.
 This version supports PHP 5.6+.
 
-Some notes for the docs:
+# Authentication
 
-* Each payment type has its own project and shared secret for hash validation.
+A GiroCheckout merchant accoutn is first set up.
+Within that account, one of more projects are set up.
+Each project is configured to run just one payment type (e.g. credit card, direct debit).
+
+Each project contains a pre-shared secret.
+That secret is used to sign all messages, in both diections (requests to the gateway,
+responses to those requests, and server request notification messages).
+
+So for each payment type, you will have the following matched authentication details,
+required for all interaction:
+
+* Merchant ID
+* Project ID
+* Pre-shared secret (passphrase)
+* Payment type
+
+A gateway could be set up like this:
+
+```php
+use Academe\GiroCheckout\Gateway;
+use Omnipay\Omnipay;
+
+// The backward slashes are needed to make the driver base class absolute.
+// An issue will be raised against Omnipay Common to fix this.
+$gateway = Omnipay::create('\\' . Gateway::class);
+
+// The IDs can be given as integers ir strings.
+$gateway->setMerchantID('3610000');
+$gateway->setProjectID('37000');
+$gateway->setProjectPassphrase('ZFXDMpXDMpVV9Z');
+// Other payment types are supported.
+$gateway->setPaymentType(Gateway::PAYMENT_TYPE_CREDIT_CARD);
+```
+
+# Credit Card Payment Type
+
+This payment type supports authorize and purchase.
+A card can be tokenised during a transaction and used again for future
+payments with the user present, or for offline repeat payments.
+
+The capture/refund/void methods are also available.
+
+## Credit Card Authorize
+
+### Basic Authorize
+
+A simple authoirze will look likle this:
+
+```php
+$gateway->setPaymentType(Gateway::PAYMENT_TYPE_CREDIT_CARD);
+
+$authRequest = $gateway->authorize([
+    'transactionId' => $yourMerchantTransactionId,
+    'amount' => '1.23',
+    'currency' => 'EUR',
+    'description' => 'Mandatory reason for the transaction',
+    'language' => 'en',
+    'returnUrl' => 'url to bring the user back to the merchant site',
+    'notifyUrl' => 'url for the gateway to send direct notifications',
+    'mobileOptimise' => false,
+]);
+```
+
+The response will be a redirect to the gateway, where the user will enter their
+credit card details.
+The language setting will define the language used in the user interface and in
+error messages returned in the response.
+
+On completion, the result of the transaction will sent to the merchant site in
+two ways (both will be used):
+
+* Via the notification URL.
+* Through query parameters given to the return URL.
+
+#### Credit Card Complete Authorize
+
+When the user returns to the `returnUrl`, the transaction result can be extracted
+like this:
+
+```php
+$completeRequest = $gateway->completeAuthorize();
+$completeResponse = $completeRequest->send();
+
+// Available standard Omnipay details:
+
+$completeResponse->getCode();
+$completeResponse->getMessage();
+$completeResponse->isSuccessful();
+$completeResponse->isCancelled();
+$completeResponse->getTransactionStatus();
+$completeResponse->getTransactionReference();
+```
+
+If the response fails its hash check against the shared secret, then an exception
+will be raised on `sebd()`. The raw response data can still be read for logging as
+`$completeRequest->getData()`, which returns an array.
+
+The notification handler, on the `notifyUrl`, is set up like this:
+
+```php
+$notifyRequest = $gateway->acceptNotification();
+$notifyResponse = $notifyRequest->send();
+```
+
+Once the authorisation is complete, the amount still needs to be captured.
+
+#### Credit Card Authorize Notify
+
+Exactly the same rules apply as to the `completeAuthorize` request - an exception
+will be raised if the hash does not validate; the same standard Omnpay result
+details are available.
+
+### Creating a Reusable Card Reference
+
+When authorizing, the gateway can be asked to create a reusable card reference.
+This flag in the authorize request will trigger that:
+
+```php
+[
+    ...
+    'createCard' => true,
+]
+```
+
+After the authorize completes, the card reference is fetched using this request:
+
+```php
+$getCardRequest = $gateway->getCard([
+    'transactionReference' => 'otiginal transaction reference',
+]);
+$getCardResponse = $getCardRequest->send();
+
+// The reusable `cardReference` is available here:
+$cardReference = $getCardResponse->getTransactionReference();
+
+// Other details about the card that may be useful:
+$getCardResponse->getNumberMasked();
+$getCardResponse->getExpiryYear();
+$getCardResponse->getExpiryMonth();
+```
+
+The `$cardReference` is then used for authorizing:
+
+```php
+[
+    ...
+    'cardReference' => $cardReference,
+]
+```
+
+The user will be redirected to the payment gateway like the basic authorize,
+but the credit card details will be already completed (and cannot be changed
+by the user).
+The user will need to enter their `CVV` to authorise use of the card.
+
+### Offline Repeat Authorize
+
+When a reusable `cardReference` is used, the need to redirect the user to the
+gateway can be avoided by using the `repeatAuthorize()` method in place of the
+`authorize()` method.
+
+This can be used without the user being present, so is useful for subscriptions
+and other repeated payments.
+
+### Credit Card Purchase Transactions
+
+Replace `authorize` with `purchase` in the request creation to authorise and
+capture in one step.
+
+* `authorize()' -> `purchase()`
+* `repeatAuthorize()` -> `repeatPurchase()`
+
+### Credit Card Capture
+
+The required amount can be captured using this request:
+
+```php
+$captureRequest = $gateway->capture([
+    'transactionId' => $yourMerchantTransactionId,
+    'amount' => '1.23',
+    'currency' => 'EUR',
+    'description' => 'Capture reason is required',
+    'transactionReference' => 'original authorize transaction reference',
+]);
+
+$captureRersponse = $captureRequest->send();
+
+// Check if successful:
+$captureRersponse->isSuccessful();
+
+// Some other details:
+$captureRersponse->getCode();
+$captureRersponse->getMessage();
+$captureRersponse->getTransactionReference();
+```
+
+### Credit Card Refund
+
+A refund of the full or a partial amount can be done using the `refund` message.
+It is used in exactly the same way as the `capture` message.
+
+### Credit Card Void
+
+A transaction can be completely voided like this:
+
+```php
+$voidRequest = $gateway->capture([
+    'transactionReference' => 'original authorize transaction reference',
+]);
+
+$voidResponse = $voidRequest->send();
+
+// Check if successful:
+$captureRersponse->isSuccessful();
+```
 
