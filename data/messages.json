@@ -187,5 +187,740 @@
    "payment-type-de": "Altersverifikation",
    "message-en": "Age verification unsuccessful",
    "message-de": "Altersverifikation nicht erfolgreich"
+ },
+ {
+   "code": 0,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "ok, no error",
+   "message-de": "OK, kein Fehler"
+ },
+ {
+   "code": 5000,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "authentication failed",
+   "message-de": "Authentifizierung fehlgeschlagen"
+ },
+ {
+   "code": 5001,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "no authorization",
+   "message-de": "keine Berechtigung"
+ },
+ {
+   "code": 5002,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid hash",
+   "message-de": "hash ungültig"
+ },
+ {
+   "code": 5003,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "mandatory field not specified",
+   "message-de": "Pflichtfeld nicht angegeben"
+ },
+ {
+   "code": 5004,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid call",
+   "message-de": "Aufruf ungültig"
+ },
+ {
+   "code": 5009,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid mail",
+   "message-de": "E-Mail ungültig"
+ },
+ {
+   "code": 5010,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid language",
+   "message-de": "Sprache ungültig"
+ },
+ {
+   "code": 5011,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid country",
+   "message-de": "Land ungültig"
+ },
+ {
+   "code": 5012,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid branch",
+   "message-de": "Branche ungültig"
+ },
+ {
+   "code": 5013,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid shop system",
+   "message-de": "Shopsystem ungültig"
+ },
+ {
+   "code": 5014,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid gender",
+   "message-de": "Geschlecht ungültig"
+ },
+ {
+   "code": 5015,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid product",
+   "message-de": "Produkt ungültig"
+ },
+ {
+   "code": 5016,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid organisation type",
+   "message-de": "Organisationstyp ungültig"
+ },
+ {
+   "code": 5017,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "merchant already exist",
+   "message-de": "Händler existiert bereits"
+ },
+ {
+   "code": 5018,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid PSP",
+   "message-de": "PSP ungültig"
+ },
+ {
+   "code": 5019,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid credit card type",
+   "message-de": "Kreditkartentyp ungültig"
+ },
+ {
+   "code": 5020,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid merchantId",
+   "message-de": "merchantId ungültig"
+ },
+ {
+   "code": 5021,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid projectId",
+   "message-de": "projectId ungültig"
+ },
+ {
+   "code": 5022,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid merchantTxId",
+   "message-de": "merchantTxId ungültig"
+ },
+ {
+   "code": 5023,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid purpose",
+   "message-de": "purpose ungültig"
+ },
+ {
+   "code": 5024,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid bankcode",
+   "message-de": "bankcode ungültig"
+ },
+ {
+   "code": 5025,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid bankaccount",
+   "message-de": "bankaccount ungültig"
+ },
+ {
+   "code": 5026,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid bic",
+   "message-de": "bic ungültig"
+ },
+ {
+   "code": 5027,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid iban",
+   "message-de": "iban ungültig"
+ },
+ {
+   "code": 5028,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid mobile",
+   "message-de": "mobile ungültig"
+ },
+ {
+   "code": 5029,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid pkn",
+   "message-de": "pkn ungültig"
+ },
+ {
+   "code": 5030,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid amount",
+   "message-de": "amount ungültig"
+ },
+ {
+   "code": 5031,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "bankcode or BIC missing",
+   "message-de": "Bankleitzahl oder BIC nicht angegeben"
+ },
+ {
+   "code": 5032,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid mandateSequence",
+   "message-de": "mandateSequence ungültig"
+ },
+ {
+   "code": 5033,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid currency",
+   "message-de": "currency ungültig"
+ },
+ {
+   "code": 5034,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "transaction does not exist",
+   "message-de": "Transaktion nicht vorhanden"
+ },
+ {
+   "code": 5040,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid info1Label",
+   "message-de": "info1Label ungültig"
+ },
+ {
+   "code": 5041,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid info1Text",
+   "message-de": "info1Text ungültig"
+ },
+ {
+   "code": 5042,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid info2Label",
+   "message-de": "info2Label ungültig"
+ },
+ {
+   "code": 5043,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid info2Text",
+   "message-de": "info2Text ungültig"
+ },
+ {
+   "code": 5044,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid info3Label",
+   "message-de": "info3Label ungültig"
+ },
+ {
+   "code": 5045,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid info3Text",
+   "message-de": "info3Text ungültig"
+ },
+ {
+   "code": 5046,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid info4Label",
+   "message-de": "info4Label ungültig"
+ },
+ {
+   "code": 5047,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid info4Text",
+   "message-de": "info4Text ungültig"
+ },
+ {
+   "code": 5048,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid info5Label",
+   "message-de": "info5Label ungültig"
+ },
+ {
+   "code": 5049,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid info5Text",
+   "message-de": "info5Text ungültig"
+ },
+ {
+   "code": 5050,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid recurring",
+   "message-de": "recurring ungültig"
+ },
+ {
+   "code": 5051,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid mandateReference",
+   "message-de": "mandateReference ungültig"
+ },
+ {
+   "code": 5052,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid mandateSignedOn",
+   "message-de": "mandateSignedOn ungültig"
+ },
+ {
+   "code": 5053,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid mandateReceiverName",
+   "message-de": "mandateReceiverName ungültig"
+ },
+ {
+   "code": 5054,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid issuer",
+   "message-de": "issuer ungültig"
+ },
+ {
+   "code": 5055,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid urlRedirect",
+   "message-de": "urlRedirect ungültig"
+ },
+ {
+   "code": 5056,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid urlNotify",
+   "message-de": "urlNotify ungültig"
+ },
+ {
+   "code": 5060,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "amount or currency not missing",
+   "message-de": "Betrag oder Währung nicht angegeben"
+ },
+ {
+   "code": 5061,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid purposetext",
+   "message-de": "purposetext ungültig"
+ },
+ {
+   "code": 5062,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid paymentreference",
+   "message-de": "paymentreference ungültig"
+ },
+ {
+   "code": 5063,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid format",
+   "message-de": "format ungültig"
+ },
+ {
+   "code": 5064,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid resolution",
+   "message-de": "resolution ungültig"
+ },
+ {
+   "code": 5065,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "error by creating image",
+   "message-de": "Fehler beim erstellen der Grafik"
+ },
+ {
+   "code": 5066,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "purpose and paymentreference given",
+   "message-de": "purpose und paymentreference angegeben"
+ },
+ {
+   "code": 5067,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid receiveriban",
+   "message-de": "receiveriban ungültig"
+ },
+ {
+   "code": 5068,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid receiverbic",
+   "message-de": "receiverbic ungültig"
+ },
+ {
+   "code": 5069,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid purposecode",
+   "message-de": "purposecode ungültig"
+ },
+ {
+   "code": 5070,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid receivername",
+   "message-de": "receivername ungültig"
+ },
+ {
+   "code": 5071,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "receivername, receiveriban or receiverbic not given",
+   "message-de": "receivername, receiveriban oder receiverbic nicht angeben"
+ },
+ {
+   "code": 5072,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid customerLastName",
+   "message-de": "customerLastName ungültig"
+ },
+ {
+   "code": 5073,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid customerStreet",
+   "message-de": "customerStreet ungültig"
+ },
+ {
+   "code": 5074,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid customerStreetNumber",
+   "message-de": "customerStreetNumber ungültig"
+ },
+ {
+   "code": 5075,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid customerZipCode",
+   "message-de": "customerZipCode ungültig"
+ },
+ {
+   "code": 5076,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid customerCity",
+   "message-de": "customerCity ungültig"
+ },
+ {
+   "code": 5077,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid customerCountry",
+   "message-de": "customerCountry ungültig"
+ },
+ {
+   "code": 5078,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid customerBirthDate",
+   "message-de": "customerBirthDate ungültig"
+ },
+ {
+   "code": 5079,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid customerGender",
+   "message-de": "customerGender ungültig"
+ },
+ {
+   "code": 5080,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid customerEmail",
+   "message-de": "customerEmail ungültig"
+ },
+ {
+   "code": 5081,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid customerIp",
+   "message-de": "customerIp ungültig"
+ },
+ {
+   "code": 5082,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid customerId",
+   "message-de": "customerId ungültig"
+ },
+ {
+   "code": 5083,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid shopId",
+   "message-de": "shopId ungültig"
+ },
+ {
+   "code": 5084,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid customerFirstName",
+   "message-de": "customerFirstName ungültig"
+ },
+ {
+   "code": 5085,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid accountHolder",
+   "message-de": "accountHolder ungültig"
+ },
+ {
+   "code": 5086,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid type",
+   "message-de": "type ungültig"
+ },
+ {
+   "code": 5087,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid invoiceId",
+   "message-de": "Rechnungsnummer (invoiceId) ungültig"
+ },
+ {
+   "code": 5088,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid shippingCompany",
+   "message-de": "Kundenfirma (shippingCompany) ungültig"
+ },
+ {
+   "code": 5089,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid shippingAdditionalAddressInformation",
+   "message-de": "Zusatzinfo (shippingAdditionalAddressInformation) ungültig"
+ },
+ {
+   "code": 5090,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid orderId",
+   "message-de": "orderId ungültig"
+ },
+ {
+   "code": 5091,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid pricemodel",
+   "message-de": "pricemodel ungültig"
+ },
+ {
+   "code": 5092,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid shoppingCartType",
+   "message-de": "shoppingCartType ungültig"
+ },
+ {
+   "code": 5093,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid merchantReconciliationReferenceNumber",
+   "message-de": "merchantReconciliationReferenceNumber ungültig"
+ },
+ {
+   "code": 5094,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid description",
+   "message-de": "Beschreibung ungültig"
+ },
+ {
+   "code": 5095,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "Paypage: invalid page type",
+   "message-de": "Paypage: Ungültiger Seitentyp"
+ },
+ {
+   "code": 5096,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "Paypage: invalid expiration date",
+   "message-de": "Paypage: Ungültiges Verfallsdatum"
+ },
+ {
+   "code": 5097,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "Paypage: invalid payment method(s)",
+   "message-de": "Paypage: Ungültige Bezahlart(en)"
+ },
+ {
+   "code": 5098,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "Paypage: invalid organitation name",
+   "message-de": "Paypage: Ungültiger Organisationsname"
+ },
+ {
+   "code": 5099,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "Paypage: invalid value for free amount",
+   "message-de": "Paypage: Ungültiger Wert für Freier Betrag"
+ },
+ {
+   "code": 5100,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "error from payment processor",
+   "message-de": "Fehler beim Zahlungsabwickler"
+ },
+ {
+   "code": 5101,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "connection problem to payment processor",
+   "message-de": "Verbindungsproblem zum Zahlungsabwickler"
+ },
+ {
+   "code": 5102,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "pseudo-cardnumber does not exist",
+   "message-de": "Pseudo-Kartennummer nicht vorhanden"
+ },
+ {
+   "code": 5200,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "not accepted transaction",
+   "message-de": "Transaktion nicht akzeptiert"
+ },
+ {
+   "code": 5201,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "giropay bank offline",
+   "message-de": "giropay Bank offline"
+ },
+ {
+   "code": 5202,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid giropay bank of sender",
+   "message-de": "giropay Bank des Absenders ungültig"
+ },
+ {
+   "code": 5203,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "sender bank account blacklisted",
+   "message-de": "Bankverbindung des Absenders auf Blacklist"
+ },
+ {
+   "code": 5204,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "invalid sender bank account",
+   "message-de": "Bankverbindung des Absenders ungültig"
+ },
+ {
+   "code": 5205,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "transaction limit exceeded",
+   "message-de": "Transaktionslimit überschritten"
+ },
+ {
+   "code": 5500,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "Paypage: invalid value in fixed amounts",
+   "message-de": "Paypage: Ungültiger Wert in festen Beträgen"
+ },
+ {
+   "code": 5501,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "Paypage: invalid minimum amount",
+   "message-de": "Paypage: Ungültiger Mindestbetrag"
+ },
+ {
+   "code": 5502,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "Paypage: invalid maximum amount",
+   "message-de": "Paypage: Ungültiger Maximalbetrag"
+ },
+ {
+   "code": 5503,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "Paypage: invalid project list",
+   "message-de": "Paypage: Ungültige Projektliste"
+ },
+ {
+   "code": 6001,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "bank unknown",
+   "message-de": "Bank unbekannt"
+ },
+ {
+   "code": 6002,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "bank does not support giropay",
+   "message-de": "Bank unterstützt kein giropay"
+ },
+ {
+   "code": 9999,
+   "payment-type-en": "rc",
+   "payment-type-de": "rc",
+   "message-en": "internal error",
+   "message-de": "interner Fehler"
  }
 ]

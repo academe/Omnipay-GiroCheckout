@@ -6,7 +6,7 @@ use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\Tests\TestCase;
 
-class CompleteRequestTest extends TestCase
+class CompleteRequestCreditCardTest extends TestCase
 {
     protected $requestSuccess;
     protected $requestCancelled;

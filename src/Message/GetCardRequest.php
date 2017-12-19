@@ -29,8 +29,8 @@ class GetCardRequest extends AbstractRequest
         // First five parameters are mandatory and common to all payment methods.
 
         $data = [];
-        $data['merchantId']     = $this->getMerchantId(true);
-        $data['projectId']      = $this->getProjectId(true);
+        $data['merchantId'] = $this->getMerchantId(true);
+        $data['projectId'] = $this->getProjectId(true);
 
         // Reference the previous transaction that was used to save the card details.
 

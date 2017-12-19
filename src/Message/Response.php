@@ -49,7 +49,19 @@ class Response extends AbstractResponse implements RedirectResponseInterface
      */
     public function getMessage()
     {
-        return $this->getDataItem('msg');
+        $msg = $this->getDataItem('msg');
+
+        if (! empty($msg)) {
+            return $msg;
+        }
+
+        $reasonCode = $this->getReasonCode();
+
+        if (! empty($reasonCode)) {
+            return Helper::getMessage($reasonCode);
+        }
+
+        return '';
     }
 
     /**

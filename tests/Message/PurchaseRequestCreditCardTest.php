@@ -5,7 +5,7 @@ namespace Academe\GiroCheckout\Message;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Tests\TestCase;
 
-class AuthorizeRequestTest extends TestCase
+class PurchaseRequestCreditCardTest extends TestCase
 {
     /**
      * @var Gateway
@@ -16,11 +16,11 @@ class AuthorizeRequestTest extends TestCase
     {
         parent::setUp();
 
-        $this->request = new AuthorizeRequest($this->getHttpClient(), $this->getHttpRequest());
+        $this->request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
 
         $this->request->initialize([
             'paymentType' => 'CreditCard',
-            'merchantId' => 12345678,
+            'merchantId' => '12345678',
             'projectId' => 654321,
             'transactionId' => 'trans-id-123',
             'amount' => '1.23',
@@ -127,7 +127,7 @@ class AuthorizeRequestTest extends TestCase
     {
         // This hash will change if the initializartion data changes.
         $data = $this->request->getData();
-        $this->assertSame('ef3f143c59630934ffb36b14105140f7', $data['hash']);
+        $this->assertSame('f921b3c6640555bdcd4fb0ac20c60d9d', $data['hash']);
 
         $data = [
             'merchantId' => '1234567',

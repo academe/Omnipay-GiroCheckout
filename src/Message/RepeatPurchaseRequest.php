@@ -26,4 +26,11 @@ class RepeatPurchaseRequest extends PurchaseRequest
      * @var string
      */
     protected $recurring = self::RECURRING_YES;
+
+    /**
+     * @var array List of payment types that a request supports.
+     */
+    protected $supportedPaymentTypes = [
+        Gateway::PAYMENT_TYPE_CREDIT_CARD,
+    ];
 }

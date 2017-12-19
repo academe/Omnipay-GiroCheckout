@@ -205,6 +205,24 @@ class Gateway extends AbstractGateway
 
     /**
      * @param  array $parameters
+     * @return Message\OfflineAuthorizeRequest
+     */
+    public function offlineAuthorize(array $parameters = [])
+    {
+        return $this->createRequest(Message\OfflineAuthorizeRequest::class, $parameters);
+    }
+
+    /**
+     * @param  array $parameters
+     * @return Message\OfflinePurchaseRequest
+     */
+    public function offlinePurchase(array $parameters = [])
+    {
+        return $this->createRequest(Message\OfflinePurchaseRequest::class, $parameters);
+    }
+
+    /**
+     * @param  array $parameters
      * @return Message\PurchaseRequest
      */
     public function purchase(array $parameters = [])

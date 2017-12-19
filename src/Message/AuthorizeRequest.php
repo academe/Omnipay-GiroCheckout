@@ -21,6 +21,26 @@ class AuthorizeRequest extends AbstractRequest
     const RECURRING_NO = 0;
 
     /**
+     * @var int Flag to indicate a variant on the UI.
+     * VARIANT_PAGE is for when a user is present and visits the payment page.
+     */
+    const VARIANT_PAGE = 'page';
+    const VARIANT_OFFLINE = 'offline';
+
+    /**
+     * @var int 1 to 4
+     * 1 = single payment (default)
+     * 2 = first payment of a sequence
+     * 3 = recurring payment
+     * 4 = last payment of a sequence 
+     */
+    const MANDATE_SEQUENCE_SINGLE = 1;
+    const MANDATE_SEQUENCE_FIRST = 2;
+    const MANDATE_SEQUENCE_RECURRING = 3;
+    const MANDATE_SEQUENCE_LAST = 4;
+
+
+    /**
      * @var string The type of transaction being requested.
      */
     protected $transactionType = self::TRANSACTION_TYPE_AUTH;
@@ -46,6 +66,11 @@ class AuthorizeRequest extends AbstractRequest
      * @var string
      */
     protected $recurring = self::RECURRING_NO;
+
+    /**
+     * @var string
+     */
+    protected $interfaceVariant = self::VARIANT_PAGE;
 
     /**
      * @param array $data
@@ -81,11 +106,57 @@ class AuthorizeRequest extends AbstractRequest
      */
     public function getDirectDebitData($data = [])
     {
-        // TODO: all Direct Debit fields:
-        // mandateReference
-        // mandateSignedOn
-        // mandateReceiverName
-        // mandateSequence
+        // If we are using the offline variant, without the payment page to
+        // send the user to, then there are some additional mandaory parameters.
+
+        if ($this->interfaceVariant === static::VARIANT_OFFLINE) {
+            // bankcode
+            // bankaccount
+
+            $data['iban'] = 'DE87123456781234567890';
+            $data['accountHolder'] = 'JJJJJJJ';
+        }
+
+        // String(35)
+        // Permitted characters: 0–9 A–Z a–z & \ / = + , : ; . _ \ - ! ?
+
+        if ($mandateReference = $this->getMandateReference()) {
+            $data['mandateReference'] = $mandateReference;
+        }
+
+        // Date when the SEPA mandate was placed.
+        // Format "YYYY-MM-DD".
+
+        if ($mandateSignedOn = $this->getMandateSignedOn()) {
+            if ($mandateSignedOn instanceof \DateTime) {
+                $mandateSignedOn = $mandateSignedOn->format('Y-m-d');
+            }
+
+            $data['mandateSignedOn'] = $mandateSignedOn;
+        }
+
+        // String(35)
+        // Permitted characters: 0–9 A–Z a–z & / = + , : ; . _ - ! ?
+
+        if ($mandateReceiverName = $this->getMandateReceiverName()) {
+            $data['mandateReceiverName'] = $mandateReceiverName;
+        }
+
+        // Sequence type of the SEPA direct debit.
+        // One of static::MANDATE_SEQUENCE_*
+
+        if ($mandateSequence = $this->getMandateSequence()) {
+            $mandateSequenceList = Helper::constantList($this, 'MANDATE_SEQUENCE_');
+
+            if (! in_array($mandateSequence, $mandateSequenceList)) {
+                throw new InvalidRequestException(sprintf(
+                    'mandateSequence must be an integer, one of %s',
+                    implode(', ', $mandateSequenceList)
+                ));
+            }
+
+            $data['mandateSequence'] = $mandateSequence;
+        }
 
         return $data;
     }
@@ -139,9 +210,15 @@ class AuthorizeRequest extends AbstractRequest
 
             $data['type'] = $this->transactionType;
 
-            // The locale cannot be set for recurring (aka repeat, offline) payments.
+            // The locale can be set only where the user is sent off to the
+            // gateway payment form. Offline or repeat payment (or where no valid language is set)
+            // leaves the locale unset.
 
-            if ($this->recurring !== static::RECURRING_YES && $this->getValidLanguage()) {
+            if (
+                $this->recurring === static::RECURRING_NO
+                && $this->interfaceVariant === static::VARIANT_PAGE
+                && $this->getValidLanguage()
+            ) {
                 $data['locale'] = $this->getValidLanguage();
             }
 
@@ -193,7 +270,9 @@ class AuthorizeRequest extends AbstractRequest
             }
         }
 
-        $data['recurring'] = $this->recurring;
+        if ($paymentType === Gateway::PAYMENT_TYPE_CREDIT_CARD) {
+            $data['recurring'] = $this->recurring;
+        }
 
         // Paydirekt has a bunch of fields here.
 
@@ -204,7 +283,7 @@ class AuthorizeRequest extends AbstractRequest
         // Where to send the user after filling out their CC details, or cancelling.
         // Only supply a redirect (aka return) URL if not doing a recurring payment.
 
-        if ($this->recurring !== static::RECURRING_YES) {
+        if ($this->recurring !== static::RECURRING_YES && $this->interfaceVariant === static::VARIANT_PAGE) {
             $data['urlRedirect'] = $this->getReturnUrl();
         }
 
@@ -251,5 +330,73 @@ class AuthorizeRequest extends AbstractRequest
     public function setCreateCard($value)
     {
         return $this->setParameter('createCard', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMandateReference()
+    {
+        return $this->getParameter('mandateReference');
+    }
+
+    /**
+     * @param  mixed $value
+     * @return $this
+     */
+    public function setMandateReference($value)
+    {
+        return $this->setParameter('mandateReference', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMandateSignedOn()
+    {
+        return $this->getParameter('mandateSignedOn');
+    }
+
+    /**
+     * @param  string|DateTime $value String format is YYYY-MM-DD
+     * @return $this
+     */
+    public function setMandateSignedOn($value)
+    {
+        return $this->setParameter('mandateSignedOn', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMandateReceiverName()
+    {
+        return $this->getParameter('mandateReceiverName');
+    }
+
+    /**
+     * @param  mixed $value
+     * @return $this
+     */
+    public function setMandateReceiverName($value)
+    {
+        return $this->setParameter('mandateReceiverName', $value);
+    }
+
+    /**
+     * @return int
+     */
+    public function getMandateSequence()
+    {
+        return $this->getParameter('mandateSequence');
+    }
+
+    /**
+     * @param  int $value
+     * @return $this
+     */
+    public function setMandateSequence($value)
+    {
+        return $this->setParameter('mandateSequence', $value);
     }
 }
