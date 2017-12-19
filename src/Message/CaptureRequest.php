@@ -54,15 +54,23 @@ class CaptureRequest extends AbstractRequest
         $data['currency']       = $this->getCurrency();
 
         // NOTE: the online documentation has the purpose and reference swapped
-        // around. However, that causes invalid hash errors against the live
-        // API. I will assume the documentation is incorrect, at least at the the
+        // around for the Credit Card payment type.
+        // However, that causes invalid hash errors against the live API.
+        // I will assume the documentation is incorrect, at least at the the
         // time this is being written.
         // http://api.girocheckout.de/en:girocheckout:creditcard:start
         // The "purpose" is mandatory for Paydirekt, but optional for other supported
         // payment types.
 
-        if ($purpose = $this->getDescription() || $paymentType === Gateway::PAYMENT_TYPE_PAYDIREKT) {
-            $data['purpose'] = substr($purpose, 0, static::PURPOSE_LENGTH);
+        $purpose = $this->getDescription();
+
+        if ($purpose !== null || $paymentType === Gateway::PAYMENT_TYPE_PAYDIREKT) {
+            // Even though the documentation shows the purpose as optional for Direct Debit
+            // payment types, it actually causes a hash validation error if included.
+
+            if ($paymentType !== Gateway::PAYMENT_TYPE_DIRECTDEBIT) {
+                $data['purpose'] = substr($purpose, 0, static::PURPOSE_LENGTH);
+            }
         }
 
         // GiroCheckout transaction ID from a previous transaction, which

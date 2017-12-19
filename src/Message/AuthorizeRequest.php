@@ -111,20 +111,26 @@ class AuthorizeRequest extends AbstractRequest
 
         if ($this->interfaceVariant === static::VARIANT_OFFLINE) {
             $iban = $this->getIban();
+
             $bankcode = $this->getBankcode();
             $bankaccount = $this->getBankaccount();
 
-            // Either the iban, or the bank details must be set
+            $cardReference = $this->getCardReference();
 
-            if ($iban === null && ($bankcode === null || $bankaccount === null)) {
+            // Either the iban, the bank details, or a PKN must be provided.
+
+            if ($iban === null && ($bankcode === null || $bankaccount === null) && $cardReference === null) {
                 throw new InvalidRequestException(
-                    'Either the iban or the bankcode+bankaccount must be set for offline Direct Debit payments'
+                    'One of the iban, the bankcode+bankaccount or the cardReference'
+                    . ' must be set for offline Direct Debit payments'
                 );
             }
 
+            // The cardReference (the PKN) is set elsewhere.
+
             if ($iban !== null) {
                 $data['iban'] = $iban;
-            } else {
+            } elseif ($cardReference !== null) {
                 $data['bankcode'] = $bankcode;
                 $data['bankaccount'] = $bankaccount;
             }
@@ -144,7 +150,7 @@ class AuthorizeRequest extends AbstractRequest
             $data['accountHolder'] = $accountHolder;
         }
 
-        // String(35)
+        // String(35) ASCII characters
         // Permitted characters: 0–9 A–Z a–z & \ / = + , : ; . _ \ - ! ?
 
         if ($mandateReference = $this->getMandateReference()) {
@@ -152,7 +158,7 @@ class AuthorizeRequest extends AbstractRequest
         }
 
         // Date when the SEPA mandate was placed.
-        // Format "YYYY-MM-DD".
+        // Format "YYYY-MM-DD". We might want to validate the format if a string.
 
         if ($mandateSignedOn = $this->getMandateSignedOn()) {
             if ($mandateSignedOn instanceof \DateTime) {
@@ -162,7 +168,7 @@ class AuthorizeRequest extends AbstractRequest
             $data['mandateSignedOn'] = $mandateSignedOn;
         }
 
-        // String(35)
+        // String(35) ASCII characters
         // Permitted characters: 0–9 A–Z a–z & / = + , : ; . _ - ! ?
 
         if ($mandateReceiverName = $this->getMandateReceiverName()) {
