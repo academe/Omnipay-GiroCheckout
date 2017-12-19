@@ -110,11 +110,38 @@ class AuthorizeRequest extends AbstractRequest
         // send the user to, then there are some additional mandaory parameters.
 
         if ($this->interfaceVariant === static::VARIANT_OFFLINE) {
-            // bankcode
-            // bankaccount
+            $iban = $this->getIban();
+            $bankcode = $this->getBankcode();
+            $bankaccount = $this->getBankaccount();
 
-            $data['iban'] = 'DE87123456781234567890';
-            $data['accountHolder'] = 'JJJJJJJ';
+            // Either the iban, or the bank details must be set
+
+            if ($iban === null && ($bankcode === null || $bankaccount === null)) {
+                throw new InvalidRequestException(
+                    'Either the iban or the bankcode+bankaccount must be set for offline Direct Debit payments'
+                );
+            }
+
+            if ($iban !== null) {
+                $data['iban'] = $iban;
+            } else {
+                $data['bankcode'] = $bankcode;
+                $data['bankaccount'] = $bankaccount;
+            }
+
+            $accountHolder = $this->getAccountHolder();
+
+            // The accountHolder is mandatory.
+            // We will check here and raise an error, as the gateway reports less intuitive
+            // errors if fieds are missing (normally just "invalid hash").
+
+            if ($accountHolder === null) {
+                throw new InvalidRequestException(
+                    'The accountHolder must be set for offline Direct Debit payments'
+                );
+            }
+
+            $data['accountHolder'] = $accountHolder;
         }
 
         // String(35)
@@ -398,5 +425,73 @@ class AuthorizeRequest extends AbstractRequest
     public function setMandateSequence($value)
     {
         return $this->setParameter('mandateSequence', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getIban()
+    {
+        return $this->getParameter('iban');
+    }
+
+    /**
+     * @param  string $value
+     * @return $this
+     */
+    public function setIban($value)
+    {
+        return $this->setParameter('iban', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getBankcode()
+    {
+        return $this->getParameter('bankcode');
+    }
+
+    /**
+     * @param  string $value
+     * @return $this
+     */
+    public function setBankcode($value)
+    {
+        return $this->setParameter('bankcode', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getBankaccount()
+    {
+        return $this->getParameter('bankaccount');
+    }
+
+    /**
+     * @param  string $value
+     * @return $this
+     */
+    public function setBankaccount($value)
+    {
+        return $this->setParameter('bankaccount', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccountHolder()
+    {
+        return $this->getParameter('accountHolder');
+    }
+
+    /**
+     * @param  string $value
+     * @return $this
+     */
+    public function setAccountHolder($value)
+    {
+        return $this->setParameter('accountHolder', $value);
     }
 }
