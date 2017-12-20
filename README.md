@@ -189,19 +189,21 @@ The user will need to enter their `CVV` to authorise use of the card.
 ### Offline Repeat Authorize
 
 When a reusable `cardReference` is used, the need to redirect the user to the
-gateway can be avoided by using the `repeatAuthorize()` method in place of the
-`authorize()` method.
+gateway can be avoided by resetting the `paymentPage` parameter.
+
+```php
+$authRequest = $gateway->authorize([
+    ...
+    'paymentPage' => false,
+]);
+```
 
 This can be used without the user being present, so is useful for subscriptions
 and other repeated payments.
 
 ### Credit Card Purchase Transactions
 
-Replace `authorize` with `purchase` in the request creation to authorise and
-capture in one step.
-
-* `authorize()' -> `purchase()`
-* `repeatAuthorize()` -> `repeatPurchase()`
+Replace `purchase` in place of `authorize`.
 
 ### Credit Card Capture
 

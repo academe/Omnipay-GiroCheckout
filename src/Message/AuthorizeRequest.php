@@ -18,14 +18,14 @@ class AuthorizeRequest extends AbstractRequest
      * @var int Flag to indicate a recurring payment.
      */
     const RECURRING_YES = 1;
-    const RECURRING_NO = 0;
+    const RECURRING_NO  = 0;
 
     /**
      * @var int Flag to indicate a variant on the UI.
      * VARIANT_PAGE is for when a user is present and visits the payment page.
      */
-    const VARIANT_PAGE = 'page';
-    const VARIANT_OFFLINE = 'offline';
+    const VARIANT_PAGE      = 'page';
+    const VARIANT_OFFLINE   = 'offline';
 
     /**
      * @var int 1 to 4
@@ -34,10 +34,10 @@ class AuthorizeRequest extends AbstractRequest
      * 3 = recurring payment
      * 4 = last payment of a sequence 
      */
-    const MANDATE_SEQUENCE_SINGLE = 1;
-    const MANDATE_SEQUENCE_FIRST = 2;
-    const MANDATE_SEQUENCE_RECURRING = 3;
-    const MANDATE_SEQUENCE_LAST = 4;
+    const MANDATE_SEQUENCE_SINGLE       = 1;
+    const MANDATE_SEQUENCE_FIRST        = 2;
+    const MANDATE_SEQUENCE_RECURRING    = 3;
+    const MANDATE_SEQUENCE_LAST         = 4;
 
 
     /**
@@ -61,11 +61,6 @@ class AuthorizeRequest extends AbstractRequest
         Gateway::PAYMENT_TYPE_GIROPAY,
         Gateway::PAYMENT_TYPE_PAYDIREKT,
     ];
-
-    /**
-     * @var string
-     */
-    protected $recurring = self::RECURRING_NO;
 
     /**
      * @var string
@@ -234,11 +229,7 @@ class AuthorizeRequest extends AbstractRequest
 
         // Credit Card, Direct Debit and Maestro have optional type, locale and mobile parameters.
 
-        if (
-            $paymentType === Gateway::PAYMENT_TYPE_CREDIT_CARD
-            || $paymentType === Gateway::PAYMENT_TYPE_DIRECTDEBIT
-            || $paymentType === Gateway::PAYMENT_TYPE_MAESTRO
-        ) {
+        if ($this->isCreditCard() || $this->isDirectDebit() || $this->isMaestro()) {
             // 'SALE' or 'AUTH', for purchase or authorization.
 
             $data['type'] = $this->transactionType;
@@ -247,16 +238,11 @@ class AuthorizeRequest extends AbstractRequest
             // gateway payment form. Offline or repeat payment (or where no valid language is set)
             // leaves the locale unset.
 
-            if (
-                $this->recurring === static::RECURRING_NO
-                && $this->interfaceVariant === static::VARIANT_PAGE
-                && $this->getValidLanguage()
-            ) {
+            if ($this->getValidLanguage() && $this->hasPaymentPage()) {
                 $data['locale'] = $this->getValidLanguage();
             }
 
-            // FIXME: just call this "mobile".
-            if ($this->getMobile() !== null) {
+            if ($this->getMobile() !== null && $this->hasPaymentPage()) {
                 $data['mobile'] = ! empty($this->getMobile())
                     ? (string)static::MOBILE_OPTIMISE_YES
                     : (string)static::MOBILE_OPTIMISE_NO;
@@ -265,7 +251,7 @@ class AuthorizeRequest extends AbstractRequest
 
         // Direct Debit has a bunch of optional fields here.
 
-        if ($paymentType === Gateway::PAYMENT_TYPE_DIRECTDEBIT) {
+        if ($this->isDirectDebit()) {
             $data = $this->getDirectDebitData($data);
         }
 
@@ -274,22 +260,20 @@ class AuthorizeRequest extends AbstractRequest
             $data['type'] = $this->transactionType;
         }
 
-        // The PKN is use by Credit Card and Direct Debit payment types.
+        // The PKN is used by Credit Card and Direct Debit payment types.
 
-        if (
-            $paymentType === Gateway::PAYMENT_TYPE_CREDIT_CARD
-            || $paymentType === Gateway::PAYMENT_TYPE_DIRECTDEBIT
-        ) {
+        if ($this->isCreditCard() || $this->isDirectDebit()) {
             // A pseudo card number (PKN) can be supplied, or a new PKN can be requested,
-            // or the transaction can be left as a one-off with no PKN saved.
-
-            $pkn = $this->getCardReference() ?: $this->getToken();
+            // but not at the same time.
+            // Alternatively the transaction can be left as a one-off with no PKN saved.
 
             // A PKN is required if doing a recurring CC payment.
 
-            if ($paymentType === Gateway::PAYMENT_TYPE_CREDIT_CARD && $this->recurring == static::RECURRING_YES) {
+            $pkn = $this->getCardReference() ?: $this->getToken();
+
+            if ($this->isCreditCard() && ! $this->hasPaymentPage()) {
                 if (empty($pkn)) {
-                    throw new InvalidRequestException('A repeat payment requires a cardReference; none given');
+                    throw new InvalidRequestException('Missing cardReference for a payment without a payment page.');
                 }
             }
 
@@ -303,8 +287,12 @@ class AuthorizeRequest extends AbstractRequest
             }
         }
 
-        if ($paymentType === Gateway::PAYMENT_TYPE_CREDIT_CARD) {
-            $data['recurring'] = $this->recurring;
+        if ($this->isCreditCard()) {
+            if (! $this->hasPaymentPage()) {
+                $data['recurring'] = static::RECURRING_YES;
+            } else {
+                $data['recurring'] = static::RECURRING_NO;
+            }
         }
 
         // Paydirekt has a bunch of fields here.
@@ -314,9 +302,8 @@ class AuthorizeRequest extends AbstractRequest
         }
 
         // Where to send the user after filling out their CC details, or cancelling.
-        // Only supply a redirect (aka return) URL if not doing a recurring payment.
 
-        if ($this->recurring !== static::RECURRING_YES && $this->interfaceVariant === static::VARIANT_PAGE) {
+        if ($this->hasPaymentPage()) {
             $data['urlRedirect'] = $this->getReturnUrl();
         }
 
@@ -499,5 +486,19 @@ class AuthorizeRequest extends AbstractRequest
     public function setAccountHolder($value)
     {
         return $this->setParameter('accountHolder', $value);
+    }
+
+    /**
+     * @return string Absolute endpoint URL.
+     */
+    public function getEndpoint($path = null)
+    {
+        if ($this->isCreditCard()) {
+            if (! $this->hasPaymentPage()) {
+                $path = 'transaction/payment';
+            }
+        }
+
+        return parent::getEndpoint($path);
     }
 }

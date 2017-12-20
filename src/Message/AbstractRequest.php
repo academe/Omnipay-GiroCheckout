@@ -176,6 +176,32 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
+     * @return string
+     */
+    public function getPaymentPage()
+    {
+        return $this->getParameter('paymentPage');
+    }
+
+    /**
+     * @param  mixed $value Will be cast to a boolean.
+     * @return $this
+     */
+    public function setPaymentPage($value)
+    {
+        return $this->setParameter('paymentPage', $value);
+    }
+
+    /**
+     * If not set at all, then default it to true, mainly for testing.
+     * @return bool The value of parameter paymentPage as a boolean
+     */
+    public function hasPaymentPage()
+    {
+        return $this->getPaymentPage() === null ? true : (bool)$this->getPaymentPage();
+    }
+
+    /**
      * @param bool $assertValidation True to assert validation rules on the value
      * @return string
      */
@@ -367,5 +393,29 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         }
 
         return implode('/', [$this->endpointBaseUrl, $this->endpointPath]);
+    }
+
+    /**
+     * @return bool true if processing a credit card.
+     */
+    public function isCreditCard()
+    {
+        return $this->getPaymentType(true) === Gateway::PAYMENT_TYPE_CREDIT_CARD;
+    }
+
+    /**
+     * @return bool true if processing a direct debit transaction.
+     */
+    public function isDirectDebit()
+    {
+        return $this->getPaymentType(true) === Gateway::PAYMENT_TYPE_DIRECTDEBIT;
+    }
+
+    /**
+     * @return bool true if processing a maestro transaction.
+     */
+    public function isMaestro()
+    {
+        return $this->getPaymentType(true) === Gateway::PAYMENT_TYPE_MAESTRO;
     }
 }

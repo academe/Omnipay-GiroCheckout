@@ -54,6 +54,7 @@ class Gateway extends AbstractGateway
             'projectId' => 0,
             'projectPassphrase' => '',
             'language' => 'de',
+            'paymentPage' => true,
             'paymentType' => static::PAYMENT_TYPE_CREDIT_CARD,
         ];
     }
@@ -143,6 +144,23 @@ class Gateway extends AbstractGateway
     }
 
     /**
+     * @return string
+     */
+    public function getPaymentPage()
+    {
+        return $this->getParameter('paymentPage');
+    }
+
+    /**
+     * @param  mixed $value Will be cast to a boolean.
+     * @return $this
+     */
+    public function setPaymentPage($value)
+    {
+        return $this->setParameter('paymentPage', $value);
+    }
+
+    /**
      * @param bool $assertValidation True to assert validation rules on the value
      * @return string
      */
@@ -183,42 +201,6 @@ class Gateway extends AbstractGateway
     public function authorize(array $parameters = [])
     {
         return $this->createRequest(Message\AuthorizeRequest::class, $parameters);
-    }
-
-    /**
-     * @param  array $parameters
-     * @return Message\RepeatAuthorizeRequest
-     */
-    public function repeatAuthorize(array $parameters = [])
-    {
-        return $this->createRequest(Message\RepeatAuthorizeRequest::class, $parameters);
-    }
-
-    /**
-     * @param  array $parameters
-     * @return Message\RepeatPurchaseRequest
-     */
-    public function repeatPurchase(array $parameters = [])
-    {
-        return $this->createRequest(Message\RepeatPurchaseRequest::class, $parameters);
-    }
-
-    /**
-     * @param  array $parameters
-     * @return Message\OfflineAuthorizeRequest
-     */
-    public function offlineAuthorize(array $parameters = [])
-    {
-        return $this->createRequest(Message\OfflineAuthorizeRequest::class, $parameters);
-    }
-
-    /**
-     * @param  array $parameters
-     * @return Message\OfflinePurchaseRequest
-     */
-    public function offlinePurchase(array $parameters = [])
-    {
-        return $this->createRequest(Message\OfflinePurchaseRequest::class, $parameters);
     }
 
     /**
