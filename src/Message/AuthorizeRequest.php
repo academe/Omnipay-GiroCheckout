@@ -493,7 +493,7 @@ class AuthorizeRequest extends AbstractRequest
      */
     public function getEndpoint($path = null)
     {
-        if ($this->isCreditCard()) {
+        if ($this->isCreditCard() || $this->isDirectDebit()) {
             if (! $this->hasPaymentPage()) {
                 $path = 'transaction/payment';
             }
