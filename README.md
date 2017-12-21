@@ -25,15 +25,18 @@ Table of Contents
             * [Credit Card Authorize Notify](#credit-card-authorize-notify)
          * [Create a Reusable Card Reference](#create-a-reusable-card-reference)
          * [Offline Repeat Authorize](#offline-repeat-authorize)
-         * [Credit Card Purchase Transactions](#credit-card-purchase-transactions)
-         * [Credit Card Capture](#credit-card-capture)
-         * [Credit Card Refund](#credit-card-refund)
-         * [Credit Card Void](#credit-card-void)
+      * [Credit Card Purchase Transactions](#credit-card-purchase-transactions)
+      * [Credit Card Capture](#credit-card-capture)
+      * [Credit Card Refund](#credit-card-refund)
+      * [Credit Card Void](#credit-card-void)
    * [Direct Debit Payment Type](#direct-debit-payment-type)
-         * [Basic Authorize](#basic-authorize-1)
+      * [Basic Authorize](#basic-authorize-1)
          * [Create a Reusable Direct Debit Card Reference](#create-a-reusable-direct-debit-card-reference)
          * [Offline Direct Debit Payment](#offline-direct-debit-payment)
-         * [Direct Debit Capture/Refund/Void](#direct-debit-capturerefundvoid)
+      * [Direct Debit Capture/Refund/Void](#direct-debit-capturerefundvoid)
+   * [PayPal Payment Type](#paypal-payment-type)
+      * [PayPal Purchase](#paypal-purchase)
+
 
 # Authentication
 
@@ -83,7 +86,7 @@ The capture/refund/void methods are also available.
 
 ### Basic Authorize
 
-A simple authoirze will look likle this:
+A simple authorize will look like this:
 
 ```php
 $gateway->setPaymentType(Gateway::PAYMENT_TYPE_CREDIT_CARD);
@@ -96,7 +99,7 @@ $authRequest = $gateway->authorize([
     'language' => 'en',
     'returnUrl' => 'url to bring the user back to the merchant site',
     'notifyUrl' => 'url for the gateway to send direct notifications',
-    'mobileOptimise' => false,
+    'mobile' => false,
 ]);
 ```
 
@@ -207,11 +210,11 @@ $authRequest = $gateway->authorize([
 This can be used without the user being present, so is useful for subscriptions
 and other repeated payments.
 
-### Credit Card Purchase Transactions
+## Credit Card Purchase Transactions
 
 Replace `purchase` in place of `authorize`.
 
-### Credit Card Capture
+## Credit Card Capture
 
 The required amount can be captured using this request:
 
@@ -235,12 +238,12 @@ $captureRersponse->getMessage();
 $captureRersponse->getTransactionReference();
 ```
 
-### Credit Card Refund
+## Credit Card Refund
 
 A refund of the full or a partial amount can be done using the `refund` message.
 It is used in exactly the same way as the `capture` message.
 
-### Credit Card Void
+## Credit Card Void
 
 A transaction can be completely voided like this:
 
@@ -265,9 +268,9 @@ The main differences are:
 * When fetching the saved "cardReference", details you get back include `ibanMasked`.
 * Running an authorize or payment without a paymentform, you can supply IBAN, SCAN or cardReference.
 
-### Basic Authorize
+## Basic Authorize
 
-A simple authoirze will look likle this:
+A simple authorize will look like this:
 
 ```php
 $gateway->setPaymentType(Gateway::PAYMENT_TYPE_DIRECTDEBIT);
@@ -280,7 +283,7 @@ $authRequest = $gateway->authorize([
     'language' => 'en',
     'returnUrl' => 'url to bring the user back to the merchant site',
     'notifyUrl' => 'url for the gateway to send direct notifications',
-    'mobileOptimise' => false,
+    'mobile' => false,
     // Parameters specific to Direct Debit, all optional:
     'mandateReference' => '...',
     'mandateSignedOn' => '...',
@@ -337,7 +340,35 @@ $authRequest = $gateway->authorize([
 ]);
 ```
 
-### Direct Debit Capture/Refund/Void
+## Direct Debit Capture/Refund/Void
 
 These operate in exactly the same way as for Credit Card payments.
+
+# PayPal Payment Type
+
+The PayPal payment type supports only one payment type, `pruchase'.
+
+## PayPal Purchase
+
+A simple purchase will look like this:
+
+```php
+$gateway->setPaymentType(Gateway::PAYMENT_TYPE_PAYPAL);
+
+$authRequest = $gateway->purchase([
+    'transactionId' => $yourMerchantTransactionId,
+    'amount' => '7.89',
+    'currency' => 'EUR',
+    'description' => 'Mandatory reason for the transaction',
+    'returnUrl' => 'url to bring the user back to the merchant site',
+    'notifyUrl' => 'url for the gateway to send direct notifications',
+]);
+```
+
+The response should be a redirect to the remote gateway.
+
+On return from the gateway, the result can be accessed using the
+`$response -> $gateway->complete()->send()` message like for previous payment types.
+
+The back-channel notification handler will be sent the usual details too.
 
