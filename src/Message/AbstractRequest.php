@@ -202,24 +202,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
-     * @param bool $assertValidation True to assert validation rules on the value
      * @return string
      */
-    public function getPaymentType($assertValidation = false)
+    public function getPaymentType()
     {
         $paymentType = $this->getParameter('paymentType');
-
-        if ($assertValidation) {
-            $paymentTypes = Helper::constantList(Gateway::class, 'PAYMENT_TYPE_');
-
-            if (! in_array($paymentType, $paymentTypes)) {
-                throw new InvalidRequestException(sprintf(
-                    'paymentType must be one of: %s; %s given',
-                    implode(', ', $paymentTypes),
-                    $paymentType
-                ));
-            }
-        }
 
         return $paymentType;
     }
@@ -412,10 +399,47 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
+     * @return bool true if processing by PayPal.
+     */
+    public function isPayPal()
+    {
+        return $this->getPaymentType(true) === Gateway::PAYMENT_TYPE_PAYPAL;
+    }
+
+    /**
      * @return bool true if processing a maestro transaction.
      */
     public function isMaestro()
     {
         return $this->getPaymentType(true) === Gateway::PAYMENT_TYPE_MAESTRO;
+    }
+
+    /**
+     * Check whether this message supports the payment type chosen.
+     * 
+     * @return bool true
+     * @throws xxx
+     */
+    public function validatePaymentType()
+    {
+        $paymentType = $this->getPaymentType();
+
+        $paymentTypes = Helper::constantList(Gateway::class, 'PAYMENT_TYPE_');
+
+        if (! in_array($paymentType, $paymentTypes)) {
+            throw new InvalidRequestException(sprintf(
+                'paymentType must be one of: %s; %s given',
+                implode(', ', $paymentTypes),
+                $paymentType
+            ));
+        }
+
+        if (! in_array($paymentType, $this->supportedPaymentTypes)) {
+            throw new InvalidRequestException(sprintf(
+                'This message does not support payment type "%s"; payment types supported: %s',
+                $paymentType,
+                implode(', ', $this->supportedPaymentTypes)
+            ));
+        }
     }
 }

@@ -200,7 +200,9 @@ class AuthorizeRequest extends AbstractRequest
     {
         // Construction of the data will depend on the payment type.
 
-        $paymentType = $this->getPaymentType(true);
+        $paymentType = $this->getPaymentType();
+
+        $this->validatePaymentType();
 
         // First six parameters are mandatory and common to all payment methods.
 
@@ -303,7 +305,7 @@ class AuthorizeRequest extends AbstractRequest
 
         // Where to send the user after filling out their CC details, or cancelling.
 
-        if ($this->hasPaymentPage()) {
+        if ($this->hasPaymentPage() || $this->isPayPal()) {
             $data['urlRedirect'] = $this->getReturnUrl();
         }
 
