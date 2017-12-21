@@ -24,7 +24,9 @@ class GetCardRequest extends AbstractRequest
     {
         // Construction of the data will depend on the payment type.
 
-        $paymentType = $this->getPaymentType(true);
+        $paymentType = $this->getPaymentType();
+
+        $this->$this->validatePaymentType();
 
         // First five parameters are mandatory and common to all payment methods.
 

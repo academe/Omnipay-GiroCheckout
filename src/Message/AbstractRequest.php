@@ -387,7 +387,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function isCreditCard()
     {
-        return $this->getPaymentType(true) === Gateway::PAYMENT_TYPE_CREDIT_CARD;
+        return $this->getPaymentType() === Gateway::PAYMENT_TYPE_CREDIT_CARD;
     }
 
     /**
@@ -395,7 +395,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function isDirectDebit()
     {
-        return $this->getPaymentType(true) === Gateway::PAYMENT_TYPE_DIRECTDEBIT;
+        return $this->getPaymentType() === Gateway::PAYMENT_TYPE_DIRECTDEBIT;
     }
 
     /**
@@ -403,7 +403,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function isPayPal()
     {
-        return $this->getPaymentType(true) === Gateway::PAYMENT_TYPE_PAYPAL;
+        return $this->getPaymentType() === Gateway::PAYMENT_TYPE_PAYPAL;
     }
 
     /**
@@ -411,14 +411,14 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function isMaestro()
     {
-        return $this->getPaymentType(true) === Gateway::PAYMENT_TYPE_MAESTRO;
+        return $this->getPaymentType() === Gateway::PAYMENT_TYPE_MAESTRO;
     }
 
     /**
      * Check whether this message supports the payment type chosen.
      * 
      * @return bool true
-     * @throws xxx
+     * @throws InvalidRequestException
      */
     public function validatePaymentType()
     {
