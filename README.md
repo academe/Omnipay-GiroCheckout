@@ -16,6 +16,7 @@ Table of Contents
 =================
 
    * [Omnipay: GiroCheckout](#omnipay-girocheckout)
+   * [Table of Contents](#table-of-contents)
    * [Authentication](#authentication)
    * [Credit Card Payment Type](#credit-card-payment-type)
       * [Credit Card Authorize](#credit-card-authorize)
@@ -28,6 +29,11 @@ Table of Contents
          * [Credit Card Capture](#credit-card-capture)
          * [Credit Card Refund](#credit-card-refund)
          * [Credit Card Void](#credit-card-void)
+   * [Direct Debit Payment Type](#direct-debit-payment-type)
+         * [Basic Authorize](#basic-authorize-1)
+         * [Create a Reusable Direct Debit Card Reference](#create-a-reusable-direct-debit-card-reference)
+         * [Offline Direct Debit Payment](#offline-direct-debit-payment)
+         * [Direct Debit Capture/Refund/Void](#direct-debit-capturerefundvoid)
 
 # Authentication
 
