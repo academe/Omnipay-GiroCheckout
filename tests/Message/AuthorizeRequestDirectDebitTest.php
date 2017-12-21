@@ -34,6 +34,39 @@ class AuthorizeRequestDirectDebitTest extends TestCase
     }
 
     /**
+     * @ expectedException \Omnipay\Common\Exception\InvalidRequestException
+     * @ expectedExceptionMessage Missing cardReference for a payment without a payment page.
+     */
+    public function testPaymentPageNoCardReference()
+    {
+        // With no payment page, there will be no form modifiers and no return URL.
+        //$this->request->setPaymentPage(false);
+        //$this->request->getData();
+    }
+
+    public function testPaymentPage()
+    {
+        // With a payment page, there will be form modifiers and no return URL.
+
+        $data = $this->request->getData();
+
+        $this->assertArrayHasKey('urlRedirect', $data);
+        $this->assertArrayHasKey('mobile', $data);
+        $this->assertArrayHasKey('locale', $data);
+
+        // With no payment page, there will be no form modifiers and no return URL.
+
+        $this->request->setPaymentPage(false);
+        $this->request->setCardReference('abcdefgh1234567890');
+
+        $data = $this->request->getData();
+
+        $this->assertArrayNotHasKey('urlRedirect', $data);
+        $this->assertArrayNotHasKey('mobile', $data);
+        $this->assertArrayNotHasKey('locale', $data);
+    }
+
+    /**
      * The date can be a string or a DateTime (or derived, such as Carbon\Carbon)
      */
     public function testValidDate()
