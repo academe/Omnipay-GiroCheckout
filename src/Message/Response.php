@@ -106,7 +106,50 @@ class Response extends AbstractResponse implements RedirectResponseInterface
             && !empty($this->getRedirectUrl());
     }
 
-    // TODO: for CC capture/refund: merchantTxid, amount, currency
-    // The transaction can then be a success if resultPayment == 4000 and code == 0
-    // Maybe extend to a child class.
+    /**
+     * For Direct Debit payment types.
+     *
+     * @param string $mask Alternative masking character.
+     * @return string
+     */
+    public function getIbanMasked($mask = '*')
+    {
+        $iban = $this->getDataItem('iban', '');
+
+        if ($mask !== '*') {
+            $iban = str_replace('*', $mask, $iban);
+        }
+
+        return $iban;
+    }
+
+    /**
+     * For Direct Debit payment types.
+     *
+     * @return string
+     */
+    public function getAccountHolder()
+    {
+        return $this->getDataItem('holder');
+    }
+
+    /**
+     * For Direct Debit payment types.
+     *
+     * @return string
+     */
+    public function getBankCode()
+    {
+        return $this->getDataItem('bankcode');
+    }
+
+    /**
+     * For Direct Debit payment types.
+     *
+     * @return string
+     */
+    public function getBankAccount()
+    {
+        return $this->getDataItem('bankaccount');
+    }
 }

@@ -248,3 +248,90 @@ $voidResponse = $voidRequest->send();
 // Check if successful:
 $captureRersponse->isSuccessful();
 ```
+
+# Direct Debit Payment Type
+
+The Direct Debit payment type works in a very similar way to the Credit Card
+payment type.
+The main differences are:
+
+* The bank account is identified by an IBAN or a sort code/bank code/BMZ and account number (SCAN).
+* When fetching the saved "cardReference", details you get back include `ibanMasked`.
+* Running an authorize or payment without a paymentform, you can supply IBAN, SCAN or cardReference.
+
+### Basic Authorize
+
+A simple authoirze will look likle this:
+
+```php
+$gateway->setPaymentType(Gateway::PAYMENT_TYPE_DIRECTDEBIT);
+
+$authRequest = $gateway->authorize([
+    'transactionId' => $yourMerchantTransactionId,
+    'amount' => '4.56',
+    'currency' => 'EUR',
+    'description' => 'Mandatory reason for the transaction',
+    'language' => 'en',
+    'returnUrl' => 'url to bring the user back to the merchant site',
+    'notifyUrl' => 'url for the gateway to send direct notifications',
+    'mobileOptimise' => false,
+    // Parameters specific to Direct Debit, all optional:
+    'mandateReference' => '...',
+    'mandateSignedOn' => '...',
+    'mandateReceiverName' => '...',
+    'mandateSequence' => '...',
+]);
+```
+
+The `mandateSignedOn` is a date in the forma `YYYY-MM-DD`.
+A `DateTime` or derived object can ve supplied instead, which includes `Carbon\Carbon` objects.
+
+### Create a Reusable Direct Debit Card Reference
+
+The Direct Debit payment type supports saving the details of the collected bank details
+as a `cardReference`. Triggering the saving is done by turning on `creatCard` like this:
+
+```php
+$authRequest = $gateway->authorize([
+    ...
+    'createCard' => true,
+]);
+```
+
+The `cardReference` can be fetched in the same way as the Credit Card payment type.
+
+### Offline Direct Debit Payment
+
+The payment page redirect can be turned off to support offline payment, without the
+user being present:
+
+```php
+$authRequest = $gateway->authorize([
+    ...
+    'paymentPage' => false,
+]);
+```
+
+When making an offline payment, one of the following must be supplied:
+
+* cardReference
+* IBAN
+* SCAN
+
+```php
+$authRequest = $gateway->authorize([
+    ...
+    'cardReference' => '13b5ca34a8389774690154bcc0da0a8e',
+    // or
+    'iban' => 'DE87123456781234567890',
+    // or
+    'accountHolder' => 'Name',
+    'bankCode' => '12345678',
+    'bankAccount' => '1234567890',
+]);
+```
+
+### Direct Debit Capture/Refund/Void
+
+These operate in exactly the same way as for Credit Card payments.
+

@@ -39,7 +39,7 @@ class CaptureResponseTest extends TestCase
     public function testSuccessFlags()
     {
         $successResponse = $this->newResponse($this->captureSuccessData);
-
+var_dump($successResponse->getData());
         $this->assertSame(true, $successResponse->isSuccessful());
         $this->assertSame('TXN-94459199193', $successResponse->getTransactionId());
         $this->assertSame('700a4199-634b-4876-b28a-c8e9b01a3793', $successResponse->getTransactionReference());

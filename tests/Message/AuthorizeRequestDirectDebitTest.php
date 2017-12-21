@@ -58,6 +58,7 @@ class AuthorizeRequestDirectDebitTest extends TestCase
 
         $this->request->setPaymentPage(false);
         $this->request->setCardReference('abcdefgh1234567890');
+        $this->request->setAccountHolder('Full Name');
 
         $data = $this->request->getData();
 

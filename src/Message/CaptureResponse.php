@@ -20,6 +20,16 @@ class CaptureResponse extends Response
     }
 
     /**
+     * @return string GiroCheckout transaction ID of the original base transaction
+     */
+    public function getParentTransactionReference()
+    {
+        return $this->getDataItem('referenceParent');
+    }
+
+    /**
+     * For CC and DD Capture and Refund.
+     *
      * @return string Unique transaction id of the merchant
      */
     public function getTransactionId()
@@ -28,10 +38,22 @@ class CaptureResponse extends Response
     }
 
     /**
-     * @return string GiroCheckout transaction ID of the original base transaction
+     * For CC and DD Capture and Refund.
+     *
+     * @return int Expressed in minor units
      */
-    public function getParentTransactionReference()
+    public function getAmountInteger()
     {
-        return $this->getDataItem('referenceParent');
+        return (int)$this->getDataItem('amount');
+    }
+
+    /**
+     * For CC and DD Capture and Refund.
+     *
+     * @return string
+     */
+    public function getCurrency()
+    {
+        return $this->getDataItem('currency');
     }
 }

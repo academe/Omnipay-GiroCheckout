@@ -104,19 +104,19 @@ class AuthorizeRequest extends AbstractRequest
         // If we are using the offline variant, without the payment page to
         // send the user to, then there are some additional mandaory parameters.
 
-        if ($this->interfaceVariant === static::VARIANT_OFFLINE) {
+        if (! $this->hasPaymentPage()) {
             $iban = $this->getIban();
 
-            $bankcode = $this->getBankcode();
-            $bankaccount = $this->getBankaccount();
+            $bankCode = $this->getBankCode();
+            $bankAccount = $this->getBankAccount();
 
             $cardReference = $this->getCardReference();
 
             // Either the iban, the bank details, or a PKN must be provided.
 
-            if ($iban === null && ($bankcode === null || $bankaccount === null) && $cardReference === null) {
+            if ($iban === null && ($bankCode === null || $bankAccount === null) && $cardReference === null) {
                 throw new InvalidRequestException(
-                    'One of the iban, the bankcode+bankaccount or the cardReference'
+                    'One of the iban, the bankCode+bankAccount or the cardReference'
                     . ' must be set for offline Direct Debit payments'
                 );
             }
@@ -125,9 +125,9 @@ class AuthorizeRequest extends AbstractRequest
 
             if ($iban !== null) {
                 $data['iban'] = $iban;
-            } elseif ($cardReference !== null) {
-                $data['bankcode'] = $bankcode;
-                $data['bankaccount'] = $bankaccount;
+            } elseif ($cardReference === null) {
+                $data['bankcode'] = $bankCode;
+                $data['bankaccount'] = $bankAccount;
             }
 
             $accountHolder = $this->getAccountHolder();
@@ -440,35 +440,35 @@ class AuthorizeRequest extends AbstractRequest
     /**
      * @return string
      */
-    public function getBankcode()
+    public function getBankCode()
     {
-        return $this->getParameter('bankcode');
+        return $this->getParameter('bankCode');
     }
 
     /**
      * @param  string $value
      * @return $this
      */
-    public function setBankcode($value)
+    public function setBankCode($value)
     {
-        return $this->setParameter('bankcode', $value);
+        return $this->setParameter('bankCode', $value);
     }
 
     /**
      * @return string
      */
-    public function getBankaccount()
+    public function getBankAccount()
     {
-        return $this->getParameter('bankaccount');
+        return $this->getParameter('bankAccount');
     }
 
     /**
      * @param  string $value
      * @return $this
      */
-    public function setBankaccount($value)
+    public function setBankAccount($value)
     {
-        return $this->setParameter('bankaccount', $value);
+        return $this->setParameter('bankAccount', $value);
     }
 
     /**
