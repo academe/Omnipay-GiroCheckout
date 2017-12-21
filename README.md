@@ -346,7 +346,7 @@ These operate in exactly the same way as for Credit Card payments.
 
 # PayPal Payment Type
 
-The PayPal payment type supports only one payment type, `pruchase'.
+The PayPal payment type supports only one request type, `purchase`.
 
 ## PayPal Purchase
 
