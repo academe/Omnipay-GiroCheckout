@@ -36,7 +36,9 @@ Table of Contents
       * [Direct Debit Capture/Refund/Void](#direct-debit-capturerefundvoid)
    * [PayPal Payment Type](#paypal-payment-type)
       * [PayPal Purchase](#paypal-purchase)
-
+   * [Giropay Payment Type](#giropay-payment-type)
+      * [Giropay Issuers List](#giropay-issuers-list)
+      * [Giropay Bank Capabilities](#giropay-bank-capabilities)
 
 # Authentication
 
