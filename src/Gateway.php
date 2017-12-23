@@ -284,10 +284,19 @@ class Gateway extends AbstractGateway
 
     /**
      * @param  array $parameters
-     * @return Message\BankStatusRequest
+     * @return Message\GetBankStatusRequest
      */
-    public function bankStatus(array $parameters = [])
+    public function getBankStatus(array $parameters = [])
     {
-        return $this->createRequest(Message\BankStatusRequest::class, $parameters);
+        return $this->createRequest(Message\GetBankStatusRequest::class, $parameters);
+    }
+
+    /**
+     * @param  array $parameters
+     * @return Message\GetIssuersRequest
+     */
+    public function getIssuers(array $parameters = [])
+    {
+        return $this->createRequest(Message\GetIssuersRequest::class, $parameters);
     }
 }

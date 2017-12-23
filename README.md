@@ -379,3 +379,61 @@ On return from the gateway, the result can be accessed using the
 
 The back-channel notification handler will be sent the usual details too.
 
+# Giropay Payment Type
+
+This payment type only works for payments in Euros, and only for issuing
+banks that have registered with the service (over 1500 to date).
+
+As well as making payments, there are a number of supporting API methods.
+
+## Giropay Issuers List
+
+This method returns a list of issuing banks that are regisered for this service.
+The list would normally be used to present to the end user so they can choose
+their personal bank.
+
+```php
+$gateway->setPaymentType(Gateway::PAYMENT_TYPE_GIROPAY);
+
+$request = $gateway->getIssuers();
+
+$response = $resquest->send();
+
+// The list of named banks is indexed by their BIC.
+
+if ($response->isSuccessful()) {
+    $bankList = $response->getIssuerArray();
+}
+
+// array(1407) {
+//  ["BELADEBEXXX"]=>
+//  string(38) "Landesbank Berlin - Berliner Sparkasse"
+//  ["BEVODEBBXXX"]=>
+//  string(18) "Berliner Volksbank"
+//  ["GENODEF1P01"]=>
+//  string(27) "PSD Bank Berlin-Brandenburg"
+//  ["WELADED1WBB"]=>
+//  string(9) "Weberbank"
+//  ...
+// }
+
+```
+
+## Giropay Bank Capabilities
+
+Once an issuing bank is chosen, its capabilities can be checked.
+This tests whether it supports Giropay, or Giropay+ID, or both.
+
+```php
+$request = $gateway->getBankStatus([
+    'bic' => 'TESTDETT421',
+]);
+
+$response = $resquest->send();
+
+// Both return boolean.
+
+$supportsGiropay = $response->hasGiropay();
+$supportsGiropayId = $response->hasGiropayId();
+```
+

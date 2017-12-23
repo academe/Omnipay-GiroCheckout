@@ -3,19 +3,16 @@
 namespace Academe\GiroCheckout\Message;
 
 /**
- * GiroCheckout Gateway "query pseudo card information" Request,
- * Gets the cardReference and other details from a previous transaction.
- * The original transaction must have requested for the PKN to be saved
- * using `['createCard' => true]`
+ * Get the Giropay support details for a bank.
  *
- * @link http://api.girocheckout.de/en:girocheckout:creditcard:start#pseudo_card_numbers_pkn
+ * @link http://api.girocheckout.de/en:girocheckout:giropay:start#check_bankstatus
  */
 
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Academe\GiroCheckout\Gateway;
 
-class BankStatusRequest extends AbstractRequest
+class GetBankStatusRequest extends AbstractRequest
 {
     /**
      * @var string The resource path, appended to the endpoint base URL.
@@ -51,10 +48,10 @@ class BankStatusRequest extends AbstractRequest
     /**
      * Create the response object.
      *
-     * @return GetCardResponse
+     * @return GetBankStatusResponse
      */
     protected function createResponse(array $data)
     {
-        return $this->response = new BankStatusResponse($this, $data);
+        return $this->response = new GetBankStatusResponse($this, $data);
     }
 }

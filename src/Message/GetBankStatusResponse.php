@@ -11,7 +11,7 @@ namespace Academe\GiroCheckout\Message;
 use Omnipay\Common\Message\RedirectResponseInterface;
 use Academe\GiroCheckout\Gateway;
 
-class BankStatusResponse extends Response
+class GetBankStatusResponse extends Response
 {
     /**
      * @return bool
