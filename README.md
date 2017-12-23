@@ -424,6 +424,10 @@ if ($response->isSuccessful()) {
 Once an issuing bank is chosen, its capabilities can be checked.
 This tests whether it supports Giropay, or Giropay+ID, or both.
 
+This list can also be retrieved on the front end only using the
+[Bank Selection Widget](http://api.girocheckout.de/en:girocheckout:giropay:start#bank_selection_widget).
+There is no direct support for the widget in this driver.
+
 ```php
 $request = $gateway->getBankStatus([
     'bic' => 'TESTDETT421',
