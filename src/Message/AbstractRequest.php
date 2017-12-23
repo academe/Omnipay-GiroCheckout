@@ -178,6 +178,23 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * @return string
      */
+    public function getBic()
+    {
+        return $this->getParameter('bic');
+    }
+
+    /**
+     * @param  string $value
+     * @return $this
+     */
+    public function setBic($value)
+    {
+        return $this->setParameter('bic', $value);
+    }
+
+    /**
+     * @return string
+     */
     public function getPaymentPage()
     {
         return $this->getParameter('paymentPage');
@@ -404,6 +421,14 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     public function isPayPal()
     {
         return $this->getPaymentType() === Gateway::PAYMENT_TYPE_PAYPAL;
+    }
+
+    /**
+     * @return bool true if processing by Giropay.
+     */
+    public function isGiropay()
+    {
+        return $this->getPaymentType() === Gateway::PAYMENT_TYPE_GIROPAY;
     }
 
     /**

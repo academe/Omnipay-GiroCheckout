@@ -281,4 +281,13 @@ class Gateway extends AbstractGateway
     {
         return $this->createRequest(Message\GetCardRequest::class, $parameters);
     }
+
+    /**
+     * @param  array $parameters
+     * @return Message\BankStatusRequest
+     */
+    public function bankStatus(array $parameters = [])
+    {
+        return $this->createRequest(Message\BankStatusRequest::class, $parameters);
+    }
 }
