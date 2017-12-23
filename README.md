@@ -195,6 +195,13 @@ but the credit card details will be already completed (and cannot be changed
 by the user).
 The user will need to enter their `CVV` to authorise use of the card.
 
+By setting the `recurring` parameter flag, even the need for the CVV to be
+entered can be avoided. This feature is only available on application.
+Even through the user will be redirected to the gateway, they will be redirected
+back again immediately with no need to enter any card or CVV details.
+However, the redirect does give the gateway the option to insert some additional
+validation if it needs to.
+
 ### Offline Repeat Authorize
 
 When a reusable `cardReference` is used, the need to redirect the user to the

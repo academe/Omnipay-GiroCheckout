@@ -156,6 +156,8 @@ class AuthorizeRequestCreditCardTest extends TestCase
 
     public function testHash()
     {
+        $data = $this->request->setRecurring(false);
+
         // This hash will change if the initializartion data changes.
         $data = $this->request->getData();
         $this->assertSame('ef3f143c59630934ffb36b14105140f7', $data['hash']);

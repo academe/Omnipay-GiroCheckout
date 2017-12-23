@@ -293,7 +293,11 @@ class AuthorizeRequest extends AbstractRequest
             if (! $this->hasPaymentPage()) {
                 $data['recurring'] = static::RECURRING_YES;
             } else {
-                $data['recurring'] = static::RECURRING_NO;
+                $recurring = $this->getRecurring();
+
+                if ($recurring !== null) {
+                    $data['recurring'] = (bool)$recurring ? static::RECURRING_YES : static::RECURRING_NO;
+                }
             }
         }
 
@@ -335,6 +339,23 @@ class AuthorizeRequest extends AbstractRequest
     public function setMobile($value)
     {
         return $this->setParameter('mobile', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecurring()
+    {
+        return $this->getParameter('recurring');
+    }
+
+    /**
+     * @param  mixed $value A value that will later be cast to true/false
+     * @return $this
+     */
+    public function setRecurring($value)
+    {
+        return $this->setParameter('recurring', $value);
     }
 
     /**
