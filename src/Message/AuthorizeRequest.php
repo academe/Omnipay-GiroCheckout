@@ -58,7 +58,6 @@ class AuthorizeRequest extends AbstractRequest
         Gateway::PAYMENT_TYPE_DIRECTDEBIT,
         Gateway::PAYMENT_TYPE_MAESTRO,
         Gateway::PAYMENT_TYPE_EPS,
-        Gateway::PAYMENT_TYPE_GIROPAY,
         Gateway::PAYMENT_TYPE_PAYDIREKT,
     ];
 
@@ -73,13 +72,32 @@ class AuthorizeRequest extends AbstractRequest
      */
     public function getGiropayData($data = [])
     {
-        // TODO: all Giropay fields; all are optional:
-        // iban
-        // info1Label info1Text
-        // info2Label info2Text
-        // info3Label info3Text
-        // info4Label info4Text
-        // info5Label info5Text
+        if ($this->getBic() === null) {
+                throw new InvalidRequestException(
+                    'The BIC is mandatory but missing for Giropay initialisation'
+                );
+        }
+
+        $data['bic'] = $this->getBic();
+
+        if ($iban = $this->getIban()) {
+            $data['iban'] = $this->getIban();
+        }
+
+        // There are five optional label and text fields.
+
+        for ($i = 1; $i <= 5; $i++) {
+            $labelMethod = "getInfo${i}Label";
+            $textMethod = "getInfo${i}Text";
+
+            $label = $this->$labelMethod();
+            $text = $this->$textMethod();
+
+            if ($label !== null && $text !== null) {
+                $data["info${i}Label"] = $label;
+                $data["info${i}Text"] = $text;
+            }
+        }
 
         return $data;
     }
@@ -216,10 +234,7 @@ class AuthorizeRequest extends AbstractRequest
 
         // EPS and Giropay require a bic
 
-        if (
-            $paymentType === Gateway::PAYMENT_TYPE_EPS
-            || $paymentType === Gateway::PAYMENT_TYPE_GIROPAY
-        ) {
+        if ($paymentType === Gateway::PAYMENT_TYPE_EPS) {
             $data['bic'] = $this->getBic();
         }
 
@@ -510,6 +525,181 @@ class AuthorizeRequest extends AbstractRequest
     {
         return $this->setParameter('accountHolder', $value);
     }
+
+    // Following getInfoNLabel and getInfoNText methods are for Giropay only.
+    // TODO: allow all to be set at once through more structured data.
+
+    /**
+     * @return string For Giropay
+     */
+    public function getInfo1Label()
+    {
+        return $this->getParameter('info1Label');
+    }
+
+    /**
+     * @param  string $value for Giropay
+     * @return $this
+     */
+    public function setInfo1Label($value)
+    {
+        return $this->setParameter('info1Label', $value);
+    }
+
+    /**
+     * @return string For Giropay
+     */
+    public function getInfo1Text()
+    {
+        return $this->getParameter('info1Text');
+    }
+
+    /**
+     * @param  string $value for Giropay
+     * @return $this
+     */
+    public function setInfo1Text($value)
+    {
+        return $this->setParameter('info1Text', $value);
+    }
+
+    /**
+     * @return string For Giropay
+     */
+    public function getInfo2Label()
+    {
+        return $this->getParameter('info2Label');
+    }
+
+    /**
+     * @param  string $value for Giropay
+     * @return $this
+     */
+    public function setInfo2Label($value)
+    {
+        return $this->setParameter('infoLabel', $value);
+    }
+
+    /**
+     * @return string For Giropay
+     */
+    public function getInfo2Text()
+    {
+        return $this->getParameter('info2Text');
+    }
+
+    /**
+     * @param  string $value for Giropay
+     * @return $this
+     */
+    public function setInfo2Text($value)
+    {
+        return $this->setParameter('info2Text', $value);
+    }
+
+    /**
+     * @return string For Giropay
+     */
+    public function getInfo3Label()
+    {
+        return $this->getParameter('info3Label');
+    }
+
+    /**
+     * @param  string $value for Giropay
+     * @return $this
+     */
+    public function setInfo3Label($value)
+    {
+        return $this->setParameter('info3Label', $value);
+    }
+
+    /**
+     * @return string For Giropay
+     */
+    public function getInfo3Text()
+    {
+        return $this->getParameter('info3Text');
+    }
+
+    /**
+     * @param  string $value for Giropay
+     * @return $this
+     */
+    public function setInfo3Text($value)
+    {
+        return $this->setParameter('info3Text', $value);
+    }
+
+    /**
+     * @return string For Giropay
+     */
+    public function getInfo4Label()
+    {
+        return $this->getParameter('info4Label');
+    }
+
+    /**
+     * @param  string $value for Giropay
+     * @return $this
+     */
+    public function setInfo4Label($value)
+    {
+        return $this->setParameter('info4Label', $value);
+    }
+
+    /**
+     * @return string For Giropay
+     */
+    public function getInfo4Text()
+    {
+        return $this->getParameter('info4Text');
+    }
+
+    /**
+     * @param  string $value for Giropay
+     * @return $this
+     */
+    public function setInfo4Text($value)
+    {
+        return $this->setParameter('info4Text', $value);
+    }
+
+    /**
+     * @return string For Giropay
+     */
+    public function getInfo5Label()
+    {
+        return $this->getParameter('info5Label');
+    }
+
+    /**
+     * @param  string $value for Giropay
+     * @return $this
+     */
+    public function setInfo5Label($value)
+    {
+        return $this->setParameter('info5Label', $value);
+    }
+
+    /**
+     * @return string For Giropay
+     */
+    public function getInfo5Text()
+    {
+        return $this->getParameter('info5Text');
+    }
+
+    /**
+     * @param  string $value for Giropay
+     * @return $this
+     */
+    public function setInfo5Text($value)
+    {
+        return $this->setParameter('info5Text', $value);
+    }
+
+
 
     /**
      * @return string Absolute endpoint URL.

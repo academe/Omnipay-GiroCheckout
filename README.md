@@ -116,6 +116,9 @@ two ways (both will be used):
 * Via the notification URL.
 * Through query parameters given to the return URL.
 
+The `notifyUrl` and the `returnUrl` can both take custom query parameters.
+The gateway will merge in its own parameters when using the URLs.
+
 #### Credit Card Complete Authorize
 
 When the user returns to the `returnUrl`, the transaction result can be extracted
@@ -384,7 +387,7 @@ The back-channel notification handler will be sent the usual details too.
 # Giropay Payment Type
 
 This payment type only works for payments in Euros, and only for issuing
-banks that have registered with the service (over 1500 to date).
+banks that have registered with the service (over 1400 to date).
 
 As well as making payments, there are a number of supporting API methods.
 
@@ -405,6 +408,8 @@ $response = $resquest->send();
 
 if ($response->isSuccessful()) {
     $bankList = $response->getIssuerArray();
+
+    var_dump($bankList);
 }
 
 // array(1407) {
@@ -441,5 +446,61 @@ $response = $resquest->send();
 
 $supportsGiropay = $response->hasGiropay();
 $supportsGiropayId = $response->hasGiropayId();
+```
+
+## Giropay Purchase
+
+There is no `authorize` capability, just `purchase`.
+
+```php
+$request = $gateway->purchase([
+    'transactionId' => $transactionId,
+    'amount' => '1.23',
+    'currency' => 'EUR',
+    'description' => 'Transaction ' . $transactionId,
+    'returnUrl' => 'url to bring the user back to the merchant site',
+    'notifyUrl' => 'url for the gateway to send direct notifications',
+    'bic' => 'TESTDETT421', // mandatory
+    'info1Label' => 'My Label 1',
+    'info1Text' => 'My Text 1',
+]);
+```
+
+The result will be a redirect to the gateway or bank.
+
+On return, the usual `completePurchase` and `acceptNotification` messages will provide
+the result of the transaction attempt.
+
+The final result includes the following methods to inspect additional details:
+
+```php
+$notifyResponse->getResultAvs();
+$notifyResponse->getObvName();
+$notifyResponse->isAgeVerificartionSuccessful();
+```
+
+## Giropay Sender Details
+
+Details of the sender can be fetched given a successful transaction.
+
+```php
+$request = $gateway->getSender([
+    'transactionReference' => '6b65a235-e7c1-464f-b238-ea4ea0bc647f',
+]);
+
+$response = $request->send();
+```
+
+Details include:
+
+```php
+$response->getAccountHolder();
+// string(17) "Stefan Adlerhorst"
+
+$response->getIban();
+// string(22) "DE46940594210000012345"
+
+$response->getBic();
+// string(11) "TESTDETT421"
 ```
 

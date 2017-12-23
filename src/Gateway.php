@@ -299,4 +299,13 @@ class Gateway extends AbstractGateway
     {
         return $this->createRequest(Message\GetIssuersRequest::class, $parameters);
     }
+
+    /**
+     * @param  array $parameters
+     * @return Message\GetSenderRequest
+     */
+    public function getSender(array $parameters = [])
+    {
+        return $this->createRequest(Message\GetSenderRequest::class, $parameters);
+    }
 }
