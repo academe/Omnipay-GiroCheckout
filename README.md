@@ -504,3 +504,12 @@ $response->getBic();
 // string(11) "TESTDETT421"
 ```
 
+## Giropay ID (age verification)
+
+Use the `Giropay-ID` payment type to just perform age verification without
+making a payment. You can leave out the amount, currency and description, as
+none of those are sent to the gateway.
+
+```php
+$gateway->setPaymentType(Gateway::PAYMENT_TYPE_GIROPAY_ID);
+```

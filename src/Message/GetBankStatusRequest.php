@@ -24,6 +24,7 @@ class GetBankStatusRequest extends AbstractRequest
      */
     protected $supportedPaymentTypes = [
         Gateway::PAYMENT_TYPE_GIROPAY,
+        Gateway::PAYMENT_TYPE_GIROPAY_ID,
     ];
 
     /**

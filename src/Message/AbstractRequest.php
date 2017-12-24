@@ -69,9 +69,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         'gcAmount',
         'gcCurrency',
         'gcResultPayment',
+        'gcResultAVS',
+        'gcObvName',
         'gcHash',
     ];
-
+//gcReference=125e9007-7ef4-4b82-b716-24ceef197c69&gcMerchantTxId=TXN-45590020420&gcBackendTxId=SJBK0SQLP4&gcAmount=123&gcCurrency=EUR&gcResultPayment=4000&gcResultAVS=4020&gcHash=181e25e703868f07da3e730ae83fc075
     /**
      * @var array List of supported language strings.
      */
@@ -429,6 +431,14 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     public function isGiropay()
     {
         return $this->getPaymentType() === Gateway::PAYMENT_TYPE_GIROPAY;
+    }
+
+    /**
+     * @return bool true if processing by Giropay-ID.
+     */
+    public function isGiropayId()
+    {
+        return $this->getPaymentType() === Gateway::PAYMENT_TYPE_GIROPAY_ID;
     }
 
     /**

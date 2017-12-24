@@ -222,15 +222,19 @@ class AuthorizeRequest extends AbstractRequest
 
         $this->validatePaymentType();
 
-        // First six parameters are mandatory and common to all payment methods.
+        // First six parameters are mandatory and common to all payment methods
+        // (except Giropay-ID).
 
         $data = [];
         $data['merchantId']     = $this->getMerchantId(true);
         $data['projectId']      = $this->getProjectId(true);
         $data['merchantTxId']   = $this->getTransactionId(true);
-        $data['amount']         = (string)$this->getAmountInteger();
-        $data['currency']       = $this->getCurrency();
-        $data['purpose']        = substr($this->getDescription(), 0, static::PURPOSE_LENGTH);
+
+        if (! $this->isGiropayId()) {
+            $data['amount']         = (string)$this->getAmountInteger();
+            $data['currency']       = $this->getCurrency();
+            $data['purpose']        = substr($this->getDescription(), 0, static::PURPOSE_LENGTH);
+        }
 
         // EPS and Giropay require a bic
 

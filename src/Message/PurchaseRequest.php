@@ -23,6 +23,7 @@ class PurchaseRequest extends AuthorizeRequest
         Gateway::PAYMENT_TYPE_MAESTRO,
         Gateway::PAYMENT_TYPE_EPS,
         Gateway::PAYMENT_TYPE_GIROPAY,
+        Gateway::PAYMENT_TYPE_GIROPAY_ID,
         Gateway::PAYMENT_TYPE_PAYDIREKT,
     ];
 
