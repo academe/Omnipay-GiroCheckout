@@ -40,10 +40,6 @@ class CaptureRequest extends AbstractRequest
      */
     public function getData()
     {
-        // Construction of the data will depend on the payment type.
-
-        $paymentType = $this->getPaymentType();
-
         $this->$this->validatePaymentType();
 
         // First five parameters are mandatory and common to all payment methods.
@@ -66,11 +62,11 @@ class CaptureRequest extends AbstractRequest
 
         $purpose = $this->getDescription();
 
-        if ($purpose !== null || $paymentType === Gateway::PAYMENT_TYPE_PAYDIREKT) {
+        if ($purpose !== null || $this->isPaydirekt()) {
             // Even though the documentation shows the purpose as optional for Direct Debit
             // payment types, it actually causes a hash validation error if included.
 
-            if ($paymentType !== Gateway::PAYMENT_TYPE_DIRECTDEBIT) {
+            if ($this->isDirectDebit()) {
                 $data['purpose'] = substr($purpose, 0, static::PURPOSE_LENGTH);
             }
         }
@@ -80,24 +76,20 @@ class CaptureRequest extends AbstractRequest
 
         $data['reference'] = $this->getTransactionReference();
 
-        if ($paymentType === Gateway::PAYMENT_TYPE_PAYDIREKT) {
-            $data = $this->getPaydirektData($data);
+        if ($this->isPaydirekt()) {
+            $merchantReconciliationReferenceNumber = $this->getMerchantReconciliationReferenceNumber();
+
+            if ($merchantReconciliationReferenceNumber) {
+                $data['merchantReconciliationReferenceNumber'] = $merchantReconciliationReferenceNumber;
+            }
+
+            $data['final'] = (bool)$this->getFinal()
+                ? static::PAYDIREKT_FINAL_FLAG_YES
+                : static::PAYDIREKT_FINAL_FLAG_NO;
         }
 
         // Add a hash for the data we have constructed.
         $data['hash'] = $this->requestHash($data);
-
-        return $data;
-    }
-
-    /**
-     * @param array $data The data so far
-     * @return array
-     */
-    public function getPaydirektData(array $data = [])
-    {
-        $data['merchantReconciliationReferenceNumber'] = $this->getMerchantReconciliationReferenceNumber();
-        $data['final'] = (bool)$this->getFinal() ? static::PAYDIREKT_FINAL_FLAG_YES : static::PAYDIREKT_FINAL_FLAG_NO;
 
         return $data;
     }
