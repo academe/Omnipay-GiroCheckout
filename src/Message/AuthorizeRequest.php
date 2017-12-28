@@ -11,6 +11,7 @@ namespace Academe\GiroCheckout\Message;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Academe\GiroCheckout\Gateway;
+use Omnipay\Common\ItemBag;
 
 class AuthorizeRequest extends AbstractRequest
 {
@@ -39,6 +40,19 @@ class AuthorizeRequest extends AbstractRequest
     const MANDATE_SEQUENCE_RECURRING    = 3;
     const MANDATE_SEQUENCE_LAST         = 4;
 
+    /**
+     * PHYSICAL: All items in the cart are physical (default)
+     * DIGITAL: All items in the cart are digital.
+     * MIXED: The cart contains both physical and digital items.
+     * ANONYMOUS_DONATION: An anonymous donation (no address data required).
+     * AUTHORITIES_PAYMENT: A payment operation to the authorities (e-Government, no address data required).
+     * @var string Paydirekt cart type
+     */
+    const SHOPPING_CART_TYPE_PHYSICAL               = 'PHYSICAL';
+    const SHOPPING_CART_TYPE_DIGITAL                = 'DIGITAL';
+    const SHOPPING_CART_TYPE_MIXED                  = 'MIXED';
+    const SHOPPING_CART_TYPE_ANONYMOUS_DONATION     = 'ANONYMOUS_DONATION';
+    const SHOPPING_CART_TYPE_AUTHORITIES_PAYMENT    = 'AUTHORITIES_PAYMENT';
 
     /**
      * @var string The type of transaction being requested.
@@ -62,13 +76,8 @@ class AuthorizeRequest extends AbstractRequest
     ];
 
     /**
-     * @var string
-     */
-    protected $interfaceVariant = self::VARIANT_PAGE;
-
-    /**
      * @param array $data
-     * @return array Data with the Giropay fields attempted.
+     * @return array Data with the Giropay fields appended.
      */
     public function getGiropayData($data = [])
     {
@@ -104,18 +113,144 @@ class AuthorizeRequest extends AbstractRequest
 
     /**
      * @param array $data
-     * @return array Data with the Paydirekt fields attempted.
+     * @return array Data with the Paydirekt fields appended.
      */
     public function getPaydirektData($data = [])
     {
-        // TODO: all Paydirekt fields.
+        // TOOD: validate against constants.
+        if ($shoppingCartType = $this->getShoppingCartType()) {
+            $data['shoppingCartType'] = $shoppingCartType;
+        }
+
+        // TODO: validate max 20 characters.
+        if ($customerId = $this->getCustomerId()) {
+            $data['customerId'] = $customerId;
+        }
+
+        // TODO: shippingAmount - can we get this from the cart? Probably not.
+
+        if ($card = $this->getCard()) {
+            if ($shippingFirstName = $card->getShippingFirstName()) {
+                $data['shippingAddresseFirstName'] = $shippingFirstName;
+            }
+
+            if ($shippingLastName = $card->getShippingLastName()) {
+                $data['shippingAddresseLastName'] = $shippingLastName;
+            }
+
+            if ($shippingCompany = $card->getShippingCompany()) {
+                $data['shippingCompany'] = $shippingCompany;
+            }
+
+            if ($shippingAddress2 = $card->getShippingAddress2()) {
+                $data['shippingAdditionalAddressInformation'] = $shippingAddress2;
+            }
+
+            if ($shippingAddress1 = $card->getShippingAddress1()) {
+                $data['shippingStreet'] = $shippingAddress1;
+            }
+
+            // TODO: shippingStreetNumber
+            // The street number would need to go into the requesr as custom parameters
+            // cannot be added to the card, so its value here is questionable.
+
+            if ($shippingPostcode = $card->getShippingPostcode()) {
+                $data['shippingZipCode'] = $shippingPostcode;
+            }
+
+            if ($shippingCity = $card->getShippingCity()) {
+                $data['shippingCity'] = $shippingCity;
+            }
+
+            // TODO: validate an ISO 3166-1 2-character code
+            if ($shippingCountry = $card->getShippingCountry()) {
+                $data['shippingCountry'] = $shippingCountry;
+            }
+
+            if ($email = $card->getEmail()) {
+                $data['shippingEmail'] = $email;
+            }
+        }
+
+        // Only for `purchase`. The transaction type here is a convenient proxy.
+        if ($merchantReconciliationReferenceNumber = $this->getMerchantReconciliationReferenceNumber()) {
+            if ($this->transactionType == self::TRANSACTION_TYPE_SALE) {
+                $data['merchantReconciliationReferenceNumber'] = $merchantReconciliationReferenceNumber;
+            }
+        }
+
+        // TODO: orderAmount probably from the cart, not the card.
+        // This is the total amount minus any shipping.
+
+        // TODO: validate this is set (this is mandatory).
+        $orderId = $this->getOrderId();
+        $data['orderId'] = $orderId;
+
+        $items = $this->getItems();
+        if ($items) {
+            $data['cart'] = json_encode($this->getCartData($items));
+        }
+
+        if ($invoiceId = $this->getInvoiceId()) {
+            $data['invoiceId'] = $invoiceId;
+        }
+
+        if ($customerMail = $this->getCustomerMail()) {
+            $data['customerMail'] = $customerMail;
+        }
+
+        // TODO: validate this is an integer and is in range.
+        if ($minimumAge = $this->getMinimumAge()) {
+            $data['minimumAge'] = $minimumAge;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Build the cart data.
+     * Note: Omnipay 2.x does not define the format of the item price, so this
+     * method interprets it according to the base type or whether a decimal
+     * point is found. It's horrible and Omnipay 3.x fixes this.
+     * Note: ean is not supported at this time.
+     *
+     * @param ItemBag $items
+     * @return array format required for Paydirekt
+     */
+    public function getCartData(ItemBag $items)
+    {
+        $data = [];
+
+        foreach ($items as $item) {
+            $itemAmount = $item->getPrice();
+
+            if (is_int($itemAmount)) {
+                // 123
+                $grossAmount = $itemAmount;
+            } elseif (is_float($itemAmount)) {
+                // 1.23
+                $grossAmount = (int)($itemAmount * 100); // Horible hack!
+            } elseif (is_string($itemAmount) && strpos($itemAmount, '.') !== false) {
+                // '1.23'
+                $grossAmount = (int)((float)$itemAmount * 100); // Horible hack!
+            } elseif (is_string($itemAmount)) {
+                // '123'
+                $grossAmount = (int)$itemAmount;
+            }
+
+            $data[] = [
+                'name' => $item->getName(),
+                'quantity' => $item->getQuantity(),
+                'grossAmount' => $grossAmount,
+            ];
+        }
 
         return $data;
     }
 
     /**
      * @param array $data
-     * @return array Data with the Direct Debit fields attempted.
+     * @return array Data with the Direct Debit fields appended.
      */
     public function getDirectDebitData($data = [])
     {
@@ -322,7 +457,7 @@ class AuthorizeRequest extends AbstractRequest
 
         // Paydirekt has a bunch of fields here.
 
-        if ($paymentType === Gateway::PAYMENT_TYPE_PAYDIREKT) {
+        if ($this->isPaydirekt()) {
             $data = $this->getPaydirektData($data);
         }
 
@@ -703,7 +838,107 @@ class AuthorizeRequest extends AbstractRequest
         return $this->setParameter('info5Text', $value);
     }
 
+    /**
+     * @return string For Paydirekt
+     */
+    public function getShoppingCartType()
+    {
+        return $this->getParameter('shoppingCartType');
+    }
 
+    /**
+     * @param  string $value for Paydirekt one of static::SHOPPING_CART_TYPE_*
+     * @return $this
+     */
+    public function setShoppingCartType($value)
+    {
+        return $this->setParameter('shoppingCartType', $value);
+    }
+
+    /**
+     * @return string For Paydirekt
+     */
+    public function getCustomerId()
+    {
+        return $this->getParameter('customerId');
+    }
+
+    /**
+     * @param  string $value for Paydirekt
+     * @return $this
+     */
+    public function setCustomerId($value)
+    {
+        return $this->setParameter('customerId', $value);
+    }
+
+    /**
+     * @return string For Paydirekt
+     */
+    public function getOrderId()
+    {
+        return $this->getParameter('orderId');
+    }
+
+    /**
+     * @param  string $value for Paydirekt
+     * @return $this
+     */
+    public function setOrderId($value)
+    {
+        return $this->setParameter('orderId', $value);
+    }
+
+    /**
+     * @return string For Paydirekt
+     */
+    public function getInvoiceId()
+    {
+        return $this->getParameter('invoiceId');
+    }
+
+    /**
+     * @param  string $value for Paydirekt
+     * @return $this
+     */
+    public function setInvoiceId($value)
+    {
+        return $this->setParameter('invoiceId', $value);
+    }
+
+    /**
+     * @return string For Paydirekt
+     */
+    public function getCustomerMail()
+    {
+        return $this->getParameter('customerMail');
+    }
+
+    /**
+     * @param  string $value for Paydirekt
+     * @return $this
+     */
+    public function setCustomerMail($value)
+    {
+        return $this->setParameter('customerMail', $value);
+    }
+
+    /**
+     * @return int For Paydirekt
+     */
+    public function getMinimumAge()
+    {
+        return $this->getParameter('minimumAge');
+    }
+
+    /**
+     * @param int $value for Paydirekt
+     * @return $this
+     */
+    public function setMinimumAge($value)
+    {
+        return $this->setParameter('minimumAge', $value);
+    }
 
     /**
      * @return string Absolute endpoint URL.

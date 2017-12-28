@@ -60,6 +60,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     protected $supportedPaymentTypes = [];
 
     /**
+     * These fields are included in the hash generation for requests from
+     * the gateway. All other fields are ignored.
+     * CHECKME: think about just checking for a parameter name pattern to
+     * be more future-proof, e.g. /^gc[A-Z]/
+     *
      * @var array Query parameters.
      */
     protected $notificationQueryParameters = [
@@ -192,6 +197,23 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     public function setBic($value)
     {
         return $this->setParameter('bic', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getMerchantReconciliationReferenceNumber()
+    {
+        return $this->getParameter('merchantReconciliationReferenceNumber');
+    }
+
+    /**
+     * @param string $value for Paydirekt
+     * @return $this
+     */
+    public function setMerchantReconciliationReferenceNumber($value)
+    {
+        return $this->setParameter('merchantReconciliationReferenceNumber', $value);
     }
 
     /**
@@ -447,6 +469,14 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     public function isMaestro()
     {
         return $this->getPaymentType() === Gateway::PAYMENT_TYPE_MAESTRO;
+    }
+
+    /**
+     * @return bool true if processing a paydirekt transaction.
+     */
+    public function isPaydirekt()
+    {
+        return $this->getPaymentType() === Gateway::PAYMENT_TYPE_PAYDIREKT;
     }
 
     /**

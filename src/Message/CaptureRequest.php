@@ -115,23 +115,6 @@ class CaptureRequest extends AbstractRequest
     /**
      * @return string
      */
-    public function getMerchantReconciliationReferenceNumber()
-    {
-        return $this->getParameter('merchantReconciliationReferenceNumber');
-    }
-
-    /**
-     * @param string $value
-     * @return $this
-     */
-    public function setMerchantReconciliationReferenceNumber($value)
-    {
-        return $this->setParameter('merchantReconciliationReferenceNumber', $value);
-    }
-
-    /**
-     * @return string
-     */
     public function getFinal()
     {
         return $this->getParameter('merchantReconciliationReferenceNumber');
