@@ -39,6 +39,10 @@ Table of Contents
    * [Giropay Payment Type](#giropay-payment-type)
       * [Giropay Issuers List](#giropay-issuers-list)
       * [Giropay Bank Capabilities](#giropay-bank-capabilities)
+      * [Giropay Purchase](#giropay-purchase)
+      * [Giropay Sender Details](#giropay-sender-details)
+      * [Giropay ID (age verification)](#giropay-id-age-verification)
+   * [Paydirekt Payment Type](#paydirekt-payment-type)
 
 # Authentication
 
@@ -68,12 +72,21 @@ use Omnipay\Omnipay;
 // An issue will be raised against Omnipay Common to fix this.
 $gateway = Omnipay::create('\\' . Gateway::class);
 
-// The IDs can be given as integers ir strings.
+// The IDs can be given as integers in strings.
 $gateway->setMerchantID('3610000');
 $gateway->setProjectID('37000');
 $gateway->setProjectPassphrase('ZFXDMpXDMpVV9Z');
 // Other payment types are supported.
 $gateway->setPaymentType(Gateway::PAYMENT_TYPE_CREDIT_CARD);
+
+// or
+
+$gateway->initialize([
+    'merchantId' => 3610000,
+    'projectId' => 37000,
+    'projectPassphrase' => 'ZFXDMpXDMpVV9Z',
+    'paymentType' => Gateway::PAYMENT_TYPE_CREDIT_PAYPAL,
+]);
 ```
 
 # Credit Card Payment Type
@@ -513,3 +526,24 @@ none of those are sent to the gateway.
 ```php
 $gateway->setPaymentType(Gateway::PAYMENT_TYPE_GIROPAY_ID);
 ```
+
+# Paydirekt Payment Type
+
+This is the only payment type that accepts a shopping cart details and
+a `CreditCard` object for shipping details.
+
+Capabilities of this payment type include `authorize` and `purchase`.
+An authorization transaction can be further processed though `capture`
+and `void`. A purchase transaction can accept a `refund`.
+
+The gateway requires cart item prices to be in minor units.
+Since Omnipay 2.x does not define the units cart items use, some assumptions
+will be made and conversions performed as follows (all these formats are
+treated as the same amount):
+
+* String '1.23' => 123
+* String '123' => 123
+* Integer 123 => 123
+* Float 1.23 => 123
+
+Further documentation and examples will follow.
