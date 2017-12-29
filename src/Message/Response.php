@@ -14,7 +14,7 @@ use Academe\GiroCheckout\Gateway;
 class Response extends AbstractResponse implements RedirectResponseInterface
 {
     /**
-     * @var int The response code to indicate a CC has been successfuly initialised.
+     * @var int The response code to indicate the requested action was successful.
      */
     const RESPONSE_CODE_INITIALISE_SUCCESS = 0;
 
