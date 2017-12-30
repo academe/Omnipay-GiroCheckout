@@ -55,6 +55,9 @@ class Response extends AbstractResponse implements RedirectResponseInterface
             return $msg;
         }
 
+        // A few of the APIs do not return a message, but still return
+        // the code that can be mapped onto a message.
+
         $reasonCode = $this->getReasonCode();
 
         if (! empty($reasonCode)) {

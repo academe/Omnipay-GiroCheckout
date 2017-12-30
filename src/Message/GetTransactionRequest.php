@@ -3,12 +3,9 @@
 namespace Academe\GiroCheckout\Message;
 
 /**
- * GiroCheckout Gateway "query pseudo card information" Request,
- * Gets the cardReference and other details from a previous transaction.
- * The original transaction must have requested for the PKN to be saved
- * using `['createCard' => true]`
+ * GiroCheckout Gateway "get transaction information" Request.
  *
- * @link http://api.girocheckout.de/en:girocheckout:creditcard:start#pseudo_card_numbers_pkn
+ * @link http://api.girocheckout.de/en:tools:transaction_status
  */
 
 use Omnipay\Common\Exception\InvalidResponseException;

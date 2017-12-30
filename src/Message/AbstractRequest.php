@@ -64,18 +64,35 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      * the gateway. All other fields are ignored.
      * CHECKME: think about just checking for a parameter name pattern to
      * be more future-proof, e.g. /^gc[A-Z]/
+     * The Payment Page payment type has many more query parameters, all
+     * matching this pattern, so that seems like a good reason to just use
+     * the pattern. However, the order of the fields are defined here, which
+     * would handle the query parameters order being mixed up.
      *
      * @var array Query parameters.
      */
     protected $notificationQueryParameters = [
+        // Payment page only
+        'gcPaymethod',
+        'gcType',
+        'gcProjectId',
+        // All payment types
         'gcReference',
         'gcMerchantTxId',
         'gcBackendTxId',
         'gcAmount',
         'gcCurrency',
         'gcResultPayment',
+        // Giropay-ID only
         'gcResultAVS',
         'gcObvName',
+        // Payment Page only, if create PKN is enabled
+        'gcPkn',
+        'gcCardnumber',
+        'gcCardExpDate',
+        'gcAccountHolder',
+        'gcIban',
+        // Tamper check for all requests
         'gcHash',
     ];
 
