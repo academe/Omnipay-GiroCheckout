@@ -4,6 +4,7 @@ namespace Academe\GiroCheckout\Message;
 
 /**
  * Handles the Capture, Refund and Void responses.
+ * This could probably be merged into the generic Response class.
  */
 
 use Academe\GiroCheckout\Gateway;
