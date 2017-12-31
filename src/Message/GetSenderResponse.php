@@ -16,7 +16,7 @@ class GetSenderResponse extends Response
      */
     public function isSuccessful()
     {
-        return $this->getCode() == static::RESPONSE_CODE_INITIALISE_SUCCESS;
+        return $this->getCode() == static::RESPONSE_CODE_SUCCESS;
     }
 
     /**

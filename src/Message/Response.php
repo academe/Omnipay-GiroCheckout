@@ -16,16 +16,16 @@ class Response extends AbstractResponse implements RedirectResponseInterface
     /**
      * @var int The response code to indicate the requested action was successful.
      */
-    const RESPONSE_CODE_INITIALISE_SUCCESS = 0;
+    const RESPONSE_CODE_SUCCESS = 0;
 
     /**
      * @return bool
      */
     public function isSuccessful()
     {
-        return $this->getCode() == static::RESPONSE_CODE_INITIALISE_SUCCESS
+        return $this->getCode() == static::RESPONSE_CODE_SUCCESS
             && $this->getReasonCode() == Gateway::RESULT_PAYMENT_SUCCESS
-            && empty($this->getRedirectUrl());
+            && ! $this->isRedirect();
     }
 
     /**
@@ -105,7 +105,7 @@ class Response extends AbstractResponse implements RedirectResponseInterface
      */
     public function isRedirect()
     {
-        return $this->getCode() == static::RESPONSE_CODE_INITIALISE_SUCCESS
+        return $this->getCode() == static::RESPONSE_CODE_SUCCESS
             && !empty($this->getRedirectUrl());
     }
 

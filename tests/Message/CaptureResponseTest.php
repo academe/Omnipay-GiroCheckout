@@ -41,10 +41,10 @@ class CaptureResponseTest extends TestCase
         $successResponse = $this->newResponse($this->captureSuccessData);
 
         $this->assertSame(true, $successResponse->isSuccessful());
+        $this->assertSame(false, $successResponse->isRedirect());
         $this->assertSame('TXN-94459199193', $successResponse->getTransactionId());
         $this->assertSame('700a4199-634b-4876-b28a-c8e9b01a3793', $successResponse->getTransactionReference());
-
-        // TODO: get the backend reference
+        $this->assertSame('020SiesTKoaIE1oEK0cdQH', $successResponse->getBackendTxId());
 
         // NOTE: The parent transaction reference is NOT documented for capture and refund, but it for
         // void. I am going to assume it is a mistake in the documentation, since the API DOES retunr it.
@@ -62,6 +62,11 @@ class CaptureResponseTest extends TestCase
         $this->assertSame(false, $successResponse->isSuccessful());
         $this->assertNull($successResponse->getTransactionId());
         $this->assertNull($successResponse->getTransactionReference());
+    }
+
+    public function testParentTransactionReference()
+    {
+        $successResponse = $this->newResponse($this->captureFailData);
 
         // NOTE: The parent transaction reference is NOT documented for capture and refund, but it for
         // void. I am going to assume it is a mistake in the documentation, since the API DOES retunr it.

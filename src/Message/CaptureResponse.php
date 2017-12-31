@@ -15,7 +15,7 @@ class CaptureResponse extends Response
      */
     public function isSuccessful()
     {
-        return $this->getCode() == static::RESPONSE_CODE_INITIALISE_SUCCESS
+        return $this->getCode() == static::RESPONSE_CODE_SUCCESS
             && $this->getReasonCode() == Gateway::RESULT_PAYMENT_SUCCESS;
     }
 
@@ -25,6 +25,16 @@ class CaptureResponse extends Response
     public function getParentTransactionReference()
     {
         return $this->getDataItem('referenceParent');
+    }
+
+    /**
+     * For CC and DD Capture and Refund.
+     *
+     * @return string
+     */
+    public function getBackendTxId()
+    {
+        return $this->getDataItem('backendTxId');
     }
 
     /**
