@@ -92,8 +92,8 @@ class AuthorizeRequestPaymentPageTest extends TestCase
         $this->request->setMaxAmount(9000);
 
         $data = $this->request->getData();
-        $this->assertNull($data['minamount']);
-        $this->assertNull($data['maxamount']);
+        $this->assertArrayNotHasKey('minamount', $data);
+        $this->assertArrayNotHasKey('maxamount', $data);
     }
 
     //test if MIN, MAX are included if fixed values does not exist
@@ -104,8 +104,8 @@ class AuthorizeRequestPaymentPageTest extends TestCase
         $this->request->setMaxAmount(9000);
 
         $data = $this->request->getData();
-        $this->assertNotNull($data['minamount']);
-        $this->assertNotNull($data['maxamount']);
+        $this->assertArrayHasKey('minamount', $data);
+        $this->assertArrayHasKey('maxamount', $data);
     }
 
 
