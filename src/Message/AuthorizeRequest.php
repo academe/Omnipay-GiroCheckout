@@ -73,6 +73,7 @@ class AuthorizeRequest extends AbstractRequest
         Gateway::PAYMENT_TYPE_MAESTRO,
         Gateway::PAYMENT_TYPE_EPS,
         Gateway::PAYMENT_TYPE_PAYDIREKT,
+        Gateway::PAYMENT_TYPE_PAYMENTPAGE,
     ];
 
     /**
@@ -342,6 +343,70 @@ class AuthorizeRequest extends AbstractRequest
         return $data;
     }
 
+
+    /**
+     * @param array $data
+     * @return array Data with the Payment Page fields appended.
+     */
+    public function getPaymentPageData($data = [])
+    {
+        // Possible Payment methods
+        //Comma Seperated list, at time of writing could be: 1,2,6,7,8,11,12,14,23,27.
+        //(11/01/18)
+
+        if ($payMethods = $this->getPayMethods()) {
+            $data['paymethods'] = $payMethods;
+        }
+
+        //Comma Seperated list of the project IDs, whose payment methods are to be available on the page.
+
+        if ($payProjects = $this->getPayProjects()) {
+            $data['payprojects'] = $payProjects;
+        }
+
+        //String (70) Characters
+
+        if ($organization = $this->getOrganization()) {
+            $data['organization'] = $organization;
+        }
+
+        //if fixedvalues has values then freeamount is ignored.
+        if ($freeAmount = $this->getFreeAmount()) {
+            $data['freeamount'] = $freeAmount;
+        }
+
+        if ($fixedValues = $this->getFixedValues()) {
+            $data['fixedvalues'] = $fixedValues;
+
+        } else {
+            if ($this->hasFreeAmount()) {
+
+                if ($minAmount = $this->getMinAmount()) {
+                    $data['minamount'] = $minAmount;
+                } else {
+                    $data['minamount'] = 100;
+                }
+
+                if ($maxAmount = $this->getMaxAmount()) {
+                    $data['maxamount'] = $maxAmount;
+                }
+            }
+        }
+
+        //orderId is only used when payment method is paydirekt
+
+        if ($orderId = $this->getOrderId()) {
+            $data['orderid'] = $orderId;
+        }
+
+        if ($data['pagetype'] == 2 && ($projectList = $this->getProjectList())) {
+            $data['projectlist'] = $projectList;
+        }
+
+
+        return $data;
+    }
+
     /**
      * All values will be strings; they will be sent as a form encoded request.
      * The data parameters MUST be built in a strict order.
@@ -368,7 +433,13 @@ class AuthorizeRequest extends AbstractRequest
         if (! $this->isGiropayId()) {
             $data['amount']         = (string)$this->getAmountInteger();
             $data['currency']       = $this->getCurrency();
-            $data['purpose']        = substr($this->getDescription(), 0, static::PURPOSE_LENGTH);
+
+            //PaymentPage has a different length for purpose
+            if ($this->isPaymentPage()) {
+                $data['purpose'] = $this->getPurpose();
+            } else {
+                $data['purpose'] = substr($this->getDescription(), 0, static::PURPOSE_LENGTH);
+            }
         }
 
         // EPS and Giropay require a bic
@@ -383,9 +454,30 @@ class AuthorizeRequest extends AbstractRequest
             $data = $this->getGiropayData($data);
         }
 
-        // Credit Card, Direct Debit and Maestro have optional type, locale and mobile parameters.
+        //PaymentPage has its own optional fields here.
 
-        if ($this->isCreditCard() || $this->isDirectDebit() || $this->isMaestro()) {
+        if ($this->isPaymentPage()) {
+
+            if ($description = $this->getDescription()) {
+                if (strlen($description) > 20) {
+                    $data['description'] = $description;
+                }
+            }
+
+            if ($pageType = $this->getPageType()) {
+                $data['pagetype']    = $pageType;
+            }
+            
+            if ($expiryDate = $this->getExpiryDate()) {
+                $data['expirydate']  = $expiryDate;
+            }
+            
+        }
+
+        //Credit Card, Direct Debit and Maestro have optional type, locale and mobile parameters.
+        //PaymentPage has type and locale.
+
+        if ($this->isCreditCard() || $this->isDirectDebit() || $this->isMaestro() || $this->isPaymentPage()) {
             // 'SALE' or 'AUTH', for purchase or authorization.
 
             $data['type'] = $this->transactionType;
@@ -398,7 +490,7 @@ class AuthorizeRequest extends AbstractRequest
                 $data['locale'] = $this->getValidLanguage();
             }
 
-            if ($this->getMobile() !== null && $this->hasPaymentPage()) {
+            if ($this->getMobile() !== null && $this->hasPaymentPage() && !$this->isPaymentPage()) {
                 $data['mobile'] = ! empty($this->getMobile())
                     ? (string)static::MOBILE_OPTIMISE_YES
                     : (string)static::MOBILE_OPTIMISE_NO;
@@ -416,9 +508,16 @@ class AuthorizeRequest extends AbstractRequest
             $data['type'] = $this->transactionType;
         }
 
+        //PaymentPage has a bunch of optional fields here.
+
+        if ($this->isPaymentPage()) {
+            $data = $this->getPaymentPageData($data);
+        }
+
+
         // The PKN is used by Credit Card and Direct Debit payment types.
 
-        if ($this->isCreditCard() || $this->isDirectDebit()) {
+        if ($this->isCreditCard() || $this->isDirectDebit() || $this->isPaymentPage()) {
             // A pseudo card number (PKN) can be supplied, or a new PKN can be requested,
             // but not at the same time.
             // Alternatively the transaction can be left as a one-off with no PKN saved.
@@ -443,6 +542,10 @@ class AuthorizeRequest extends AbstractRequest
             }
         }
 
+        if ($this->isPaymentPage()) {
+            $data['test'] = $this->getTest();
+        }
+
         if ($this->isCreditCard()) {
             if (! $this->hasPaymentPage()) {
                 $data['recurring'] = static::RECURRING_YES;
@@ -461,16 +564,38 @@ class AuthorizeRequest extends AbstractRequest
             $data = $this->getPaydirektData($data);
         }
 
-        // Where to send the user after filling out their CC details, or cancelling.
+        //PAYMENT PAGE URL STUFF
+        if ($this->isPaymentPage()) {
+            if ($successUrl = $this->getReturnUrl()) {
+                $data['successUrl'] = $successUrl;
+            }
 
-        if ($this->hasPaymentPage() || $this->isPayPal()) {
-            $data['urlRedirect'] = $this->getReturnUrl();
+            if ($backUrl = $this->getCancelUrl()) {
+                $data['backUrl'] = $backUrl;
+            }
+
+            if ($failUrl = ($this->getFailUrl() ?: $this->getReturnUrl())) {
+                $data['failUrl'] = $failUrl;
+            }
+
+            if ($notifyUrl = $this->getNotifyUrl()) {
+                $data['notifyUrl'] = $notifyUrl;
+            }
+        } else {
+
+            // Where to send the user after filling out their CC details, or cancelling.
+
+            if ($this->hasPaymentPage() || $this->isPayPal()) {
+                $data['urlRedirect'] = $this->getReturnUrl();
+            }
+
+            // Back channel notification of the result.
+            // The main part of the result will be handed over the front channel too.
+
+            if (! $this->isPaymentPage()) {
+                $data['urlNotify'] = $this->getNotifyUrl();
+            }
         }
-
-        // Back channel notification of the result.
-        // The main part of the result will be handed over the front channel too.
-
-        $data['urlNotify'] = $this->getNotifyUrl();
 
         // Add a hash for the data we have constructed.
         $data['hash'] = $this->requestHash($data);
@@ -938,6 +1063,244 @@ class AuthorizeRequest extends AbstractRequest
     public function setMinimumAge($value)
     {
         return $this->setParameter('minimumAge', $value);
+    }
+
+    /**
+     * @return int For PaymentPage
+     */
+    public function getPageType()
+    {
+        return $this->getParameter('pagetype');
+    }
+
+    /**
+     * @param int $value for PaymentPage
+     * @return $this
+     */
+    public function setPageType($value)
+    {
+        return $this->setParameter('pagetype', $value);
+    }
+
+    /**
+     * @return string For PaymentPage
+     */
+    public function getExpiryDate()
+    {
+        return $this->getParameter('expirydate');
+    }
+
+    /**
+     * @param string $value for PaymentPage
+     * @return $this
+     */
+    public function setExpiryDate($value)
+    {
+        return $this->setParameter('expirydate', $value);
+    }
+
+    /**
+     * @return string For PaymentPage
+     */
+    public function getPayMethods()
+    {
+        return $this->getParameter('paymethods');
+    }
+
+    /**
+     * @param string $value for PaymentPage
+     * @return $this
+     */
+    public function setPayMethods($value)
+    {
+        if (is_array($value)) {
+            $value = implode(',', $value);
+        }
+
+        return $this->setParameter('paymethods', $value);
+    }
+
+    /**
+     * @return string For PaymentPage
+     */
+    public function getPayProjects()
+    {
+        return $this->getParameter('payprojects');
+    }
+
+    /**
+     * @param string $value for PaymentPage
+     * @return $this
+     */
+    public function setPayProjects($value)
+    {
+        if (is_array($value)) {
+            $value = implode(',', $value);
+        }
+
+        return $this->setParameter('payprojects', $value);
+    }
+
+    /**
+     * @return string For PaymentPage
+     */
+    public function getTest()
+    {
+        return $this->getParameter('test');
+    }
+
+    /**
+     * @param string $value for PaymentPage
+     * @return $this
+     */
+    public function setTest($value)
+    {
+        return $this->setParameter('test', $value);
+    }
+
+    /**
+     * @return string For PaymentPage
+     */
+    public function getOrganization()
+    {
+        return $this->getParameter('organization');
+    }
+
+    /**
+     * @param string $value for PaymentPage
+     * @return $this
+     */
+    public function setOrganization($value)
+    {
+        return $this->setParameter('organization', $value);
+    }
+
+    /**
+     * @return int For PaymentPage
+     */
+    public function getFreeAmount()
+    {
+        return $this->getParameter('freeamount');
+    }
+
+    /**
+     * @param int $value for PaymentPage
+     * @return $this
+     */
+    public function setFreeAmount($value)
+    {
+        return $this->setParameter('freeamount', $value);
+    }
+
+    /**
+     * @return string For PaymentPage
+     */
+    public function getFixedValues()
+    {
+        return $this->getParameter('fixedvalues');
+    }
+
+    /**
+     * @param string $value for PaymentPage
+     * @return $this
+     */
+    public function setFixedValues($value)
+    {
+
+        if (is_array($value)) {
+            $value = json_encode(array_values($value));
+        }
+
+        return $this->setParameter('fixedvalues', $value);
+    }
+
+    /**
+     * @return int For PaymentPage
+     */
+    public function getMinAmount()
+    {
+        return $this->getParameter('minamount');
+    }
+
+    /**
+     * @param int $value for PaymentPage
+     * @return $this
+     */
+    public function setMinAmount($value)
+    {
+        return $this->setParameter('minamount', $value);
+    }
+
+    /**
+     * @return int For PaymentPage
+     */
+    public function getMaxAmount()
+    {
+        return $this->getParameter('maxamount');
+    }
+
+    /**
+     * @param int $value for PaymentPage
+     * @return $this
+     */
+    public function setMaxAmount($value)
+    {
+        return $this->setParameter('maxamount', $value);
+    }
+
+    /**
+     * @return string For PaymentPage
+     */
+    public function getProjectList()
+    {
+        return $this->getParameter('projectlist');
+    }
+
+    /**
+     * @param string $value for PaymentPage
+     * @return $this
+     */
+    public function setProjectList($value)
+    {
+        if (is_array($value)) {
+            $value = json_encode(array_values($value));
+        }
+
+        return $this->setParameter('projectlist', $value);
+    }
+
+    /**
+     * @return string For PaymentPage
+     */
+    public function getFailUrl()
+    {
+        return $this->getParameter('failUrl');
+    }
+
+    /**
+     * @param string $value for PaymentPage
+     * @return $this
+     */
+    public function setFailUrl($value)
+    {
+        return $this->setParameter('failUrl', $value);
+    }
+
+    /**
+     * @return string For PaymentPage
+     */
+    public function getPurpose()
+    {
+        return $this->getParameter('purpose');
+    }
+
+    /**
+     * @param string $value for PaymentPage
+     * @return $this
+     */
+    public function setPurpose($value)
+    {
+        return $this->setParameter('purpose', $value);
     }
 
     /**

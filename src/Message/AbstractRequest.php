@@ -497,6 +497,27 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
+     * @return bool true if processing a paydirekt transaction.
+     */
+    public function isPaymentPage()
+    {
+        return $this->getPaymentType() === Gateway::PAYMENT_TYPE_PAYMENTPAGE;
+    }
+
+    /**
+     * If not set at all, then default it to false
+     * @return bool The value of freeAmount as bool.
+     */
+    public function hasFreeAmount()
+    {
+        if ($this->getFreeAmount() == 1) {
+            return true;
+        } elseif ($this->getFreeAmount() == 0 || null) {
+            return false;
+        }
+    }
+
+    /**
      * Check whether this message supports the payment type chosen.
      * 
      * @return bool true
