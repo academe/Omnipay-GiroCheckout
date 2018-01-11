@@ -399,8 +399,10 @@ class AuthorizeRequest extends AbstractRequest
             $data['orderid'] = $orderId;
         }
 
-        if ($data['pagetype'] == 2 && ($projectList = $this->getProjectList())) {
-            $data['projectlist'] = $projectList;
+        if (isset($data['pagetype'])) {
+            if ($data['pagetype'] == 2 && $projectList = $this->getProjectList()) {
+                $data['projectlist'] = $projectList;
+            }
         }
 
 
