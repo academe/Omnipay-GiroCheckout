@@ -1309,7 +1309,9 @@ class AuthorizeRequest extends AbstractRequest
             if (! $this->hasPaymentPage()) {
                 $path = 'transaction/payment';
             }
-        }
+        } elseif ($this->isPaymentPage()) {
+            $path = 'paypage/init';
+        }  
 
         return parent::getEndpoint($path);
     }
