@@ -50,6 +50,7 @@ Table of Contents
    * [Paydirekt Payment Type](#paydirekt-payment-type)
    * [Payment Page Payment Type](#payment-page-payment-type)
       * [Payment Page Projects List](#payment-page-projects-list)
+      * [Cancel Url](#cancel-url)
 
 # Authentication
 
