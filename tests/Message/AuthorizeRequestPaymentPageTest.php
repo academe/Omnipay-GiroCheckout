@@ -108,8 +108,4 @@ class AuthorizeRequestPaymentPageTest extends TestCase
         $this->assertArrayHasKey('minamount', $data);
         $this->assertArrayHasKey('maxamount', $data);
     }
-
-
-
-
 }
