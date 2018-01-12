@@ -556,12 +556,8 @@ class AuthorizeRequest extends AbstractRequest
 
         if ($this->isPaymentPage()) {
             $test = $this->getTestMode();
+            $data['test'] = (bool)$test ? static::TEST_YES : static::TEST_NO;
 
-            if ($test != null) {
-                $data['test'] = (bool)$test ? static::TEST_YES : static::TEST_NO;
-            } else {
-                throw new InvalidRequestException("Missing test value. getTestMode returning null.");
-            }
         }
 
         if ($this->isCreditCard()) {
