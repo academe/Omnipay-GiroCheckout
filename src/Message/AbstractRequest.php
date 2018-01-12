@@ -542,7 +542,10 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             ));
         }
 
-        if (! in_array($paymentType, $this->supportedPaymentTypes)) {
+        if (
+            $this->supportedPaymentTypes !== []
+            && ! in_array($paymentType, $this->supportedPaymentTypes)
+        ) {
             throw new InvalidRequestException(sprintf(
                 'This message does not support payment type "%s"; payment types supported: %s',
                 $paymentType,
