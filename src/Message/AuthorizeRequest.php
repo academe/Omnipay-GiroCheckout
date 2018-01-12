@@ -447,7 +447,7 @@ class AuthorizeRequest extends AbstractRequest
                 if ($purpose = $this->getPurpose()) {
                     $data['purpose'] = $purpose;
                 } else {
-                    $data['purpose'] = substr($this->getDescription(), 0, static::PURPOSE_LENGTH_PAYMENTAGE);
+                    $data['purpose'] = trim(substr($this->getDescription(), 0, static::PURPOSE_LENGTH_PAYMENTAGE));
                 }
             } else {
                 $data['purpose'] = substr($this->getDescription(), 0, static::PURPOSE_LENGTH);
