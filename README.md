@@ -603,4 +603,4 @@ if ($response->isSuccessful()) {
 
 ## Cancel Url
 
-The Payment Page `cancelUrl` differs to the rest of the payment types as it does not return the transaction cancelled details. Therefor, you must **not** call `completeAuthorise` when returning to the merchant site.
+The Payment Page `cancelUrl` differs to the rest of the payment types as it does not return the transaction cancelled details. Therefore, you must **not** call `completeAuthorise` when returning to the merchant site.
