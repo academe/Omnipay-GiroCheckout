@@ -14,7 +14,7 @@ class GetProjectsResponse extends Response
      *
      * @return array
      */
-    public function getProjectsArray()
+    public function getProjects()
     {
         return $this->getDataItem('projects', []);
     }
