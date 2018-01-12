@@ -48,6 +48,9 @@ Table of Contents
       * [Giropay Sender Details](#giropay-sender-details)
       * [Giropay ID (age verification)](#giropay-id-age-verification)
    * [Paydirekt Payment Type](#paydirekt-payment-type)
+   * [Payment Page Payment Type](#payment-page-payment-type)
+      * [Payment Page Projects List](#payment-page-projects-list)
+      * [Cancel Url](#cancel-url)
 
 # Authentication
 
@@ -552,3 +555,53 @@ treated as the same amount):
 * Float 1.23 => 123
 
 Further documentation and examples will follow.
+
+# Payment Page Payment Type
+
+This payment type offers the customer all payment methods available from the 
+merchant rather than displaying them seperately. The payment page allows the
+customer to select the payment method they wish to use and then the selected
+payment is initialized accordingly.
+
+## Payment Page Projects List
+
+This method returns a list of possible GiroCockpit projects. The list contains the following elements:
+
+* Project Id
+* Project Name
+* Paymethod Number (see [Payment methods](http://api.girocheckout.de/en:girocheckout:paypage:start#payment_methods))
+* Mode (_TEST_ or _LIVE_)
+
+```php
+$gateway->setPaymentType(Gateway::PAYMENT_TYPE_PAYMENTPAGE);
+
+$request = $gateway->getProjects();
+
+$response = $request->send();
+
+if ($response->isSuccessful()) {
+    $projects = $response->getProjects();
+
+    var_dump($projects);
+}
+
+// array(5) {
+//     [0]=>
+//     array(4) {
+//       ["id"]=>
+//       string(5) "37570"
+//      ["name"]=>
+//       string(11) "Giropay One"
+//       ["paymethod"]=>
+//      string(1) "1"
+//       ["mode"]=>
+//       string(4) "TEST"
+//     }
+//    ...
+// }
+
+```
+
+## Cancel Url
+
+The Payment Page `cancelUrl` differs to the rest of the payment types as it does not return the transaction cancelled details. Therefore, you must **not** call `completeAuthorise` when returning to the merchant site.

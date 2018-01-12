@@ -21,6 +21,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     const PURPOSE_LENGTH = 27;
 
     /**
+     * @var int Maximum length of the `purpose` field on PaymentPage.
+     */
+    const PURPOSE_LENGTH_PAYMENTAGE = 20;
+
+    /**
      * @var string Request transaction types.
      */
     // Authorization only.
@@ -497,6 +502,27 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
+     * @return bool true if processing a paydirekt transaction.
+     */
+    public function isPaymentPage()
+    {
+        return $this->getPaymentType() === Gateway::PAYMENT_TYPE_PAYMENTPAGE;
+    }
+
+    /**
+     * If not set at all, then default it to false
+     * @return bool The value of freeAmount as bool.
+     */
+    public function hasFreeAmount()
+    {
+        if ($this->getFreeAmount() == 1) {
+            return true;
+        } elseif ($this->getFreeAmount() == 0 || null) {
+            return false;
+        }
+    }
+
+    /**
      * Check whether this message supports the payment type chosen.
      * 
      * @return bool true
@@ -516,7 +542,10 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             ));
         }
 
-        if (! in_array($paymentType, $this->supportedPaymentTypes)) {
+        if (
+            $this->supportedPaymentTypes !== []
+            && ! in_array($paymentType, $this->supportedPaymentTypes)
+        ) {
             throw new InvalidRequestException(sprintf(
                 'This message does not support payment type "%s"; payment types supported: %s',
                 $paymentType,

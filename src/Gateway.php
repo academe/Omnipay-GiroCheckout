@@ -23,6 +23,7 @@ class Gateway extends AbstractGateway
     const PAYMENT_TYPE_GIROPAY      = 'Giropay';
     const PAYMENT_TYPE_GIROPAY_ID   = 'Giropay-ID';
     const PAYMENT_TYPE_PAYDIREKT    = 'Paydirekt';
+    const PAYMENT_TYPE_PAYMENTPAGE  = 'PaymentPage';
 
     const PAYMENT_TYPE_MAESTRO      = 'Maestro';
     const PAYMENT_TYPE_IDEAL        = 'iDEAL';
@@ -299,6 +300,15 @@ class Gateway extends AbstractGateway
     public function getIssuers(array $parameters = [])
     {
         return $this->createRequest(Message\GetIssuersRequest::class, $parameters);
+    }
+
+    /**
+     * @param  array $parameters
+     * @return Message\GetProjectsRequest
+     */
+    public function getProjects(array $parameters = [])
+    {
+        return $this->createRequest(Message\GetProjectsRequest::class, $parameters);
     }
 
     /**

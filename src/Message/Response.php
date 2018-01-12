@@ -80,7 +80,7 @@ class Response extends AbstractResponse implements RedirectResponseInterface
      */
     public function getRedirectUrl()
     {
-        return $this->getDataItem('redirect');
+        return $this->getDataItem('redirect') ?: $this->getDataItem('url');
     }
 
     /**
