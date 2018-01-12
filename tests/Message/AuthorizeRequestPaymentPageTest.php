@@ -27,8 +27,8 @@ class AuthorizeRequestPaymentPageTest extends TestCase
             'currency' => 'EUR',
 
             //PaymentPage specific
-            'purpose' => 'Purpose is to test',
-            'test' => '1'
+            'description' => 'Purpose is to test, to test things.',
+            'testmode' => TRUE
             
         ]);
     }
@@ -60,7 +60,8 @@ class AuthorizeRequestPaymentPageTest extends TestCase
             'merchantTxId' => 'TEST-123-5',
             'amount' => '123',
             'currency' => 'EUR',
-            'purpose' => 'Purpose is to test',
+            'purpose' => 'Purpose is to test, ',
+            'description' => 'Purpose is to test, to test things.',
             'type' => 'AUTH',
             'test' => '1'
         ];
@@ -107,6 +108,8 @@ class AuthorizeRequestPaymentPageTest extends TestCase
         $this->assertArrayHasKey('minamount', $data);
         $this->assertArrayHasKey('maxamount', $data);
     }
+
+
 
 
 }

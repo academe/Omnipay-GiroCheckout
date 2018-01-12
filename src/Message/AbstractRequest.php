@@ -21,6 +21,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     const PURPOSE_LENGTH = 27;
 
     /**
+     * @var int Maximum length of the `purpose` field on PaymentPage.
+     */
+    const PURPOSE_LENGTH_PAYMENTAGE = 20;
+
+    /**
      * @var string Request transaction types.
      */
     // Authorization only.

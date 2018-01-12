@@ -77,6 +77,12 @@ class AuthorizeRequest extends AbstractRequest
     ];
 
     /**
+     * @var int Flag to indicate whether a PaymentPage payment is in test mode or not.
+     */
+    const TEST_YES = '1';
+    const TEST_NO  = '0';
+
+    /**
      * @param array $data
      * @return array Data with the Giropay fields appended.
      */
@@ -438,7 +444,11 @@ class AuthorizeRequest extends AbstractRequest
 
             //PaymentPage has a different length for purpose
             if ($this->isPaymentPage()) {
-                $data['purpose'] = $this->getPurpose();
+                if ($purpose = $this->getPurpose()) {
+                    $data['purpose'] = $purpose;
+                } else {
+                    $data['purpose'] = substr($this->getDescription(), 0, static::PURPOSE_LENGTH_PAYMENTAGE);
+                }
             } else {
                 $data['purpose'] = substr($this->getDescription(), 0, static::PURPOSE_LENGTH);
             }
@@ -545,7 +555,13 @@ class AuthorizeRequest extends AbstractRequest
         }
 
         if ($this->isPaymentPage()) {
-            $data['test'] = $this->getTest();
+            $test = $this->getTestMode();
+
+            if ($test != null) {
+                $data['test'] = (bool)$test ? static::TEST_YES : static::TEST_NO;
+            } else {
+                throw new InvalidRequestException("Missing test value. getTestMode returning null.");
+            }
         }
 
         if ($this->isCreditCard()) {
@@ -1141,23 +1157,6 @@ class AuthorizeRequest extends AbstractRequest
         }
 
         return $this->setParameter('payprojects', $value);
-    }
-
-    /**
-     * @return string For PaymentPage
-     */
-    public function getTest()
-    {
-        return $this->getParameter('test');
-    }
-
-    /**
-     * @param string $value for PaymentPage
-     * @return $this
-     */
-    public function setTest($value)
-    {
-        return $this->setParameter('test', $value);
     }
 
     /**
