@@ -559,8 +559,8 @@ Further documentation and examples will follow.
 
 This payment type offers the customer all payment methods available from the 
 merchant rather than displaying them seperately. The payment page allows the
-customer to select from all of the available payment methods and then the
-selected payment is initialized accordingly.
+customer to select the payment method they wish to use and then the selected
+payment is initialized accordingly.
 
 ## Payment Page Projects List
 
@@ -569,7 +569,7 @@ This method returns a list of possible GiroCockpit projects. The list contains t
 * Project Id
 * Project Name
 * Paymethod Number (see [Payment methods](http://api.girocheckout.de/en:girocheckout:paypage:start#payment_methods))
-* Mode _(TEST or LIVE)_
+* Mode (_TEST_ or _LIVE_)
 
 ```php
 $gateway->setPaymentType(Gateway::PAYMENT_TYPE_PAYMENTPAGE);
