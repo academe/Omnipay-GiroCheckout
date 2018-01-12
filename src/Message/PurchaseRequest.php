@@ -25,6 +25,7 @@ class PurchaseRequest extends AuthorizeRequest
         Gateway::PAYMENT_TYPE_GIROPAY,
         Gateway::PAYMENT_TYPE_GIROPAY_ID,
         Gateway::PAYMENT_TYPE_PAYDIREKT,
+        Gateway::PAYMENT_TYPE_PAYMENTPAGE,
     ];
 
     /**
