@@ -13,7 +13,7 @@ processing library for PHP 5.3+.
 This package implements [Girocheckout](http://api.girocheckout.de/en:girocheckout:general:start)
 support, and supports PHP 5.5+.
 
-This branch supports Omnipay 2.x and will be maintained. For use of of Omnipay 3.x see [master branch](https://github.com/academe/Omnipay-GiroCheckout/tree/master)
+This branch supports Omnipay 2.x and will be maintained. For use of of Omnipay 3.x see [master branch](https://github.com/academe/Omnipay-GiroCheckout/tree/master).
 
 Table of Contents
 =================
