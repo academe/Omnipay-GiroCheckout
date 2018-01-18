@@ -104,7 +104,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * @var array List of supported language strings.
      */
-     protected $supportedLanguages = [
+    protected $supportedLanguages = [
         'de',   // German (default)
         'en',   // English
         'es',   // Spanish
@@ -530,7 +530,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
     /**
      * Check whether this message supports the payment type chosen.
-     * 
+     *
      * @return bool true
      * @throws InvalidRequestException
      */
@@ -548,12 +548,9 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             ));
         }
 
-        if (
-            $this->supportedPaymentTypes !== []
-            && ! in_array($paymentType, $this->supportedPaymentTypes)
-        ) {
+        if ($this->supportedPaymentTypes !== [] && ! in_array($paymentType, $this->supportedPaymentTypes)) {
             throw new InvalidRequestException(sprintf(
-                'This message does not support payment type "%s"; payment types supported: %s',
+                'This  message does not support payment type "%s"; payment types supported: %s',
                 $paymentType,
                 implode(', ', $this->supportedPaymentTypes)
             ));

@@ -33,7 +33,7 @@ class AuthorizeRequest extends AbstractRequest
      * 1 = single payment (default)
      * 2 = first payment of a sequence
      * 3 = recurring payment
-     * 4 = last payment of a sequence 
+     * 4 = last payment of a sequence
      */
     const MANDATE_SEQUENCE_SINGLE       = 1;
     const MANDATE_SEQUENCE_FIRST        = 2;
@@ -383,10 +383,8 @@ class AuthorizeRequest extends AbstractRequest
 
         if ($fixedValues = $this->getFixedValues()) {
             $data['fixedvalues'] = $fixedValues;
-
         } else {
             if ($this->hasFreeAmount()) {
-
                 if ($minAmount = $this->getMinAmount()) {
                     $data['minamount'] = $minAmount;
                 } else {
@@ -469,7 +467,6 @@ class AuthorizeRequest extends AbstractRequest
         //PaymentPage has its own optional fields here.
 
         if ($this->isPaymentPage()) {
-
             if ($description = $this->getDescription()) {
                 if (strlen($description) > 20) {
                     $data['description'] = $description;
@@ -483,7 +480,6 @@ class AuthorizeRequest extends AbstractRequest
             if ($expiryDate = $this->getExpiryDate()) {
                 $data['expirydate']  = $expiryDate;
             }
-            
         }
 
         //Credit Card, Direct Debit and Maestro have optional type, locale and mobile parameters.
@@ -557,7 +553,6 @@ class AuthorizeRequest extends AbstractRequest
         if ($this->isPaymentPage()) {
             $test = $this->getTestMode();
             $data['test'] = (bool)$test ? static::TEST_YES : static::TEST_NO;
-
         }
 
         if ($this->isCreditCard()) {
@@ -596,7 +591,6 @@ class AuthorizeRequest extends AbstractRequest
                 $data['notifyUrl'] = $notifyUrl;
             }
         } else {
-
             // Where to send the user after filling out their CC details, or cancelling.
 
             if ($this->hasPaymentPage() || $this->isPayPal()) {
