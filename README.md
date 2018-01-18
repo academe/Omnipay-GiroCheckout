@@ -11,11 +11,11 @@
 [Omnipay](https://github.com/thephpleague/omnipay) is a framework agnostic, multi-gateway payment
 processing library for PHP 5.3+.
 This package implements [Girocheckout](http://api.girocheckout.de/en:girocheckout:general:start)
-support, and supports PHP 5.5+.
+support, and supports PHP 5.6+.
 
-Initially support will be fon Omnpay 2.x.
-As soon as that is complete, 2.x will be put into a support branch and the master
-branch will be updated to support Omnipay 3.x.
+This package is currently supporting Omnipay 3.x on dev-master and therefore could _potentially_ be
+unstable. Due to this, we recommend using the package at your own risk. If you wish to use the Omnipay 2.x
+supported package, please see the [2.x branch](https://github.com/academe/Omnipay-GiroCheckout/tree/2.x).
 
 Table of Contents
 =================

@@ -391,23 +391,29 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         // Content-Type: application/x-www-form-urlencoded
         // Request must be UTF-8 encoded
 
-        $httpRequest = $this->httpClient->createRequest(
+        $headers = [
+            "Content-Type" => "application/x-www-form-urlencoded",
+        ];
+
+        $httpResponse = $this->httpClient->send(
             $this->requestMethod,
-            $this->getEndpoint()
+            $this->getEndpoint(),
+            $headers,
+            $data
         );
 
-        foreach ($data as $name => $value) {
+        /* foreach ($data as $name => $value) {
             $httpRequest->setPostField($name, $value);
         }
 
-        $httpResponse = $httpRequest->send();
+        $httpResponse = $httpRequest->send(); */
 
         // A valid response is one in which the hash that has been sent does
         // not tie up with the message body.
 
-        $headerHash = (string)$httpResponse->getHeader('hash');
+        $headerHash  = (string)$httpResponse->getHeaderLine('hash');
         $bodyContent = (string)$httpResponse->getBody();
-        $bodyHash = $this->responseHash($bodyContent);
+        $bodyHash    = $this->responseHash($bodyContent);
 
         $validResponse = ($bodyHash === $headerHash);
 
@@ -420,7 +426,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             ));
         }
 
-        return $this->createResponse($httpResponse->json());
+        return $this->createResponse(json_decode($bodyContent, true));
     }
 
     /**
