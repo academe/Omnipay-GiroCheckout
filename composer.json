@@ -29,7 +29,8 @@
         "omnipay/common": "dev-master"
     },
     "require-dev": {
-        "omnipay/tests": "~3.0"
+        "omnipay/tests": "~3.0",
+        "squizlabs/php_codesniffer": "^3.0@dev"
     },
     "extra": {
         "branch-alias": {
