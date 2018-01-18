@@ -402,12 +402,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             $data
         );
 
-        /* foreach ($data as $name => $value) {
-            $httpRequest->setPostField($name, $value);
-        }
-
-        $httpResponse = $httpRequest->send(); */
-
         // A valid response is one in which the hash that has been sent does
         // not tie up with the message body.
 
