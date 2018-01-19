@@ -4,6 +4,7 @@ namespace Academe\GiroCheckout\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Tests\TestCase;
+use Money\Money;
 
 class AuthorizeRequestPaydirektTest extends TestCase
 {
@@ -35,9 +36,12 @@ class AuthorizeRequestPaydirektTest extends TestCase
             'email' => 'example@example.com',
         ];
 
+        $money = Money::EUR(350);
+
         $items = [
             ['name' => 'Item 1', 'quantity' => 1, 'price' => '1.23'],
             ['name' => 'Item 2', 'quantity' => 4, 'price' => 999],
+            ['name' => 'Item 3', 'quantity' => 2, 'price' => $money]
         ];
 
         $this->request->initialize([
@@ -120,7 +124,7 @@ class AuthorizeRequestPaydirektTest extends TestCase
 
         // This hash will change if the initializartion data changes.
         $data = $this->request->getData();
-        $this->assertSame('784f77c35510c17b990d0f641f970ce8', $data['hash']);
+        $this->assertSame('c4c1c3581f266e3e0cb17b832685fa4c', $data['hash']);
 
         $data = [
             'merchantId' => '1234567',
@@ -140,4 +144,50 @@ class AuthorizeRequestPaydirektTest extends TestCase
 
         $this->assertSame('184d3f805959fc9fff2d07ccec1d1022', $this->request->requestHash($data));
     }
+
+    public function testAmount()
+    {
+        $data      = $this->request->getData();
+        $cart      = $data['cart'];
+        $itemArray = json_decode($cart, true);
+
+        $this->assertSame(123, $itemArray[0]['grossAmount']);
+        $this->assertSame(999, $itemArray[1]['grossAmount']);
+        $this->assertSame(350, $itemArray[2]['grossAmount']);
+    }
+
+    public function testCurrency()
+    {
+        //Checking that currency is set normally 
+        $data = $this->request->getData();
+
+        $this->assertSame('EUR', $data['currency']);
+
+        //Check that if no currency is entered then defaults to USD
+        $this->request->setCurrency(null);
+        $data = $this->request->getData();
+
+        $this->assertSame('USD', $data['currency']);
+
+        //Check that currency can be extracted if amount is passed as a php money object
+        $money = Money::GBP(509);
+        $this->request->setAmount($money);
+        $data = $this->request->getData();
+
+        $this->assertSame('GBP', $data['currency']);
+    }
+
+    // public function testX()
+    // {
+    //     $this->request->initialize();
+
+    //     $currency = $this->request->getCurrency();
+
+    //     $this->assertNull($currency);
+
+    //     $this->request->setAmount(123);
+    //     $currency = $this->request->getCurrency();
+        
+    //     $this->assertNull($currency);
+    // }
 }

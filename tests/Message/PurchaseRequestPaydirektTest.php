@@ -18,6 +18,7 @@ class PurchaseRequestPaydirektTest extends AuthorizeRequestPaydirektTest
 
         // This hash will change if the initializartion data changes.
         $data = $this->request->getData();
-        $this->assertSame('4b200eaaf1de408e44c9a4309b5d24ee', $data['hash']);
+        $this->assertSame('239da494f2e276bb2c91b5a8aef79f42', $data['hash']);
     }
+
 }

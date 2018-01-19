@@ -12,6 +12,7 @@ use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Academe\GiroCheckout\Gateway;
 use Omnipay\Common\ItemBag;
+use Money\Money;
 
 class AuthorizeRequest extends AbstractRequest
 {
@@ -231,7 +232,10 @@ class AuthorizeRequest extends AbstractRequest
         foreach ($items as $item) {
             $itemAmount = $item->getPrice();
 
-            if (is_int($itemAmount)) {
+            if ($itemAmount instanceof Money) {
+                //Money::EUR(123)
+                $grossAmount = (int)$itemAmount->getAmount();
+            } elseif (is_int($itemAmount)) {
                 // 123
                 $grossAmount = $itemAmount;
             } elseif (is_float($itemAmount)) {
@@ -437,8 +441,14 @@ class AuthorizeRequest extends AbstractRequest
         $data['merchantTxId']   = $this->getTransactionId(true);
 
         if (! $this->isGiropayId()) {
-            $data['amount']         = (string)$this->getAmountInteger();
-            $data['currency']       = $this->getCurrency();
+            $data['amount'] = (string)$this->getAmountInteger();
+
+            if ($currency = $this->getCurrency()) {
+                $data['currency'] = $currency;
+            } else {
+                $amount = $this->getMoney();
+                $data['currency'] = $amount->getCurrency()->getCode();
+            }
 
             //PaymentPage has a different length for purpose
             if ($this->isPaymentPage()) {
