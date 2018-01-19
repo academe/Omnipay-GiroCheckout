@@ -556,11 +556,13 @@ Since Omnipay 2.x does not define the units cart items use, some assumptions
 will be made and conversions performed as follows (all these formats are
 treated as the same amount):
 
+* `Money\Money::EUR(123)` => 123
 * String '1.23' => 123
 * String '123' => 123
 * Integer 123 => 123
 * Float 1.23 => 123
 
+If no currency is set explicity with `setCurrency()`, then it will be derived from the amount if using a `Money\Money` object.
 Further documentation and examples will follow.
 
 # Payment Page Payment Type

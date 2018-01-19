@@ -443,11 +443,8 @@ class AuthorizeRequest extends AbstractRequest
         if (! $this->isGiropayId()) {
             $data['amount'] = (string)$this->getAmountInteger();
 
-            if ($currency = $this->getCurrency()) {
+            if ($currency = $this->getCurrencyFallback()) {
                 $data['currency'] = $currency;
-            } else {
-                $amount = $this->getMoney();
-                $data['currency'] = $amount->getCurrency()->getCode();
             }
 
             //PaymentPage has a different length for purpose

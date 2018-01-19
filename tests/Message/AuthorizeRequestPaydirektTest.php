@@ -177,17 +177,18 @@ class AuthorizeRequestPaydirektTest extends TestCase
         $this->assertSame('GBP', $data['currency']);
     }
 
-    // public function testX()
-    // {
-    //     $this->request->initialize();
+    public function testCurrencyDerived()
+    {
+        $this->request->initialize([]);
+        $this->assertNull($this->request->getCurrencyFallback());
 
-    //     $currency = $this->request->getCurrency();
+        $this->request->setAmount(123);
+        $this->assertSame('USD', $this->request->getCurrencyFallback());
 
-    //     $this->assertNull($currency);
+        $this->request->setAmount(Money::EUR(123));
+        $this->assertSame('EUR', $this->request->getCurrencyFallback());
 
-    //     $this->request->setAmount(123);
-    //     $currency = $this->request->getCurrency();
-        
-    //     $this->assertNull($currency);
-    // }
+        $this->request->setCurrency('GBP');
+        $this->assertSame('GBP', $this->request->getCurrencyFallback());
+    }
 }
