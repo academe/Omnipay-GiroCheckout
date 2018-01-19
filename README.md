@@ -562,7 +562,7 @@ treated as the same amount):
 * Integer 123 => 123
 * Float 1.23 => 123
 
-If no currency is set explicity with `setCurrency()`, then it will be derived from the amount if using a `Money\Money` object.
+If no currency is set explicity with `setCurrency()` then it will be derived from the amount, if using a `Money\Money` object.
 
 Further documentation and examples will follow.
 
