@@ -21,12 +21,14 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Academe\\GiroCheckout\\" : "src/" }
+        "psr-4": {
+            "Academe\\GiroCheckout\\" : "src/"
+        }
     },
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.6",
-        "omnipay/common": "dev-master"
+        "omnipay/common": "^3.0"
     },
     "require-dev": {
         "omnipay/tests": "~3.0",
