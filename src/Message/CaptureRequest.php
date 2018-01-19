@@ -40,7 +40,7 @@ class CaptureRequest extends AbstractRequest
      */
     public function getData()
     {
-        $this->$this->validatePaymentType();
+        $this->validatePaymentType();
 
         // First five parameters are mandatory and common to all payment methods.
 

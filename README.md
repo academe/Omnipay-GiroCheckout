@@ -22,6 +22,7 @@ Table of Contents
 
    * [Omnipay: GiroCheckout](#omnipay-girocheckout)
    * [Table of Contents](#table-of-contents)
+   * [Installation](#installation)
    * [Authentication](#authentication)
    * [Credit Card Payment Type](#credit-card-payment-type)
       * [Credit Card Authorize](#credit-card-authorize)
@@ -51,6 +52,12 @@ Table of Contents
    * [Payment Page Payment Type](#payment-page-payment-type)
       * [Payment Page Projects List](#payment-page-projects-list)
       * [Cancel Url](#cancel-url)
+
+# Installation
+
+Using composer, this 2.x branch can be installed like this:
+
+    composer require academe/omnipay-girocheckout:~3.0
 
 # Authentication
 
