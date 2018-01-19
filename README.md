@@ -50,6 +50,12 @@ Table of Contents
       * [Payment Page Projects List](#payment-page-projects-list)
       * [Cancel Url](#cancel-url)
 
+# Installation
+
+Using composer, this 2.x branch can be installed like this:
+
+    composer require academe/omnipay-girocheckout:^2.0
+
 # Authentication
 
 A GiroCheckout merchant accoutn is first set up.

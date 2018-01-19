@@ -21,7 +21,9 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Academe\\GiroCheckout\\" : "src/" }
+        "psr-4": {
+            "Academe\\GiroCheckout\\" : "src/"
+        }
     },
     "require": {
         "php": ">=5.5",
