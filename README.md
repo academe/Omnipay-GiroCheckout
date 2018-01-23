@@ -9,13 +9,12 @@
 [![License](https://poser.pugx.org/academe/omnipay-girocheckout/license)](https://packagist.org/packages/academe/omnipay-girocheckout)
 
 [Omnipay](https://github.com/thephpleague/omnipay) is a framework agnostic, multi-gateway payment
-processing library for PHP 5.3+.
+processing library for PHP 5.
 This package implements [Girocheckout](http://api.girocheckout.de/en:girocheckout:general:start)
 support, and supports PHP 5.6+.
 
-This package is currently supporting Omnipay 3.x on dev-master and therefore could _potentially_ be
-unstable. Due to this, we recommend using the package at your own risk. If you wish to use the Omnipay 2.x
-supported package, please see the [2.x branch](https://github.com/academe/Omnipay-GiroCheckout/tree/2.x).
+This package is currently supporting Omnipay 3.x on dev-master and should be considered unstable.
+If you are using the Omnipay 2.x, please see the [2.x branch](https://github.com/academe/Omnipay-GiroCheckout/tree/2.x).
 
 Table of Contents
 =================
@@ -61,13 +60,14 @@ Using composer, this 2.x branch can be installed like this:
 
 # Authentication
 
-A GiroCheckout merchant accoutn is first set up.
+A GiroCheckout merchant account is first set up.
 Within that account, one of more projects are set up.
 Each project is configured to run just one payment type (e.g. credit card, direct debit).
 
 Each project contains a pre-shared secret.
-That secret is used to sign all messages, in both diections (requests to the gateway,
-responses to those requests, and server request notification messages).
+That secret is used to sign all messages, in both directions (requests to the gateway,
+responses to those requests, and server request notification messages from the gateway
+to your merchant site).
 
 So for each payment type, you will have the following matched authentication details,
 required for all interaction:
@@ -167,7 +167,7 @@ $completeResponse->getTransactionReference();
 ```
 
 If the response fails its hash check against the shared secret, then an exception
-will be raised on `sebd()`. The raw response data can still be read for logging as
+will be raised on `send()`. The raw response data can still be read for logging as
 `$completeRequest->getData()`, which returns an array.
 
 The notification handler, on the `notifyUrl`, is set up like this:
@@ -182,7 +182,7 @@ Once the authorisation is complete, the amount still needs to be captured.
 #### Credit Card Authorize Notify
 
 Exactly the same rules apply as to the `completeAuthorize` request - an exception
-will be raised if the hash does not validate; the same standard Omnpay result
+will be raised if the hash does not validate; the same standard Omnipay result
 details are available.
 
 ### Create a Reusable Card Reference
@@ -430,7 +430,7 @@ $gateway->setPaymentType(Gateway::PAYMENT_TYPE_GIROPAY);
 
 $request = $gateway->getIssuers();
 
-$response = $resquest->send();
+$response = $request->send();
 
 // The list of named banks is indexed by their BIC.
 
@@ -468,7 +468,7 @@ $request = $gateway->getBankStatus([
     'bic' => 'TESTDETT421',
 ]);
 
-$response = $resquest->send();
+$response = $request->send();
 
 // Both return boolean.
 
@@ -552,9 +552,9 @@ An authorization transaction can be further processed though `capture`
 and `void`. A purchase transaction can accept a `refund`.
 
 The gateway requires cart item prices to be in minor units.
-Since Omnipay 2.x does not define the units cart items use, some assumptions
-will be made and conversions performed as follows (all these formats are
-treated as the same amount):
+Since Omnipay 2.x (or 3.x at this time) does not define the units cart items use,
+some assumptions will be made and conversions performed as follows (all these
+formats are treated as the same amount, namely 123 minor units, such as €1.23):
 
 * `Money\Money::EUR(123)` => 123
 * String '1.23' => 123
@@ -562,14 +562,14 @@ treated as the same amount):
 * Integer 123 => 123
 * Float 1.23 => 123
 
-If no currency is set explicity with `setCurrency()` then it will be derived from the amount, if using a `Money\Money` object.
-
-Further documentation and examples will follow.
+If no currency is set explicitly with `setCurrency()` then it will be taken from the amount
+if using a `Money\Money` object.
+To avoid ambiguity, we recommend you use `Money\Money` for all `ItemBag` `price` amounts.
 
 # Payment Page Payment Type
 
 This payment type offers the customer all payment methods available from the 
-merchant rather than displaying them seperately. The payment page allows the
+merchant rather than displaying them separately. The payment page allows the
 customer to select the payment method they wish to use and then the selected
 payment is initialized accordingly.
 
@@ -614,4 +614,11 @@ if ($response->isSuccessful()) {
 
 ## Cancel Url
 
-The Payment Page `cancelUrl` differs to the rest of the payment types as it does not return the transaction cancelled details. Therefore, you must **not** call `completeAuthorise` when returning to the merchant site.
+The Payment Page's `cancelUrl` differs to the rest of the payment types as it does not
+return the transaction cancelled details.
+If the user follows the cacnel URL from this payment method, it seems the transaction is
+not actually cancelled, but is left to time out instead, at which point your merchant
+site will be sent a cancellation notification.
+In summary, you must **not** call `completeAuthorise` when returning to the merchant site
+from the *Payment Page* payment type.
+
