@@ -15,7 +15,7 @@ use Academe\GiroCheckout\Helper;
 class Gateway extends AbstractGateway
 {
     /**
-     * @var string
+     * @var string supported payment types
      */
     const PAYMENT_TYPE_CREDIT_CARD  = 'CreditCard';
     const PAYMENT_TYPE_PAYPAL       = 'PayPal';
@@ -25,6 +25,9 @@ class Gateway extends AbstractGateway
     const PAYMENT_TYPE_PAYDIREKT    = 'Paydirekt';
     const PAYMENT_TYPE_PAYMENTPAGE  = 'PaymentPage';
 
+    /**
+     * @var string payment types supported but not fully tested and documented
+     */
     const PAYMENT_TYPE_MAESTRO      = 'Maestro';
     const PAYMENT_TYPE_IDEAL        = 'iDEAL';
     const PAYMENT_TYPE_EPS          = 'eps';

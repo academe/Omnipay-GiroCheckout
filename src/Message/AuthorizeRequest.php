@@ -23,13 +23,6 @@ class AuthorizeRequest extends AbstractRequest
     const RECURRING_NO  = 0;
 
     /**
-     * @var int Flag to indicate a variant on the UI.
-     * VARIANT_PAGE is for when a user is present and visits the payment page.
-     */
-    const VARIANT_PAGE      = 'page';
-    const VARIANT_OFFLINE   = 'offline';
-
-    /**
      * @var int 1 to 4
      * 1 = single payment (default)
      * 2 = first payment of a sequence

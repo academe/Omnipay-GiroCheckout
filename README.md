@@ -119,11 +119,19 @@ The capture/refund/void methods are also available.
 A simple authorize will look like this:
 
 ```php
+use Money\Money;
+use Money\Currency;
+
 $gateway->setPaymentType(Gateway::PAYMENT_TYPE_CREDIT_CARD);
 
 $authRequest = $gateway->authorize([
     'transactionId' => $yourMerchantTransactionId,
-    'amount' => '1.23',
+    //
+    // Several ways to supply the amount:
+    'amount' => '4.56',
+    'amount' => new Money(456, new Currency('EUR')),
+    'amount' => Money::EUR(456),
+    //
     'currency' => 'EUR',
     'description' => 'Mandatory reason for the transaction',
     'language' => 'en',
@@ -261,7 +269,7 @@ The required amount can be captured using this request:
 ```php
 $captureRequest = $gateway->capture([
     'transactionId' => $yourMerchantTransactionId,
-    'amount' => '1.23',
+    'amount' => Money::EUR(123),
     'currency' => 'EUR',
     'description' => 'Capture reason is required',
     'transactionReference' => 'original authorize transaction reference',
@@ -317,8 +325,8 @@ $gateway->setPaymentType(Gateway::PAYMENT_TYPE_DIRECTDEBIT);
 
 $authRequest = $gateway->authorize([
     'transactionId' => $yourMerchantTransactionId,
-    'amount' => '4.56',
-    'currency' => 'EUR',
+    'amount' => Money::EUR(456),
+    'currency' => 'EUR', // Optional if the amount is Money
     'description' => 'Mandatory reason for the transaction',
     'language' => 'en',
     'returnUrl' => 'url to bring the user back to the merchant site',
@@ -397,7 +405,7 @@ $gateway->setPaymentType(Gateway::PAYMENT_TYPE_PAYPAL);
 
 $authRequest = $gateway->purchase([
     'transactionId' => $yourMerchantTransactionId,
-    'amount' => '7.89',
+    'amount' => Money::EUR(789),
     'currency' => 'EUR',
     'description' => 'Mandatory reason for the transaction',
     'returnUrl' => 'url to bring the user back to the merchant site',
@@ -483,7 +491,7 @@ There is no `authorize` capability, just `purchase`.
 ```php
 $request = $gateway->purchase([
     'transactionId' => $transactionId,
-    'amount' => '1.23',
+    'amount' => Money::EUR(123),
     'currency' => 'EUR',
     'description' => 'Transaction ' . $transactionId,
     'returnUrl' => 'url to bring the user back to the merchant site',
@@ -556,11 +564,11 @@ Since Omnipay 2.x (or 3.x at this time) does not define the units cart items use
 some assumptions will be made and conversions performed as follows (all these
 formats are treated as the same amount, namely 123 minor units, such as €1.23):
 
-* `Money\Money::EUR(123)` => 123
-* String '1.23' => 123
-* String '123' => 123
-* Integer 123 => 123
-* Float 1.23 => 123
+* `Money\Money::EUR(123)`
+* String '1.23'
+* String '123'
+* Integer 123
+* Float 1.23
 
 If no currency is set explicitly with `setCurrency()` then it will be taken from the amount
 if using a `Money\Money` object.
