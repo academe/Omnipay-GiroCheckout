@@ -284,6 +284,23 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
+     * @return mixed
+     */
+    public function getCreateCard()
+    {
+        return $this->getParameter('createCard');
+    }
+
+    /**
+     * @param  mixed $value A value that will later be cast to true/false
+     * @return $this
+     */
+    public function setCreateCard($value)
+    {
+        return $this->setParameter('createCard', $value);
+    }
+
+    /**
      * Get the language string, in one of the supported formats.
      * Returns an empty string if no valid format could be found.
      *
@@ -343,6 +360,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
+     * Retieve all parameters used as notification parameters,
+     * and in the correct order for hash validation. Additional
+     * parameters, some of which may be supplied by the merchant
+     * site, are ignored.
+     *
      * @return array
      */
     protected function getNotificationData()

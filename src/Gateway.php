@@ -57,6 +57,7 @@ class Gateway extends AbstractGateway
             'projectPassphrase' => '',
             'language' => 'de',
             'paymentPage' => true,
+            'createCard' => false,
             'paymentType' => static::PAYMENT_TYPE_CREDIT_CARD,
         ];
     }
@@ -160,6 +161,23 @@ class Gateway extends AbstractGateway
     public function setPaymentPage($value)
     {
         return $this->setParameter('paymentPage', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreateCard()
+    {
+        return $this->getParameter('createCard');
+    }
+
+    /**
+     * @param  mixed $value A value that will later be cast to true/false
+     * @return $this
+     */
+    public function setCreateCard($value)
+    {
+        return $this->setParameter('createCard', $value);
     }
 
     /**

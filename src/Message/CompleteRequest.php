@@ -40,14 +40,14 @@ class CompleteRequest extends AbstractRequest implements NotificationInterface
         $pkn = !empty($data['gcPkn']) ? $data['gcPkn'] : null;
 
         // Here, if we don't have the pkn details, then try to fetch them.
-        // It is disabled for now, as it fails the tests due to an invalid
-        // hash, through it does work in production. Perhaps tis can be
-        // turned on explicitly with the "createCard" option, until we can
-        // revisit the tests.
+        // These are the pseudo card details for saving and reusing.
+        // Basically, we want to suplement the data we have got, with data
+        // from an additional API call.
+        // The "createCard" parameter must be set to trigger this action.
 
-        if (false && $success && empty($pkn) && !empty($transactionReference)) {
+        if ($this->getCreateCard() && $success && empty($pkn) && !empty($transactionReference)) {
             // Create a new gateway since we don't have access to the current
-            // gateway from here.
+            // gateway object from here.
 
             $gateway = \Omnipay\Omnipay::create('GiroCheckout');
             $gateway->initialize($this->getParameters());
@@ -59,6 +59,8 @@ class CompleteRequest extends AbstractRequest implements NotificationInterface
             $cardData = $response->getData();
 
             // Map card fields to fields that the Payment Page already uses.
+            // If the original authorisation request was issued without the
+            // "createCard" option set, then these details will not be availeble.
 
             if (! empty($cardData['pkn'])) {
                 $data['gcPkn'] = $cardData['pkn'];
@@ -68,8 +70,12 @@ class CompleteRequest extends AbstractRequest implements NotificationInterface
                 $data['gcCardnumber'] = $cardData['cardnumber'];
             }
 
+            // This endpoint returns the expiry date in two parts.
+            // The Payment Page APi returns the expiry date as one string.
+            // We will normalise the two parts to the format of the one string.
+
             if (! empty($cardData['expireyear']) && ! empty($cardData['expiremonth'])) {
-                $data['gcCardExpDate'] = $cardData['expiremonth'] . '/' . $data['expireyear'];
+                $data['gcCardExpDate'] = $cardData['expiremonth'] . '/' . $cardData['expireyear'];
             }
         }
 

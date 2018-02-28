@@ -654,23 +654,6 @@ class AuthorizeRequest extends AbstractRequest
     /**
      * @return mixed
      */
-    public function getCreateCard()
-    {
-        return $this->getParameter('createCard');
-    }
-
-    /**
-     * @param  mixed $value A value that will later be cast to true/false
-     * @return $this
-     */
-    public function setCreateCard($value)
-    {
-        return $this->setParameter('createCard', $value);
-    }
-
-    /**
-     * @return mixed
-     */
     public function getMandateReference()
     {
         return $this->getParameter('mandateReference');

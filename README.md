@@ -211,6 +211,20 @@ $getCardResponse->getExpiryYear();
 $getCardResponse->getExpiryMonth();
 ```
 
+**Note:** The fetching of the card reference can be automated when completing
+an authorisation, by setting the `createCard` parameter when completing:
+
+```php
+$completeRequest = $gateway->completeAuthorize([
+    'createCard' => true,
+]);
+$completeResponse = $completeRequest->send();
+
+echo 'Card Ref: ' . $completeResponse->getCardReference();
+
+// Card Ref: 6317fda4cce2192fecc51ba244a91a08
+```
+
 The `$cardReference` is then used for authorizing:
 
 ```php
