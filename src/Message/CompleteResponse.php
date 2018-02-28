@@ -139,4 +139,72 @@ class CompleteResponse extends AbstractResponse implements NotificationInterface
     {
         return Helper::getTransactionStatus($this->getCode());
     }
+
+    /**
+     * Get a data item, or a default if not present.
+     *
+     * @param  string $name    The key for the field.
+     * @param  mixed $default  The value to return if the data item is not found at all, or is null.
+     * @return mixed           The value of the field, often a string, but could be case to anything..
+     */
+    protected function getDataItem($name, $default = null)
+    {
+        $data = $this->getData();
+        return isset($this->data[$name]) ? $this->data[$name] : $default;
+    }
+
+    /**
+     * Use this as the cardReference when making an offline or repeat payment.
+     * @return string The PKN, or saved card reference
+     */
+    public function getCardReference()
+    {
+        return $this->getDataItem('gcPkn');
+    }
+
+    /**
+     * Typical masked card format: 411111******1111
+     *
+     * @param string $mask Alternative masking character.
+     * @return string
+     */
+    public function getNumberMasked($mask = '*')
+    {
+        $card = $this->getDataItem('gcCardnumber');
+
+        if ($mask !== '*') {
+            $card = str_replace('*', $mask, $card);
+        }
+
+        return $card;
+    }
+
+    protected function getExpiryParts()
+    {
+        $expiry = $this->getDataItem('gcCardExpDate');
+
+        if (strpos($expiry, '/') !== false) {
+            return array_map('intval', explode('/', $expiry));
+        } else {
+            return [null, null];
+        }
+    }
+
+    /**
+     * @return string The card expiry month, with NO leading zeros.
+     */
+    public function getExpiryMonth()
+    {
+        list($month, $year) = $this->getExpiryParts();
+        return $month;
+    }
+
+    /**
+     * @return string The card expiry year, four digits.
+     */
+    public function getExpiryYear()
+    {
+        list($month, $year) = $this->getExpiryParts();
+        return $year;
+    }
 }
