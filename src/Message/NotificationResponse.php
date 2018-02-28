@@ -1,6 +1,6 @@
 <?php
 
-namespace Academe\GiroCheckout\Message;
+namespace Omnipay\GiroCheckout\Message;
 
 /**
  * Everything the notification response needs is already handled

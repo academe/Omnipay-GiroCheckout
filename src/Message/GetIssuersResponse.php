@@ -1,6 +1,6 @@
 <?php
 
-namespace Academe\GiroCheckout\Message;
+namespace Omnipay\GiroCheckout\Message;
 
 /**
  *

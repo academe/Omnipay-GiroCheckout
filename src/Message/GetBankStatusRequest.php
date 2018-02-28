@@ -1,6 +1,6 @@
 <?php
 
-namespace Academe\GiroCheckout\Message;
+namespace Omnipay\GiroCheckout\Message;
 
 /**
  * Get the Giropay support details for a bank.
@@ -10,7 +10,7 @@ namespace Academe\GiroCheckout\Message;
 
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Exception\InvalidRequestException;
-use Academe\GiroCheckout\Gateway;
+use Omnipay\GiroCheckout\Gateway;
 
 class GetBankStatusRequest extends AbstractRequest
 {

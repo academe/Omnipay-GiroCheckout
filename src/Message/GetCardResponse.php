@@ -1,12 +1,12 @@
 <?php
 
-namespace Academe\GiroCheckout\Message;
+namespace Omnipay\GiroCheckout\Message;
 
 /**
  * Handles the GetCard response.
  */
 
-use Academe\GiroCheckout\Gateway;
+use Omnipay\GiroCheckout\Gateway;
 
 class GetCardResponse extends Response
 {

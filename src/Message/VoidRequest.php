@@ -1,10 +1,10 @@
 <?php
 
-namespace Academe\GiroCheckout\Message;
+namespace Omnipay\GiroCheckout\Message;
 
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Exception\InvalidRequestException;
-use Academe\GiroCheckout\Gateway;
+use Omnipay\GiroCheckout\Gateway;
 
 /**
  * GiroCheckout Gateway Void Request

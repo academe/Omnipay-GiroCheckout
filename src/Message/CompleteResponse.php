@@ -1,13 +1,13 @@
 <?php
 
-namespace Academe\GiroCheckout\Message;
+namespace Omnipay\GiroCheckout\Message;
 
 /**
  *
  */
 
 use Omnipay\Common\Message\NotificationInterface;
-use Academe\GiroCheckout\Gateway;
+use Omnipay\GiroCheckout\Gateway;
 
 class CompleteResponse extends AbstractResponse implements NotificationInterface
 {

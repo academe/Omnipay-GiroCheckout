@@ -1,6 +1,6 @@
 <?php
 
-namespace Academe\GiroCheckout;
+namespace Omnipay\GiroCheckout;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Tests\GatewayTestCase;

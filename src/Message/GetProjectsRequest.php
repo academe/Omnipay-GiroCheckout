@@ -1,6 +1,6 @@
 <?php
 
-namespace Academe\GiroCheckout\Message;
+namespace Omnipay\GiroCheckout\Message;
 
 /**
  * Get a list of all PaymentPage supporting projects.

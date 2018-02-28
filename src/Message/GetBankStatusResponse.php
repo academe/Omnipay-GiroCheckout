@@ -1,6 +1,6 @@
 <?php
 
-namespace Academe\GiroCheckout\Message;
+namespace Omnipay\GiroCheckout\Message;
 
 /**
  * At the moment this just handles the CC initialisation response.
@@ -9,7 +9,7 @@ namespace Academe\GiroCheckout\Message;
  */
 
 use Omnipay\Common\Message\RedirectResponseInterface;
-use Academe\GiroCheckout\Gateway;
+use Omnipay\GiroCheckout\Gateway;
 
 class GetBankStatusResponse extends Response
 {

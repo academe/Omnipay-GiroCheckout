@@ -1,6 +1,6 @@
 <?php
 
-namespace Academe\GiroCheckout;
+namespace Omnipay\GiroCheckout;
 
 /**
  * GiroCheckout Gateway
@@ -10,7 +10,7 @@ namespace Academe\GiroCheckout;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\AbstractGateway;
-use Academe\GiroCheckout\Helper;
+use Omnipay\GiroCheckout\Helper;
 
 class Gateway extends AbstractGateway
 {

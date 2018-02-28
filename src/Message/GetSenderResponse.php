@@ -1,13 +1,13 @@
 <?php
 
-namespace Academe\GiroCheckout\Message;
+namespace Omnipay\GiroCheckout\Message;
 
 /**
  *
  */
 
 use Omnipay\Common\Message\RedirectResponseInterface;
-use Academe\GiroCheckout\Gateway;
+use Omnipay\GiroCheckout\Gateway;
 
 class GetSenderResponse extends Response
 {
