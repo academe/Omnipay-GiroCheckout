@@ -88,6 +88,15 @@ class CompleteRequest extends AbstractRequest implements NotificationInterface
             }
         }
 
+        return $this->createResponse($data);
+    }
+
+    /**
+     * @param array $data
+     * @return CompleteResponse
+     */
+    public function createResponse(array $data)
+    {
         return $this->response = new CompleteResponse($this, $data);
     }
 

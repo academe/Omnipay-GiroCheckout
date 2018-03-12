@@ -174,6 +174,14 @@ $notifyRequest = $gateway->acceptNotification();
 $notifyResponse = $notifyRequest->send();
 ```
 
+If `createCard` is set in the `$gateway` or `acceptNotification()`,
+then the reusable card token will be available in the notify response,
+along with the usual Omnipay methods:
+
+```php
+$notifyResponse->getCardReference()
+```
+
 Once the authorisation is complete, the amount still needs to be captured.
 
 #### Credit Card Authorize Notify

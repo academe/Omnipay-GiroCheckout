@@ -14,14 +14,11 @@ use Omnipay\Common\Exception\InvalidResponseException;
 class NotificationRequest extends CompleteRequest
 {
     /**
-     * @throws InvalidRequestException
      * @param array $data
-     * @return CompleteAuthotizeResponse
+     * @return NotificationResponse
      */
-    public function sendData($data)
+    public function createResponse(array $data)
     {
-        $this->validateNotificationData($data);
-
         return $this->response = new NotificationResponse($this, $data);
     }
 }
