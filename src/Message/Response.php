@@ -92,12 +92,11 @@ class Response extends AbstractResponse implements RedirectResponseInterface
     }
 
     /**
-     * CHECKME: should this be an empty array?
      * @return null
      */
     public function getRedirectData()
     {
-        return null;
+        return [];
     }
 
     /**
