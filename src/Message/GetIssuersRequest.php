@@ -1,16 +1,12 @@
 <?php
 
-namespace Academe\GiroCheckout\Message;
+namespace Omnipay\GiroCheckout\Message;
 
 /**
  * Get a list of all Giropay supporting banks.
  *
  * @link http://api.girocheckout.de/en:girocheckout:giropay:start#giropay_issuer_bank_request
  */
-
-//use Omnipay\Common\Exception\InvalidResponseException;
-//use Omnipay\Common\Exception\InvalidRequestException;
-//use Academe\GiroCheckout\Gateway;
 
 class GetIssuersRequest extends GetBankStatusRequest
 {

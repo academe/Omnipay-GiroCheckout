@@ -80,12 +80,14 @@ required for all interaction:
 A gateway could be set up like this:
 
 ```php
-use Academe\GiroCheckout\Gateway;
+use Omnipay\GiroCheckout\Gateway;
 use Omnipay\Omnipay;
 
 // The backward slashes are needed to make the driver base class absolute.
 // An issue will be raised against Omnipay Common to fix this.
 $gateway = Omnipay::create('\\' . Gateway::class);
+// or
+$gateway = Omnipay::create('GiroCheckout/Gateway';
 
 // The IDs can be given as integers in strings.
 $gateway->setMerchantID('3610000');

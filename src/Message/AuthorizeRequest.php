@@ -1,6 +1,6 @@
 <?php
 
-namespace Academe\GiroCheckout\Message;
+namespace Omnipay\GiroCheckout\Message;
 
 /**
  * GiroCheckout Gateway Authorization Request,
@@ -10,7 +10,7 @@ namespace Academe\GiroCheckout\Message;
 
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Exception\InvalidRequestException;
-use Academe\GiroCheckout\Gateway;
+use Omnipay\GiroCheckout\Gateway;
 use Omnipay\Common\ItemBag;
 use Money\Money;
 
