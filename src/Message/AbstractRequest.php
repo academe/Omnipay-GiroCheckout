@@ -395,11 +395,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             "Content-Type" => "application/x-www-form-urlencoded",
         ];
 
-        $httpResponse = $this->httpClient->send(
+        $httpResponse = $this->httpClient->request(
             $this->requestMethod,
             $this->getEndpoint(),
             $headers,
-            $data
+            http_build_query($data)
         );
 
         // A valid response is one in which the hash that has been sent does
