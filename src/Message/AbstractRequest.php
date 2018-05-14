@@ -522,7 +522,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         }
     }
 
-        /**
+    /**
      * If not set at all, then default it to false
      * @return bool The value of freeAmount as bool.
      */
@@ -531,10 +531,10 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         if ($currency = $this->getCurrency()) {
             return $currency;
         }
-        
-        if ($money = $this->getMoney()) {
-            return $money->getCurrency()->getCode();
-        }
+
+        //if ($money = $this->getMoney()) {
+        //    return $money->getCurrency()->getCode();
+        //}
 
         return;
     }
