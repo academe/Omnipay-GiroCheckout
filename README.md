@@ -59,9 +59,9 @@ Table of Contents
 
 # Installation
 
-Using composer, this 2.x branch can be installed like this:
+Using composer, the 3.0 branch can be installed like this:
 
-    composer require academe/omnipay-girocheckout:~3.0
+    composer require league/omnipay academe/omnipay-girocheckout:~3.0
 
 # Authentication
 
