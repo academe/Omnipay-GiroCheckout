@@ -65,6 +65,7 @@ class AuthorizeRequest extends AbstractRequest
         Gateway::PAYMENT_TYPE_CREDIT_CARD,
         Gateway::PAYMENT_TYPE_DIRECTDEBIT,
         Gateway::PAYMENT_TYPE_MAESTRO,
+        Gateway::PAYMENT_TYPE_GIROPAY,
         Gateway::PAYMENT_TYPE_EPS,
         Gateway::PAYMENT_TYPE_PAYDIREKT,
         Gateway::PAYMENT_TYPE_PAYMENTPAGE,
