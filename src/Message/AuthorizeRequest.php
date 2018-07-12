@@ -1058,7 +1058,7 @@ class AuthorizeRequest extends AbstractRequest
      */
     public function setOrderAmount($orderAmount)
     {
-		return $this->setParameter('orderAmount', $orderAmount);
+        return $this->setParameter('orderAmount', $orderAmount);
     }
 
     /**
