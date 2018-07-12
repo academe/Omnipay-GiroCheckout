@@ -59,6 +59,8 @@ class AuthorizeRequestPaydirektTest extends TestCase
             'card' => $card,
             'items' => $items,
             'orderId' => 'ORD-123',
+            'shippingAmount' => 1234,
+            'orderAmount' => 5678,
         ]);
     }
 
@@ -124,7 +126,7 @@ class AuthorizeRequestPaydirektTest extends TestCase
 
         // This hash will change if the initializartion data changes.
         $data = $this->request->getData();
-        $this->assertSame('c4c1c3581f266e3e0cb17b832685fa4c', $data['hash']);
+        $this->assertSame('1b1c0deca31a2a97c167bd7f9a116564', $data['hash']);
 
         $data = [
             'merchantId' => '1234567',
@@ -197,5 +199,19 @@ class AuthorizeRequestPaydirektTest extends TestCase
 
         $this->request->setCurrency('GBP');
         $this->assertSame('GBP', $this->request->getCurrencyFallback());
+    }
+
+    /**
+     * See https://github.com/academe/Omnipay-GiroCheckout/pull/10
+     */
+    public function testOrderAmounts()
+    {
+        //$this->request->setShippingAmount(1234);
+        //$this->request->setOrderAmount(5678);
+
+        $data = $this->request->getData();
+
+        $this->assertSame(1234, $data['shippingAmount']);
+        $this->assertSame(5678, $data['orderAmount']);
     }
 }
