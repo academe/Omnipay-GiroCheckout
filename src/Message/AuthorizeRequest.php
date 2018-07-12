@@ -65,7 +65,6 @@ class AuthorizeRequest extends AbstractRequest
         Gateway::PAYMENT_TYPE_CREDIT_CARD,
         Gateway::PAYMENT_TYPE_DIRECTDEBIT,
         Gateway::PAYMENT_TYPE_MAESTRO,
-        Gateway::PAYMENT_TYPE_GIROPAY,
         Gateway::PAYMENT_TYPE_EPS,
         Gateway::PAYMENT_TYPE_PAYDIREKT,
         Gateway::PAYMENT_TYPE_PAYMENTPAGE,
@@ -129,7 +128,9 @@ class AuthorizeRequest extends AbstractRequest
             $data['customerId'] = $customerId;
         }
 
-        // TODO: shippingAmount - can we get this from the cart? Probably not.
+        if ($shippingAmount = $this->getShippingAmount()) {
+            $data['shippingAmount'] = $shippingAmount;
+        }
 
         if ($card = $this->getCard()) {
             if ($shippingFirstName = $card->getShippingFirstName()) {
@@ -181,8 +182,9 @@ class AuthorizeRequest extends AbstractRequest
             }
         }
 
-        // TODO: orderAmount probably from the cart, not the card.
-        // This is the total amount minus any shipping.
+        if ($orderAmount = $this->getOrderAmount()) {
+            $data['orderAmount'] = $orderAmount;
+        }
 
         // TODO: validate this is set (this is mandatory).
         $orderId = $this->getOrderId();
@@ -1021,6 +1023,42 @@ class AuthorizeRequest extends AbstractRequest
     public function setOrderId($value)
     {
         return $this->setParameter('orderId', $value);
+    }
+
+    /**
+     * @return int|float The shipping amount
+     */
+    public function getShippingAmount()
+    {
+        return $this->getParameter('shippingAmount');
+    }
+
+    /**
+     * @param int|float $shippingAmount
+     *
+     * @return $this
+     */
+    public function setShippingAmount($shippingAmount)
+    {
+        return $this->setParameter('shippingAmount', $shippingAmount);
+    }
+
+    /**
+     * @return int|float The order amount
+     */
+    public function getOrderAmount()
+    {
+        return $this->getParameter('orderAmount');
+    }
+
+    /**
+     * @param int|float $orderAmount
+     *
+     * @return $this
+     */
+    public function setOrderAmount($orderAmount)
+    {
+        return $this->setParameter('orderAmount', $orderAmount);
     }
 
     /**
