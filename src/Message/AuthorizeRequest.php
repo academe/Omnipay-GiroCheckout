@@ -119,11 +119,13 @@ class AuthorizeRequest extends AbstractRequest
     public function getPaydirektData($data = [])
     {
         // TOOD: validate against constants.
+
         if ($shoppingCartType = $this->getShoppingCartType()) {
             $data['shoppingCartType'] = $shoppingCartType;
         }
 
         // TODO: validate max 20 characters.
+
         if ($customerId = $this->getCustomerId()) {
             $data['customerId'] = $customerId;
         }
@@ -166,6 +168,7 @@ class AuthorizeRequest extends AbstractRequest
             }
 
             // TODO: validate an ISO 3166-1 2-character code
+
             if ($shippingCountry = $card->getShippingCountry()) {
                 $data['shippingCountry'] = $shippingCountry;
             }
@@ -176,6 +179,7 @@ class AuthorizeRequest extends AbstractRequest
         }
 
         // Only for `purchase`. The transaction type here is a convenient proxy.
+
         if ($merchantReconciliationReferenceNumber = $this->getMerchantReconciliationReferenceNumber()) {
             if ($this->transactionType == self::TRANSACTION_TYPE_SALE) {
                 $data['merchantReconciliationReferenceNumber'] = $merchantReconciliationReferenceNumber;
@@ -204,6 +208,7 @@ class AuthorizeRequest extends AbstractRequest
         }
 
         // TODO: validate this is an integer and is in range.
+
         if ($minimumAge = $this->getMinimumAge()) {
             $data['minimumAge'] = $minimumAge;
         }
@@ -357,26 +362,26 @@ class AuthorizeRequest extends AbstractRequest
     public function getPaymentPageData($data = [])
     {
         // Possible Payment methods
-        //Comma Seperated list, at time of writing could be: 1,2,6,7,8,11,12,14,23,27.
-        //(11/01/18)
+        // Comma Seperated list, at time of writing could be: 1,2,6,7,8,11,12,14,23,27.
+        // (11/01/18)
 
         if ($payMethods = $this->getPayMethods()) {
             $data['paymethods'] = $payMethods;
         }
 
-        //Comma Seperated list of the project IDs, whose payment methods are to be available on the page.
+        // Comma Seperated list of the project IDs, whose payment methods are to be available on the page.
 
         if ($payProjects = $this->getPayProjects()) {
             $data['payprojects'] = $payProjects;
         }
 
-        //String (70) Characters
+        // String (70) Characters
 
         if ($organization = $this->getOrganization()) {
             $data['organization'] = $organization;
         }
 
-        //if fixedvalues has values then freeamount is ignored.
+        // if fixedvalues has values then freeamount is ignored.
         if ($freeAmount = $this->getFreeAmount()) {
             $data['freeamount'] = $freeAmount;
         }
@@ -397,7 +402,7 @@ class AuthorizeRequest extends AbstractRequest
             }
         }
 
-        //orderId is only used when payment method is paydirekt
+        // orderId is only used when payment method is paydirekt
 
         if ($orderId = $this->getOrderId()) {
             $data['orderid'] = $orderId;
@@ -443,7 +448,8 @@ class AuthorizeRequest extends AbstractRequest
                 $data['currency'] = $currency;
             }
 
-            //PaymentPage has a different length for purpose
+            // PaymentPage has a different length for purpose
+
             if ($this->isPaymentPage()) {
                 if ($purpose = $this->getPurpose()) {
                     $data['purpose'] = $purpose;
@@ -467,7 +473,7 @@ class AuthorizeRequest extends AbstractRequest
             $data = $this->getGiropayData($data);
         }
 
-        //PaymentPage has its own optional fields here.
+        // PaymentPage has its own optional fields here.
 
         if ($this->isPaymentPage()) {
             if ($description = $this->getDescription()) {
@@ -485,8 +491,8 @@ class AuthorizeRequest extends AbstractRequest
             }
         }
 
-        //Credit Card, Direct Debit and Maestro have optional type, locale and mobile parameters.
-        //PaymentPage has type and locale.
+        // Credit Card, Direct Debit and Maestro have optional type, locale and mobile parameters.
+        // PaymentPage has type and locale.
 
         if ($this->isCreditCard() || $this->isDirectDebit() || $this->isMaestro() || $this->isPaymentPage()) {
             // 'SALE' or 'AUTH', for purchase or authorization.
@@ -501,7 +507,10 @@ class AuthorizeRequest extends AbstractRequest
                 $data['locale'] = $this->getValidLanguage();
             }
 
-            if ($this->getMobile() !== null && $this->hasPaymentPage() && !$this->isPaymentPage()) {
+            if ($this->getMobile() !== null
+                && $this->hasPaymentPage()
+                && !$this->isPaymentPage()
+            ) {
                 $data['mobile'] = ! empty($this->getMobile())
                     ? (string)static::MOBILE_OPTIMISE_YES
                     : (string)static::MOBILE_OPTIMISE_NO;
@@ -519,7 +528,7 @@ class AuthorizeRequest extends AbstractRequest
             $data['type'] = $this->transactionType;
         }
 
-        //PaymentPage has a bunch of optional fields here.
+        // PaymentPage has a bunch of optional fields here.
 
         if ($this->isPaymentPage()) {
             $data = $this->getPaymentPageData($data);
@@ -576,7 +585,8 @@ class AuthorizeRequest extends AbstractRequest
             $data = $this->getPaydirektData($data);
         }
 
-        //PAYMENT PAGE URL STUFF
+        // PAYMENT PAGE URL STUFF
+
         if ($this->isPaymentPage()) {
             if ($successUrl = $this->getReturnUrl()) {
                 $data['successUrl'] = $successUrl;
@@ -609,6 +619,7 @@ class AuthorizeRequest extends AbstractRequest
         }
 
         // Add a hash for the data we have constructed.
+
         $data['hash'] = $this->requestHash($data);
 
         return $data;
