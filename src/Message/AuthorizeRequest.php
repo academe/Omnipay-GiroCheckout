@@ -863,7 +863,7 @@ class AuthorizeRequest extends AbstractRequest
      */
     public function setInfo2Label($value)
     {
-        return $this->setParameter('infoLabel', $value);
+        return $this->setParameter('info2Label', $value);
     }
 
     /**

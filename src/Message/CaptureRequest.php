@@ -67,7 +67,9 @@ class CaptureRequest extends AbstractRequest
             // payment types, it actually causes a hash validation error if included.
 
             if ($this->isDirectDebit() || $this->isPaydirekt()) {
-                $data['purpose'] = substr($purpose, 0, static::PURPOSE_LENGTH);
+                // PHP 5.6 will return false if $purpose is '', so protect aganst that.
+
+                $data['purpose'] = substr($purpose, 0, static::PURPOSE_LENGTH) ?: '';
             }
         }
 
