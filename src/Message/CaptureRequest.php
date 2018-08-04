@@ -66,7 +66,7 @@ class CaptureRequest extends AbstractRequest
             // Even though the documentation shows the purpose as optional for Direct Debit
             // payment types, it actually causes a hash validation error if included.
 
-            if ($this->isDirectDebit()) {
+            if ($this->isDirectDebit() || $this->isPaydirekt()) {
                 $data['purpose'] = substr($purpose, 0, static::PURPOSE_LENGTH);
             }
         }
