@@ -19,12 +19,19 @@ class RefundRequest extends CaptureRequest
     protected $endpointPath = 'transaction/refund';
 
     /**
+     * Override the method here, to exclude `final` property from `capture` request, because
+     * it is invalid in `refund` requests.
+     *
      * @param array $data The data so far
      * @return array
      */
-    public function getPaydirektData(array $data = [])
+    public function getPaydirektData($data = [])
     {
-        $data['merchantReconciliationReferenceNumber'] = $this->getMerchantReconciliationReferenceNumber();
+        $merchantReconciliationReferenceNumber = $this->getMerchantReconciliationReferenceNumber();
+
+        if ($merchantReconciliationReferenceNumber) {
+            $data['merchantReconciliationReferenceNumber'] = $merchantReconciliationReferenceNumber;
+        }
 
         return $data;
     }

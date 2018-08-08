@@ -35,6 +35,16 @@ class CaptureRequest extends AbstractRequest
      */
     protected $endpointPath = 'transaction/capture';
 
+    public function getPaydirektData($data = []) {
+        $merchantReconciliationReferenceNumber = $this->getMerchantReconciliationReferenceNumber();
+
+        if ($merchantReconciliationReferenceNumber) {
+            $data['merchantReconciliationReferenceNumber'] = $merchantReconciliationReferenceNumber;
+        }
+
+        $data['final'] = (bool)$this->getFinal() ? static::PAYDIREKT_FINAL_FLAG_YES : static::PAYDIREKT_FINAL_FLAG_NO;
+    }
+
     /**
      * @return array
      */
@@ -79,15 +89,7 @@ class CaptureRequest extends AbstractRequest
         $data['reference'] = $this->getTransactionReference();
 
         if ($this->isPaydirekt()) {
-            $merchantReconciliationReferenceNumber = $this->getMerchantReconciliationReferenceNumber();
-
-            if ($merchantReconciliationReferenceNumber) {
-                $data['merchantReconciliationReferenceNumber'] = $merchantReconciliationReferenceNumber;
-            }
-
-            $data['final'] = (bool)$this->getFinal()
-                ? static::PAYDIREKT_FINAL_FLAG_YES
-                : static::PAYDIREKT_FINAL_FLAG_NO;
+            $data = $this->getPaydirektData($data);
         }
 
         // Add a hash for the data we have constructed.
