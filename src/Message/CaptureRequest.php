@@ -35,7 +35,8 @@ class CaptureRequest extends AbstractRequest
      */
     protected $endpointPath = 'transaction/capture';
 
-    public function getPaydirektData($data = []) {
+    public function getPaydirektData($data = [])
+    {
         $merchantReconciliationReferenceNumber = $this->getMerchantReconciliationReferenceNumber();
 
         if ($merchantReconciliationReferenceNumber) {
