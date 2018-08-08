@@ -44,6 +44,8 @@ class CaptureRequest extends AbstractRequest
         }
 
         $data['final'] = (bool)$this->getFinal() ? static::PAYDIREKT_FINAL_FLAG_YES : static::PAYDIREKT_FINAL_FLAG_NO;
+
+        return $data;
     }
 
     /**
