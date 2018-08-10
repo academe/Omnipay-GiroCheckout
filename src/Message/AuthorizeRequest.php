@@ -116,9 +116,9 @@ class AuthorizeRequest extends AbstractRequest
      * @param array $data
      * @return array Data with the Paydirekt fields appended.
      */
-    public function getPaydirektData($data = [])
+    public function getPaydirektData(array $data = [])
     {
-        // TOOD: validate against constants.
+        // TODO: validate against constants.
 
         if ($shoppingCartType = $this->getShoppingCartType()) {
             $data['shoppingCartType'] = $shoppingCartType;

@@ -79,4 +79,49 @@ class CaptureRequestTest extends TestCase
         $this->assertArrayHasKey('purpose', $data);
         $this->assertSame('An authorisation-An authori', $data['purpose']);
     }
+
+    /**
+     * New field for Paydirekt only.
+     */
+    public function testPaydirektWithMerchantReconciliationReferenceNumber()
+    {
+        $this->request->initialize([
+            'paymentType' => 'Paydirekt',
+            'merchantId' => 12345678,
+            'projectId' => 654321,
+            'transactionId' => 'trans-id-123',
+            'amount' => '1.23',
+            'currency' => 'EUR',
+            'description' => str_repeat('An authorisation-', 5),
+            'transactionReference' => 'Original-Reference',
+            'merchantReconciliationReferenceNumber' => 'woooooo',
+        ]);
+
+        $data = $this->request->getData();
+
+        $this->assertArrayHasKey('merchantReconciliationReferenceNumber', $data);
+        $this->assertSame('woooooo', $data['merchantReconciliationReferenceNumber']);
+    }
+
+    /**
+     * New field for Paydirekt only (check not included with CreditCard, as one example).
+     */
+    public function testCreditCardWithMerchantReconciliationReferenceNumber()
+    {
+        $this->request->initialize([
+            'paymentType' => 'CreditCard',
+            'merchantId' => 12345678,
+            'projectId' => 654321,
+            'transactionId' => 'trans-id-123',
+            'amount' => '1.23',
+            'currency' => 'EUR',
+            'description' => str_repeat('An authorisation-', 5),
+            'transactionReference' => 'Original-Reference',
+            'merchantReconciliationReferenceNumber' => 'woooooo',
+        ]);
+
+        $data = $this->request->getData();
+
+        $this->assertArrayNotHasKey('merchantReconciliationReferenceNumber', $data);
+    }
 }
