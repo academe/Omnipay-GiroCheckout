@@ -25,7 +25,7 @@ class RefundRequest extends CaptureRequest
      * @param array $data The data so far
      * @return array
      */
-    public function getPaydirektData($data = [])
+    public function getPaydirektData(array $data = [])
     {
         $merchantReconciliationReferenceNumber = $this->getMerchantReconciliationReferenceNumber();
 
