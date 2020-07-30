@@ -606,7 +606,7 @@ class AuthorizeRequest extends AbstractRequest
         } else {
             // Where to send the user after filling out their CC details, or cancelling.
 
-            if ($this->hasPaymentPage() || $this->isPayPal()) {
+            if ($this->hasPaymentPage() || $this->isPayPal() || $this->isBluecode()) {
                 $data['urlRedirect'] = $this->getReturnUrl();
             }
 

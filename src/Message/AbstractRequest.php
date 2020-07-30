@@ -510,6 +510,14 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
+     * @return bool true if processing a bluecode transaction
+     */
+    public function isBluecode()
+    {
+        return $this->getPaymentType() === Gateway::PAYMENT_TYPE_BLUECODE;
+    }
+
+    /**
      * If not set at all, then default it to false
      * @return bool The value of freeAmount as bool.
      */
