@@ -24,6 +24,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      * @var int Maximum length of the `purpose` field on PaymentPage.
      */
     const PURPOSE_LENGTH_PAYMENTAGE = 20;
+    
+    /**
+     * @var int Maximum length of the `purpose` field for the Bluecode payment method
+     */
+    const PURPOSE_LENGTH_BLUECODE = 37;
 
     /**
      * @var string Request transaction types.
