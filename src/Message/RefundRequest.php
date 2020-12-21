@@ -14,6 +14,17 @@ use Omnipay\GiroCheckout\Gateway;
 class RefundRequest extends CaptureRequest
 {
     /**
+     * @var array List of payment types that a request supports.
+     */
+    protected $supportedPaymentTypes = [
+        Gateway::PAYMENT_TYPE_CREDIT_CARD,
+        Gateway::PAYMENT_TYPE_DIRECTDEBIT,
+        Gateway::PAYMENT_TYPE_MAESTRO,
+        Gateway::PAYMENT_TYPE_PAYDIREKT,
+        Gateway::PAYMENT_TYPE_BLUECODE,
+    ];
+
+    /**
      * @var string The resource path, appended to the endpoint base URL.
      */
     protected $endpointPath = 'transaction/refund';

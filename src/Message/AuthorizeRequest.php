@@ -456,6 +456,8 @@ class AuthorizeRequest extends AbstractRequest
                 } else {
                     $data['purpose'] = trim(substr($this->getDescription(), 0, static::PURPOSE_LENGTH_PAYMENTAGE));
                 }
+            } elseif ($this->isBluecode()) {
+                $data['purpose'] = substr($this->getDescription(), 0, static::PURPOSE_LENGTH_BLUECODE);
             } else {
                 $data['purpose'] = substr($this->getDescription(), 0, static::PURPOSE_LENGTH);
             }
@@ -606,7 +608,7 @@ class AuthorizeRequest extends AbstractRequest
         } else {
             // Where to send the user after filling out their CC details, or cancelling.
 
-            if ($this->hasPaymentPage() || $this->isPayPal()) {
+            if ($this->hasPaymentPage() || $this->isPayPal() || $this->isBluecode()) {
                 $data['urlRedirect'] = $this->getReturnUrl();
             }
 

@@ -24,6 +24,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      * @var int Maximum length of the `purpose` field on PaymentPage.
      */
     const PURPOSE_LENGTH_PAYMENTAGE = 20;
+    
+    /**
+     * @var int Maximum length of the `purpose` field for the Bluecode payment method
+     */
+    const PURPOSE_LENGTH_BLUECODE = 37;
 
     /**
      * @var string Request transaction types.
@@ -507,6 +512,14 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     public function isPaymentPage()
     {
         return $this->getPaymentType() === Gateway::PAYMENT_TYPE_PAYMENTPAGE;
+    }
+
+    /**
+     * @return bool true if processing a bluecode transaction
+     */
+    public function isBluecode()
+    {
+        return $this->getPaymentType() === Gateway::PAYMENT_TYPE_BLUECODE;
     }
 
     /**

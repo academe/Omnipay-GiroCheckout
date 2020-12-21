@@ -24,6 +24,7 @@ class Gateway extends AbstractGateway
     const PAYMENT_TYPE_GIROPAY_ID   = 'Giropay-ID';
     const PAYMENT_TYPE_PAYDIREKT    = 'Paydirekt';
     const PAYMENT_TYPE_PAYMENTPAGE  = 'PaymentPage';
+    const PAYMENT_TYPE_BLUECODE     = 'Bluecode';
 
     /**
      * @var string payment types supported but not fully tested and documented
