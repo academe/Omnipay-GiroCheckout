@@ -56,6 +56,9 @@ Table of Contents
    * [Payment Page Payment Type](#payment-page-payment-type)
       * [Payment Page Projects List](#payment-page-projects-list)
       * [Cancel Url](#cancel-url)
+   * [Bluecode Payment Type](#bluecode-payment-type)
+      * [Bludcode Purchase](#bluecode-purchase)
+      * [Bluecode Refund](#bluecode-refund)
 
 # Installation
 
@@ -637,3 +640,38 @@ site will be sent a cancellation notification.
 In summary, you must **not** call `completeAuthorise` when returning to the merchant site
 from the *Payment Page* payment type.
 
+# Bluecode Payment Type
+
+This payment type works currently only with bank accounts in Germany and Austria.
+
+Bluecode only supports purchase (sale) and refund operations. There is not authorize
+and/or void, like with credit cards.
+
+## Bluecode Purchase
+Issue a purchase transaction:
+```php
+$gateway->setPaymentType(Gateway::PAYMENT_TYPE_BLUECODE);
+
+$purchaseRequest = $gateway->purchase([
+    'transactionId' => $yourMerchantTransactionId,
+    'amount' => 4.56,
+    'currency' => 'EUR', // or any other valid currency code
+    'description' => 'Reason for the transaction',
+    'returnUrl' => 'url to bring the user back to the marchant site',
+    'notifyUrl' => 'url for the gateway to send direct notifications',
+]);
+```
+
+## Bluecode Refund
+Issue a refund
+```php
+$gateway->setPaymentType(Gateway::PAYMENT_TYPE_BLUECODE);
+
+$refundRequest = $gateway->refund([
+    'transactionId' => $yourMerchantTransactionId,
+    'amount' => 4.56,
+    'currency' => 'EUR', // or any other valid currency code
+    'description' => 'Reason for the transaction',
+    'transactionReference' => 'original purchase transaction reference'
+]);
+```
